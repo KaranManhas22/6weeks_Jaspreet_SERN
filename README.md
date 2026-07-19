@@ -31,6 +31,18 @@ The platform provides dedicated, specialized dashboards and flows for four disti
 
 This project is built using industry-standard, bleeding-edge web technologies:
 
+<p align="center">
+  <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" /></a>
+  <a href="https://react.dev/"><img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" /></a>
+  <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" /></a>
+  <a href="https://lucide.dev/"><img src="https://img.shields.io/badge/Lucide_React-F87171?style=for-the-badge&logo=lucide&logoColor=white" alt="Lucide React" /></a>
+  <a href="https://zustand-demo.pmnd.rs/"><img src="https://img.shields.io/badge/Zustand-000000?style=for-the-badge&logo=react&logoColor=white" alt="Zustand" /></a>
+  <a href="https://socket.io/"><img src="https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=010101" alt="Socket.IO" /></a>
+  <a href="https://leafletjs.com/"><img src="https://img.shields.io/badge/Leaflet-199900?style=for-the-badge&logo=leaflet&logoColor=white" alt="Leaflet" /></a>
+  <a href="https://recharts.org/"><img src="https://img.shields.io/badge/Recharts-22B5BF?style=for-the-badge&logo=react&logoColor=white" alt="Recharts" /></a>
+  <a href="https://supabase.com/"><img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase" /></a>
+</p>
+
 - **Framework:** [Next.js 14](https://nextjs.org/) (App Router)
 - **Library:** [React 18](https://react.dev/)
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)
