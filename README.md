@@ -14,6 +14,32 @@ The platform provides dedicated, specialized dashboards and flows for four disti
 - **Delivery Personnel (Riders):** Accept assigned deliveries, update statuses, navigate using live maps, and track cash-on-delivery (COD) deposits.
 - **Administrators:** Oversee platform health, monitor cross-university analytics, manage user roles, and seamlessly toggle global platform branding.
 
+### 🔄 Order Lifecycle Workflow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant S as 👨‍🎓 Student
+    participant F as 📱 Frontend (App)
+    participant B as ⚙️ Backend (API)
+    participant V as 🏪 Vendor
+    participant R as 🛵 Rider
+
+    S->>F: Browse Menu & Place Order
+    F->>B: REST: POST /api/orders
+    B-->>V: ⚡ Socket.io: New Order Alert
+    V->>F: Accept Order & Start Prep
+    F->>B: REST: UPDATE Status (Preparing)
+    B-->>S: ⚡ Socket.io: Order Preparing
+    V->>F: Mark Ready for Delivery
+    B-->>R: ⚡ Socket.io: Delivery Request
+    R->>F: Accept Delivery
+    R-->>S: 📍 Live GPS Tracking (Leaflet)
+    S->>R: Receive Food & Scan QR
+    R->>F: Confirm Delivery Complete
+    F->>B: REST: UPDATE Status (Completed)
+```
+
 ---
 
 ## ✨ Key Features
