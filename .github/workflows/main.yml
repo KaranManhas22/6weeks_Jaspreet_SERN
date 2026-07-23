@@ -1,0 +1,23 @@
+name: foodzie_Deploy_front
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy_front:
+    runs-on: ubuntu-latest
+    steps:
+      - name: get code
+        uses: actions/checkout@v4
+      - name: ssh connection
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{secrets.IP}}
+          username: ${{secrets.USERNAME}}
+          key: ${{secrets.KEY}}
+          script: |
+            cd /home/ubuntu/6weeks_Jaspreet_SERN
+            git pull origin main
+            sudo npm i 
+            sudo npm run build
+            pm2 restart "frontend" || pm2 start npm --name "frontend" -- run dev
