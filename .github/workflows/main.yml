@@ -20,4 +20,4 @@ jobs:
             git pull origin main
             sudo npm i 
             sudo npm run build
-            pm2 restart "frontend" || pm2 start npm --name "frontend" -- run dev
+            pm2 restart "frontend"  || pm2 start npm --name "frontend" -- start || pm2 start npm --name "frontend" -- run dev
