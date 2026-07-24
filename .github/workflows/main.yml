@@ -18,6 +18,6 @@ jobs:
           script: |
             cd /home/ubuntu/6weeks_Jaspreet_SERN
             git pull origin main
-            sudo npm i 
+            sudo npm i --force
             sudo npm run build
             pm2 restart "frontend"  || pm2 start npm --name "frontend" -- start || pm2 start npm --name "frontend" -- run dev
