@@ -328,7 +328,7 @@ export default function FoodItemPanel({ categories, items, onRefresh }: Props) {
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-455 font-bold flex items-center justify-center">{getCurrencySymbol()}</span>
                     <input id="item-price-input" type="number" min="0" step="0.5" value={form.price}
                       onChange={(e) => set('price', e.target.value)} placeholder="0.00"
-                      className="w-full bg-gray-50 dark:bg-gray-955 border border-gray-200 dark:border-gray-800 rounded-xl pl-8 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-900 dark:text-white placeholder-gray-400 transition-all" />
+                      className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl pl-8 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-900 dark:text-white placeholder-gray-400 transition-all" />
                   </div>
                 </div>
                 <div>
@@ -337,7 +337,7 @@ export default function FoodItemPanel({ categories, items, onRefresh }: Props) {
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-455 font-bold flex items-center justify-center">{getCurrencySymbol()}</span>
                     <input id="item-realprice-input" type="number" min="0" step="0.5" value={form.realPrice}
                       onChange={(e) => set('realPrice', e.target.value)} placeholder="0.00"
-                      className="w-full bg-gray-50 dark:bg-gray-955 border border-gray-200 dark:border-gray-800 rounded-xl pl-8 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-900 dark:text-white placeholder-gray-400 transition-all" />
+                      className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl pl-8 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-900 dark:text-white placeholder-gray-400 transition-all" />
                   </div>
                 </div>
               </div>
@@ -348,7 +348,7 @@ export default function FoodItemPanel({ categories, items, onRefresh }: Props) {
                   <label className="block text-xs font-semibold text-gray-655 dark:text-gray-400 mb-1.5">Prep Time (min)</label>
                   <input type="number" min="1" value={form.prepTimeMins}
                     onChange={(e) => set('prepTimeMins', e.target.value)}
-                    className="w-full bg-gray-50 dark:bg-gray-955 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-900 dark:text-white placeholder-gray-400 transition-all" />
+                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-900 dark:text-white placeholder-gray-400 transition-all" />
                 </div>
               )}
 
@@ -366,7 +366,7 @@ export default function FoodItemPanel({ categories, items, onRefresh }: Props) {
                   <div className="mt-3 animate-in fade-in slide-in-from-top-1 duration-150">
                     <label className="block text-xs font-semibold text-gray-650 dark:text-gray-400 mb-1.5 font-medium text-orange-600">New Category Name *</label>
                     <input id="item-new-category-input" type="text" value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)}
-                      placeholder="e.g. Desserts, Beverages" className="w-full bg-gray-50 dark:bg-gray-955 border border-orange-200 dark:border-orange-900/30 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-900 dark:text-white placeholder-gray-400 transition-all" />
+                      placeholder="e.g. Desserts, Beverages" className="w-full bg-gray-50 dark:bg-gray-950 border border-orange-200 dark:border-orange-900/30 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-900 dark:text-white placeholder-gray-400 transition-all" />
                   </div>
                 )}
               </div>
@@ -415,7 +415,7 @@ export default function FoodItemPanel({ categories, items, onRefresh }: Props) {
                       </label>
                       <input id="item-stock-input" type="number" min="0" value={form.stock}
                         onChange={(e) => set('stock', e.target.value)} placeholder="e.g. 50"
-                        className="w-full bg-gray-50 dark:bg-gray-955 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-gray-900 dark:text-white placeholder-gray-400 transition-all" />
+                        className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-gray-900 dark:text-white placeholder-gray-400 transition-all" />
                       <p className="text-xs text-gray-450 dark:text-gray-500 mt-1">Set to 0 to mark as out of stock</p>
                     </div>
                   )}
