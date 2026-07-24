@@ -21,6 +21,11 @@ export const metadata: Metadata = {
   description:
     'Order hot food from your university canteen in seconds. Students order, vendors manage menus, everyone eats better.',
   keywords: ['campus food', 'university canteen', 'food delivery', 'foodzie'],
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
