@@ -66,7 +66,7 @@ async function request<T>(
   });
 
   // Intercept 401 Unauthorized errors and attempt to refresh
-  if (res.status === 401 && !['/api/auth/login', '/api/auth/register', '/api/auth/refresh'].includes(path)) {
+  if (res.status === 401 && !['/api/auth/login', '/api/auth/register', '/api/auth/refresh', '/api/auth/me'].includes(path)) {
     try {
       const refreshRes = await fetch(`${BASE_URL}/api/auth/refresh`, {
         method: 'GET',
