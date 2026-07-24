@@ -201,7 +201,7 @@ export default function FoodItemPanel({ categories, items, onRefresh }: Props) {
         {/* Filter */}
         <div className="px-5 py-3 border-b border-gray-100 dark:border-gray-850">
           <select value={filterCatId} onChange={(e) => setFilterCatId(e.target.value)}
-            className="text-sm border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 text-gray-605 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400/40 bg-white dark:bg-gray-955">
+            className="text-sm border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 text-gray-605 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400/40 bg-white dark:bg-gray-900">
             <option value="all">All Categories</option>
             {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
@@ -436,7 +436,7 @@ export default function FoodItemPanel({ categories, items, onRefresh }: Props) {
                     </div>
                   )}
                   <input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
-                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-orange-50 dark:file:bg-orange-955/20 file:text-orange-700 dark:file:text-orange-400 hover:file:bg-orange-100 dark:hover:file:bg-orange-900/10 transition-all cursor-pointer" />
+                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-orange-50 dark:file:bg-orange-950/20 file:text-orange-700 dark:file:text-orange-400 hover:file:bg-orange-100 dark:hover:file:bg-orange-900/10 transition-all cursor-pointer" />
                 </div>
               </div>
 
@@ -449,22 +449,24 @@ export default function FoodItemPanel({ categories, items, onRefresh }: Props) {
                 </button>
 
                 {showDiscount && (
-                  <div className="mt-3 grid grid-cols-3 gap-3">
+                  <div className="mt-3 grid grid-cols-3 gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
                     <div>
                       <label className="block text-xs font-semibold text-gray-655 dark:text-gray-400 mb-1.5">Discount %</label>
                       <input type="number" min="0" max="100" value={form.discountPercent}
-                        onChange={(e) => set('discountPercent', e.target.value)} placeholder="10"
-                        className="w-full bg-gray-50 dark:bg-gray-955 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-900 dark:text-white placeholder-gray-400 transition-all" />
+                        onChange={(e) => set('discountPercent', e.target.value)} placeholder="e.g. 10"
+                        className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-900 dark:text-white placeholder-gray-400 transition-all" />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-gray-655 dark:text-gray-400 mb-1.5">From</label>
-                      <input type="date" value={form.discountStart} onChange={(e) => set('discountStart', e.target.value)}
-                        className="w-full bg-gray-50 dark:bg-gray-955 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-900 dark:text-white transition-all" />
+                      <label className="block text-xs font-semibold text-gray-655 dark:text-gray-400 mb-1.5">Start Date</label>
+                      <input type="date" value={form.discountStart}
+                        onChange={(e) => set('discountStart', e.target.value)}
+                        className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-900 dark:text-white transition-all" />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-gray-655 dark:text-gray-400 mb-1.5">Until</label>
-                      <input type="date" value={form.discountEnd} onChange={(e) => set('discountEnd', e.target.value)}
-                        className="w-full bg-gray-50 dark:bg-gray-955 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-900 dark:text-white transition-all" />
+                      <label className="block text-xs font-semibold text-gray-655 dark:text-gray-400 mb-1.5">End Date</label>
+                      <input type="date" value={form.discountEnd}
+                        onChange={(e) => set('discountEnd', e.target.value)}
+                        className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-900 dark:text-white transition-all" />
                     </div>
                   </div>
                 )}
