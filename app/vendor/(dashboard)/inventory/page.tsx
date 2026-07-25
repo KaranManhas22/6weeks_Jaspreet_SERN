@@ -77,9 +77,9 @@ export default function InventoryPage() {
   }
 
   return (
-    <div className="p-6 lg:p-8 h-screen flex flex-col">
+    <div className="p-6 lg:p-8 space-y-6">
       {/* Page header */}
-      <div className="flex items-center justify-between mb-6 shrink-0">
+      <div className="flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 bg-orange-100 dark:bg-orange-500/10 rounded-xl flex items-center justify-center">
             <LayoutGrid className="w-4.5 h-4.5 text-orange-600 dark:text-orange-400" size={18} />
@@ -101,7 +101,7 @@ export default function InventoryPage() {
       </div>
 
       {/* Two-column responsive panel layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-5 flex-1 min-h-0 overflow-y-auto lg:overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6 items-start">
         {/* Left: Categories */}
         <CategoryPanel
           categories={categories}

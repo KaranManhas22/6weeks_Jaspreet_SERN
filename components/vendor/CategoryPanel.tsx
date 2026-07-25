@@ -56,7 +56,7 @@ export default function CategoryPanel({ categories, onRefresh }: Props) {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col h-full">
+    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)]">
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-800">
         <div className="flex items-center gap-2">
