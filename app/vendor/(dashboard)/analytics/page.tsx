@@ -70,10 +70,11 @@ export default function VendorAnalyticsPage() {
 
   if (!data) return null;
 
-  const maxRevenue = Math.max(...data.last7Days.map(d => Math.max(d.revenue, d.profit)), 1);
-  const totalRevenue = data.last7Days.reduce((acc, d) => acc + d.revenue, 0);
-  const totalProfit = data.last7Days.reduce((acc, d) => acc + d.profit, 0);
-  const totalOrders = data.last7Days.reduce((acc, d) => acc + d.orders, 0);
+  const last7Days = data.last7Days || [];
+  const maxRevenue = Math.max(...last7Days.map(d => Math.max(d.revenue || 0, d.profit || 0)), 1);
+  const totalRevenue = last7Days.reduce((acc, d) => acc + (d.revenue || 0), 0);
+  const totalProfit = last7Days.reduce((acc, d) => acc + (d.profit || 0), 0);
+  const totalOrders = last7Days.reduce((acc, d) => acc + (d.orders || 0), 0);
 
   return (
     <div className="p-8 space-y-8 animate-in fade-in duration-500">
@@ -154,23 +155,23 @@ export default function VendorAnalyticsPage() {
           </div>
           
           <div className="h-64 flex items-end justify-between gap-2 px-2">
-            {data.last7Days.map((day) => (
-              <div key={day.date} className="flex-1 flex flex-col items-center group">
+            {(data.last7Days || []).map((day, i) => (
+              <div key={day.date || i} className="flex-1 flex flex-col items-center group">
                 <div className="relative w-full flex flex-col items-center">
                   {/* Tooltip */}
                   <div className="absolute -top-14 bg-gray-900 text-white text-[10px] font-bold py-1.5 px-2.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10 shadow-lg text-left">
-                    <p>Rev: {formatCurrency(day.revenue)}</p>
-                    <p className="text-emerald-400">Profit: {formatCurrency(day.profit)}</p>
+                    <p>Rev: {formatCurrency(day.revenue || 0)}</p>
+                    <p className="text-emerald-400">Profit: {formatCurrency(day.profit || 0)}</p>
                   </div>
                   {/* Bars Side-by-Side */}
                   <div className="flex items-end gap-1.5 w-full justify-center">
                     <div 
                       className="w-3.5 bg-orange-500/25 group-hover:bg-orange-500 transition-all duration-500 rounded-t-sm"
-                      style={{ height: `${(day.revenue / maxRevenue) * 180}px` }}
+                      style={{ height: `${((day.revenue || 0) / maxRevenue) * 180}px` }}
                     />
                     <div 
                       className="w-3.5 bg-emerald-500/25 group-hover:bg-emerald-500 transition-all duration-500 rounded-t-sm"
-                      style={{ height: `${(day.profit / maxRevenue) * 180}px` }}
+                      style={{ height: `${((day.profit || 0) / maxRevenue) * 180}px` }}
                     />
                   </div>
                 </div>
@@ -189,11 +190,11 @@ export default function VendorAnalyticsPage() {
           </div>
 
           <div className="space-y-4">
-            {data.topItems.length === 0 ? (
+            {!(data.topItems && data.topItems.length) ? (
               <p className="text-center py-12 text-gray-500 text-sm italic">No sales data yet</p>
             ) : (
               data.topItems.map((item, index) => (
-                <div key={item.name} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl group hover:bg-orange-500/5 transition-colors">
+                <div key={item.name || index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl group hover:bg-orange-500/5 transition-colors">
                   <div className="flex items-center gap-4">
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-black text-xs ${
                       index === 0 ? 'bg-amber-100 text-amber-600' : 
@@ -203,11 +204,11 @@ export default function VendorAnalyticsPage() {
                     }`}>
                       #{index + 1}
                     </div>
-                    <span className="font-bold text-gray-900 dark:text-white group-hover:text-orange-500 transition-colors">{item.name}</span>
+                    <span className="font-bold text-gray-900 dark:text-white group-hover:text-orange-500 transition-colors">{item.name || 'Unknown'}</span>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs font-black text-gray-900 dark:text-white block">{item.quantity} sold</span>
-                    <span className="text-[10px] text-gray-400 block mt-0.5">Rev: {formatCurrency(item.revenue)} | Profit: <span className="text-emerald-500 font-bold">{formatCurrency(item.profit)}</span></span>
+                    <span className="text-xs font-black text-gray-900 dark:text-white block">{item.quantity || 0} sold</span>
+                    <span className="text-[10px] text-gray-400 block mt-0.5">Rev: {formatCurrency(item.revenue || 0)} | Profit: <span className="text-emerald-500 font-bold">{formatCurrency(item.profit || 0)}</span></span>
                   </div>
                 </div>
               ))
@@ -224,8 +225,8 @@ export default function VendorAnalyticsPage() {
         </h3>
 
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {data.statusBreakdown.map((s) => (
-            <div key={s.status} className="p-4 rounded-2xl border border-gray-100 dark:border-gray-800 flex flex-col items-center text-center">
+          {(data.statusBreakdown || []).map((s, i) => (
+            <div key={s.status || i} className="p-4 rounded-2xl border border-gray-100 dark:border-gray-800 flex flex-col items-center text-center">
               <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full mb-2 ${
                 s.status === 'Delivered' ? 'bg-green-500/10 text-green-500' :
                 s.status === 'Cancelled' ? 'bg-red-500/10 text-red-500' :
