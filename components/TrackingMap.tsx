@@ -19,7 +19,7 @@ export default function TrackingMap({ riderLat, riderLng, canteenName }: Trackin
     if (typeof window === 'undefined' || !mapContainerRef.current) return;
 
     // Fix default marker icon path issue in Leaflet with Next.js static asset loaders
-    // @ts-ignore
+    // @ts-expect-error - Leaflet internal property modification
     delete L.Icon.Default.prototype._getIconUrl;
     L.Icon.Default.mergeOptions({
       iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -56,7 +56,7 @@ export default function TrackingMap({ riderLat, riderLng, canteenName }: Trackin
   }, [riderLat, riderLng, canteenName]);
 
   return (
-    <div className="w-full h-64 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-inner relative z-0">
+    <div className="w-full h-64 sm:h-80 lg:h-96 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-inner relative z-0">
       <div ref={mapContainerRef} className="w-full h-full" />
     </div>
   );
