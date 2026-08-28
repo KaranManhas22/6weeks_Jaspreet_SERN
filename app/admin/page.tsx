@@ -300,6 +300,57 @@ const ContentCMS = () => (
 
 // --- Layout & Shell ---
 export default function AdminDashboard() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userId, setUserId] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const auth = sessionStorage.getItem('admin_auth');
+    if (auth === 'true') setIsAuthenticated(true);
+  }, []);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (userId === 'admin' && password === 'admin123') {
+      setIsAuthenticated(true);
+      sessionStorage.setItem('admin_auth', 'true');
+    } else {
+      setError('Invalid ID or Password');
+    }
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#020617] flex items-center justify-center p-4">
+        <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-xl w-full max-w-md border border-slate-200 dark:border-slate-800">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-black text-slate-900 dark:text-white" style={{ fontFamily: 'var(--font-poppins, sans-serif)' }}>Foodzie Admin</h1>
+            <p className="text-slate-500 mt-2">Restricted Access Portal</p>
+          </div>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Admin ID</label>
+              <input type="text" value={userId} onChange={e => setUserId(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-orange-500 outline-none transition-all" placeholder="Enter Admin ID" />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Password</label>
+              <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-orange-500 outline-none transition-all" placeholder="Enter password" />
+            </div>
+            {error && <p className="text-red-500 text-sm font-semibold">{error}</p>}
+            <button type="submit" className="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-orange-500/30 mt-4">
+              Secure Login
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  return <AdminDashboardContent />;
+}
+
+function AdminDashboardContent() {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [isLoading, setIsLoading] = useState(true);
