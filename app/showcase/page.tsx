@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import { 
   Leaf, Zap, Tag, MapPin, Navigation, CloudRain, ShieldCheck, 
   ScanLine, ArrowRight, Star, ShoppingBag, Clock, CheckCircle2,
-  TrendingUp, Award, Droplets, Sun, ChevronRight, Menu, X, Check
+  TrendingUp, Award, Droplets, Sun, ChevronRight, Menu, X, Check,
+  Store, Plus, Users
 } from 'lucide-react';
 
 // ─── 1. STUDENT PORTAL (/shop) OVERHAUL ──────────────────────────────────────────
