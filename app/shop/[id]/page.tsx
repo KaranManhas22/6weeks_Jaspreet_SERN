@@ -113,6 +113,24 @@ export default function VendorMenuPage() {
       ]);
       setVendor(menuData);
       setVacancies(vacsData || []);
+
+      const addItemId = searchParams?.get('add_item');
+      if (addItemId && menuData.categories) {
+        let foundItem: FoodItem | null = null;
+        for (const cat of menuData.categories) {
+          foundItem = cat.items.find((i: FoodItem) => i.id === addItemId) || null;
+          if (foundItem) break;
+        }
+        if (foundItem && foundItem.stock > 0 && foundItem.isCooked) {
+          const currentCartVendor = useCartStore.getState().vendorId;
+          if (currentCartVendor && currentCartVendor !== vendorId) {
+            setPendingItem(foundItem);
+          } else {
+            useCartStore.getState().addItem(foundItem, vendorId);
+          }
+          router.replace(`/shop/${vendorId}`);
+        }
+      }
       
       // Load student profile if logged in
       try {
@@ -457,9 +475,9 @@ export default function VendorMenuPage() {
                                           </div>
                                           <button 
                                             onClick={() => setSelectedReviewItem(item)}
-                                            className="text-[11px] text-gray-400 hover:text-orange-500 hover:underline font-semibold"
+                                            className="flex items-center gap-1 px-2 py-1 bg-gray-100 hover:bg-orange-100 text-gray-600 hover:text-orange-600 rounded-lg text-xs font-semibold transition-colors"
                                           >
-                                            See all reviews ({item.reviewCount})
+                                            <Star className="w-3 h-3" /> Reviews ({item.reviewCount})
                                           </button>
                                           {studentProfile && (
                                             <button 
@@ -474,9 +492,9 @@ export default function VendorMenuPage() {
                                         <div className="flex items-center gap-3 mt-0.5 flex-wrap">
                                           <button 
                                             onClick={() => setSelectedReviewItem(item)}
-                                            className="text-[11px] text-gray-400 hover:text-orange-500 hover:underline font-semibold"
+                                            className="flex items-center gap-1 px-2 py-1 bg-gray-100 hover:bg-orange-100 text-gray-500 hover:text-orange-600 rounded-lg text-xs font-medium transition-colors"
                                           >
-                                            See all reviews
+                                            <Star className="w-3 h-3" /> Reviews
                                           </button>
                                           {studentProfile && (
                                             <button 

@@ -462,7 +462,7 @@ export default function ShopPage() {
                     .map((item, idx) => (
                       <div 
                         key={`${item.id}-${idx}`} 
-                        onClick={() => router.push(`/shop/${item.vendorId}`)}
+                        onClick={() => router.push(`/shop/${item.vendorId}?add_item=${item.id}`)}
                         className="bg-white dark:bg-gray-900 rounded-2xl p-4 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg hover:border-orange-500/30 transition-all cursor-pointer group"
                       >
                         <div className="w-full h-32 bg-gray-100 dark:bg-gray-800 rounded-xl mb-4 overflow-hidden relative">
