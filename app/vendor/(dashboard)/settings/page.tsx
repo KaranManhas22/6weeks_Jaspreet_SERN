@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { MapPin, useEffect, useState, useCallback } from 'react';
 import { 
   Store, 
   Mail, 
