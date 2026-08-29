@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { UtensilsCrossed, ArrowLeft, ReceiptRefund, Info } from 'lucide-react';
+import { UtensilsCrossed, ArrowLeft, RefreshCw, Info } from 'lucide-react';
 import { useBrand } from '@/context/BrandContext';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
@@ -35,7 +35,7 @@ export default function RefundsPage() {
       <main className="relative z-10 max-w-3xl mx-auto px-6 py-16">
         <div className="flex items-center gap-4 mb-8">
           <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center">
-            <ReceiptRefund className="w-6 h-6 text-orange-600 dark:text-orange-500" />
+            <RefreshCw className="w-6 h-6 text-orange-600 dark:text-orange-500" />
           </div>
           <h1 className="text-4xl font-black">Cancellation & Refund Policy</h1>
         </div>
