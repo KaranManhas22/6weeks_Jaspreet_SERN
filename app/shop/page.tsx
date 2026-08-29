@@ -156,7 +156,7 @@ export default function ShopPage() {
     fetchVendors();
   }, [selectedUniId]);
 
-  const filteredUnis = universities.filter(u => 
+  const filteredUnis = (searchUniQuery === userUniName || searchUniQuery.trim() === "") ? universities : universities.filter(u => 
     u.name.toLowerCase().includes(searchUniQuery.toLowerCase())
   );
 
