@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, MapPin, Store, ChevronDown, UtensilsCrossed, Loader2, Star, Clock, User, X } from 'lucide-react';
+import { Search, MapPin, Store, ChevronDown, UtensilsCrossed, Loader2, Star, Clock, User, Users, X } from 'lucide-react';
 import { api, decodeToken } from '@/lib/api';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
@@ -442,24 +442,82 @@ export default function ShopPage() {
           </div>
         )}
 
-        {/* Popular Near You (Placeholders) */}
-        {selectedUniId && vendors.length <= 3 && !isLoadingVendors && (
-          <div className="mt-8 border-t border-gray-200 dark:border-gray-800/60 pt-10">
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Popular Near You</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-white dark:bg-gray-900 rounded-2xl p-4 border border-gray-200 dark:border-gray-800 shadow-sm opacity-60 grayscale hover:grayscale-0 transition-all duration-300 cursor-not-allowed">
-                  <div className="w-full h-32 bg-gray-200 dark:bg-gray-800 rounded-xl mb-4 flex items-center justify-center">
-                    <UtensilsCrossed className="w-8 h-8 text-gray-400 dark:text-gray-600" />
-                  </div>
-                  <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-1">Coming Soon {i}</h4>
-                  <div className="flex items-center gap-2 text-xs text-gray-500">
-                    <Star className="w-3 h-3 fill-gray-400" />
-                    <span>New vendor joining</span>
-                  </div>
+        {/* Engaging Sections to fill up space instead of gray placeholders */}
+        {selectedUniId && !isLoadingVendors && (
+          <div className="mt-8 border-t border-gray-200 dark:border-gray-800/60 pt-10 space-y-12">
+            
+            {/* 1. Trending Bites / Best Items of the Week */}
+            {vendors.some(v => v.categories?.some(c => c.items?.length > 0)) && (
+              <div>
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    Trending This Week <span className="text-orange-500">🔥</span>
+                  </h3>
                 </div>
-              ))}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {vendors
+                    .flatMap(v => (v.categories || []).flatMap(c => (c.items || []).map((i: any) => ({ ...i, vendorName: v.vendorName, vendorId: v.vendorId }))))
+                    .sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0)) // Sort by rating if available
+                    .slice(0, 4)
+                    .map((item, idx) => (
+                      <div 
+                        key={`${item.id}-${idx}`} 
+                        onClick={() => router.push(`/shop/${item.vendorId}`)}
+                        className="bg-white dark:bg-gray-900 rounded-2xl p-4 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg hover:border-orange-500/30 transition-all cursor-pointer group"
+                      >
+                        <div className="w-full h-32 bg-gray-100 dark:bg-gray-800 rounded-xl mb-4 overflow-hidden relative">
+                          {item.imageUrl ? (
+                            <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <UtensilsCrossed className="w-8 h-8 text-gray-300 dark:text-gray-600" />
+                            </div>
+                          )}
+                          {item.discount && (
+                            <div className="absolute top-0 right-0 bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg">
+                              SALE
+                            </div>
+                          )}
+                        </div>
+                        <h4 className="font-bold text-gray-900 dark:text-white text-sm mb-1 line-clamp-1 group-hover:text-orange-500 transition-colors">{item.name}</h4>
+                        <div className="flex items-center justify-between text-xs mt-2">
+                          <span className="text-gray-500 truncate max-w-[100px]">By {item.vendorName}</span>
+                          <span className="font-black text-gray-900 dark:text-white">₹${item.price}</span>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
+
+            {/* 2. Why Foodzie / Platform Perks */}
+            <div>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Why Order With Foodzie?</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-orange-50 dark:bg-orange-500/5 rounded-3xl p-6 border border-orange-100 dark:border-orange-500/10">
+                  <div className="w-12 h-12 bg-orange-100 dark:bg-orange-500/20 rounded-2xl flex items-center justify-center mb-4 text-orange-600 dark:text-orange-400">
+                    <Clock className="w-6 h-6" />
+                  </div>
+                  <h4 className="font-bold text-gray-900 dark:text-white mb-2">Zero Wait Times</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Order from your dorm, get notified when it's ready, and grab your food hot without standing in line.</p>
+                </div>
+                <div className="bg-amber-50 dark:bg-amber-500/5 rounded-3xl p-6 border border-amber-100 dark:border-amber-500/10">
+                  <div className="w-12 h-12 bg-amber-100 dark:bg-amber-500/20 rounded-2xl flex items-center justify-center mb-4 text-amber-600 dark:text-amber-400">
+                    <Users className="w-6 h-6" />
+                  </div>
+                  <h4 className="font-bold text-gray-900 dark:text-white mb-2">Squad Orders</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Invite your friends to a shared cart. Everyone adds what they want, checkout once.</p>
+                </div>
+                <div className="bg-green-50 dark:bg-green-500/5 rounded-3xl p-6 border border-green-100 dark:border-green-500/10">
+                  <div className="w-12 h-12 bg-green-100 dark:bg-green-500/20 rounded-2xl flex items-center justify-center mb-4 text-green-600 dark:text-green-400">
+                    <Star className="w-6 h-6" />
+                  </div>
+                  <h4 className="font-bold text-gray-900 dark:text-white mb-2">Verified Reviews</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Read honest reviews from other students. Only confirmed orders can leave ratings.</p>
+                </div>
+              </div>
             </div>
+
           </div>
         )}
 

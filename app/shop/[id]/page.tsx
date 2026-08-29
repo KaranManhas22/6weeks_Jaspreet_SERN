@@ -597,7 +597,7 @@ export default function VendorMenuPage() {
               )}
             </div>
             {!squadParam && (
-              <span className="text-lg font-black">${totalCartPrice.toFixed(2)}</span>
+              <span className="text-lg font-black">{formatCurrency(totalCartPrice)}</span>
             )}
           </button>
         </div>
