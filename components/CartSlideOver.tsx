@@ -67,7 +67,8 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
 
   useEffect(() => {
     api.get("/api/auth/me").then(res => {
-      if (res.campusCredits) setCampusCredits(res.campusCredits);
+      const totalC = (res.refundedCredits || 0) + (res.earnedCredits || 0);
+      setCampusCredits(totalC);
     }).catch(console.error);
     if (vendorId) {
       api.get<any>(`/api/menu/vendor/${vendorId}`)

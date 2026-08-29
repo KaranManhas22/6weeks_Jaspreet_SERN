@@ -140,6 +140,20 @@ export default function VendorOrdersPage() {
     });
   }, [orders, socketRef.current]);
 
+  const [delayingOrderId, setDelayingOrderId] = useState<string | null>(null);
+  
+  const handleDelay = async (orderId: string) => {
+    setDelayingOrderId(orderId);
+    try {
+      await api.post(`/api/orders/${orderId}/delay`, { delayMinutes: 15 });
+      alert("Student notified of a 15-minute delay.");
+    } catch (err: any) {
+      alert("Failed to delay order: " + err.message);
+    } finally {
+      setDelayingOrderId(null);
+    }
+  };
+
   const updateStatus = async (orderId: string, newStatus: Order['status']) => {
     // Save original state for rollback on error
     const originalOrders = [...orders];
