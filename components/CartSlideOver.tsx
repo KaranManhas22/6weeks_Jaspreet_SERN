@@ -137,7 +137,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
         console.error("Failed to remove from squad", err);
       }
     } else {
-      removeItem(itemId, vId);
+      removeItem(itemId);
     }
   };
 
