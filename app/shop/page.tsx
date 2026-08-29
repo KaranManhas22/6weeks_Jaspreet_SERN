@@ -166,10 +166,7 @@ export default function ShopPage() {
       return;
     }
     
-    // Optimistically close dropdown and show loading state
     setShowDropdown(false);
-    
-    // Prevent switching if they are already on this university
     if (uni.id === selectedUniId) return;
 
     alert("Checking your location to confirm you are near " + uni.name + "...");
@@ -183,30 +180,34 @@ export default function ShopPage() {
           const res = await api.post<{ nearest: University, distanceKm: number, isWithinRadius: boolean }>('/api/universities/nearest', { lat, lng });
           
           if (!res.isWithinRadius || !res.nearest || res.nearest.id !== uni.id) {
-            alert("Your location doesn't match the university's location (You must be within 10km). Nearest found: " + (res.nearest?.name || 'Unknown'));
-            // Revert the search box back to current university
+            alert("Your location doesn't match the university's location. We are keeping your registered campus: " + (userUniName || 'Unknown'));
+            
+            // Revert BOTH the text input AND the selected ID so vendors load correctly
             setSearchUniQuery(userUniName || '');
+            const originalUni = universities.find(u => u.name === userUniName);
+            if (originalUni) {
+              setSelectedUniId(originalUni.id);
+            }
             return;
           }
 
-          // If valid, update the backend profile
           await api.put('/api/auth/me', { universityName: uni.name });
-          
-          // Update local state
           setSearchUniQuery(uni.name);
           setSelectedUniId(uni.id);
           setUserUniName(uni.name);
-          
-          // Refresh token logic normally happens in background, but the local state is enough to fetch new vendors
           alert("Successfully switched to " + uni.name);
         } catch (err: any) {
           alert("Error verifying location: " + err.message);
           setSearchUniQuery(userUniName || '');
+          const originalUni = universities.find(u => u.name === userUniName);
+          if (originalUni) setSelectedUniId(originalUni.id);
         }
       },
       (error) => {
         alert("Location permission is required to switch campuses (to prevent accidental orders). Please enable GPS.");
         setSearchUniQuery(userUniName || '');
+        const originalUni = universities.find(u => u.name === userUniName);
+        if (originalUni) setSelectedUniId(originalUni.id);
       },
       { timeout: 10000 }
     );
