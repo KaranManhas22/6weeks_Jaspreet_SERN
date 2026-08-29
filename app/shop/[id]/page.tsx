@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Store, Clock, Plus, Minus, ShoppingBag, Loader2, User, Leaf, Flame, Star, X } from 'lucide-react';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
+import { ArrowLeft, Store, Clock, Plus, Minus, ShoppingBag, Loader2, User, Leaf, Flame, Star, X, Users, Share2 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useCartStore } from '@/lib/store/cartStore';
@@ -58,6 +58,10 @@ export default function VendorMenuPage() {
   const router = useRouter();
   const params = useParams();
   const vendorId = params.id as string;
+  const searchParams = useSearchParams();
+  const squadParam = searchParams.get('squad');
+
+  const [creatingSquad, setCreatingSquad] = useState(false);
 
   const [vendor, setVendor] = useState<VendorMenu | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -157,12 +161,26 @@ export default function VendorMenuPage() {
     }
   };
 
-  const handleAddToCart = (item: any) => {
+  const handleAddToCart = async (item: any) => {
     if (cartVendorId && cartVendorId !== vendorId) {
       setPendingItem(item);
       return;
     }
     addItem(item, vendorId);
+    
+    // Sync with squad API if active
+    if (squadParam) {
+      try {
+        await api.post(`/api/squad/${squadParam}/add`, {
+          foodItemId: item.id,
+          quantity: 1,
+          price: item.discount ? item.discount.effectivePrice : item.price,
+          name: item.name
+        });
+      } catch (err) {
+        console.error('Failed to sync to squad cart', err);
+      }
+    }
   };
 
   const handleApplySubmit = async (e: React.FormEvent) => {
@@ -270,6 +288,50 @@ export default function VendorMenuPage() {
               className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-3 rounded-2xl shrink-0 shadow-lg shadow-emerald-500/20 active:scale-95 transition-all text-center"
             >
               Apply Now
+            </button>
+          </div>
+        )}
+
+        {/* Squad Order Banner / Button */}
+        {squadParam ? (
+          <div className="mb-8 p-4 bg-orange-100 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-500/30 rounded-2xl flex items-center justify-between animate-in fade-in duration-300">
+            <div className="flex items-center gap-3">
+              <Users className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+              <div>
+                <p className="text-sm font-bold text-orange-900 dark:text-orange-100">Squad Order Active!</p>
+                <p className="text-xs text-orange-700 dark:text-orange-300">Invite friends to add to this cart.</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => {
+                const url = window.location.origin + `/shop/${vendorId}?squad=${squadParam}`;
+                navigator.clipboard.writeText(url);
+                alert('Invite link copied!');
+              }}
+              className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 text-orange-600 dark:text-orange-400 font-bold text-xs rounded-xl shadow-sm hover:shadow-md transition-all"
+            >
+              <Share2 className="w-4 h-4" /> Copy Invite Link
+            </button>
+          </div>
+        ) : (
+          <div className="mb-8 flex justify-end">
+            <button
+              onClick={async () => {
+                setCreatingSquad(true);
+                try {
+                  const res = await api.post<{squadId: string}>('/api/squad/create', { vendorId });
+                  router.push(`/shop/${vendorId}?squad=${res.squadId}`);
+                } catch (err: any) {
+                  alert(err.message || 'Failed to start squad order');
+                } finally {
+                  setCreatingSquad(false);
+                }
+              }}
+              disabled={creatingSquad}
+              className="flex items-center gap-2 px-5 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm rounded-xl shadow-md transition-all disabled:opacity-70"
+            >
+              {creatingSquad ? <Loader2 className="w-4 h-4 animate-spin" /> : <Users className="w-4 h-4" />}
+              Start a Squad Order
             </button>
           </div>
         )}
@@ -431,6 +493,25 @@ export default function VendorMenuPage() {
                                   {item.description && (
                                     <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mt-1.5">{item.description}</p>
                                   )}
+
+                                  {/* VERIFIED REVIEWS */}
+                                  {item.reviews && item.reviews.length > 0 && (
+                                    <div className="mt-2 flex items-center gap-2">
+                                      <div className="flex items-center text-yellow-400">
+                                        <Star className="w-3.5 h-3.5 fill-current" />
+                                        <span className="text-[10px] font-bold text-gray-700 dark:text-gray-300 ml-1">
+                                          {(item.reviews.reduce((acc, r) => acc + r.rating, 0) / item.reviews.length).toFixed(1)}
+                                        </span>
+                                      </div>
+                                      <span className="text-[10px] text-gray-400">({item.reviews.length} reviews)</span>
+                                      {item.reviews[0].comment && (
+                                        <span className="text-[10px] text-gray-500 italic truncate max-w-[120px]">
+                                          "{item.reviews[0].comment}"
+                                        </span>
+                                      )}
+                                    </div>
+                                  )}
+
                                   <div className="flex items-center gap-3 mt-2 text-xs font-medium text-gray-600 dark:text-gray-400">
                                     {item.isCooked && (
                                       <span className="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-md">
@@ -496,23 +577,34 @@ export default function VendorMenuPage() {
       </main>
 
       {/* Floating Cart Button */}
-      {totalCartItems > 0 && (
+      {(totalCartItems > 0 || squadParam) && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-md w-full px-4">
           <button 
             onClick={() => setIsCartOpen(true)}
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-6 rounded-2xl flex items-center justify-between shadow-2xl shadow-orange-500/20 transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150"
+            className={`w-full ${squadParam ? 'bg-green-600 hover:bg-green-700 shadow-green-500/20' : 'bg-orange-500 hover:bg-orange-600 shadow-orange-500/20'} text-white font-bold py-4 px-6 rounded-2xl flex items-center justify-between shadow-2xl transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150`}
           >
             <div className="flex items-center gap-3">
-              <span className="bg-orange-600 px-3 py-1 rounded-lg text-xs font-black">{totalCartItems}</span>
-              <span className="text-sm font-black tracking-wide uppercase">View Your Cart</span>
+              {squadParam ? (
+                <>
+                  <span className="bg-green-700 px-3 py-1 rounded-lg text-xs font-black animate-pulse flex items-center gap-1.5"><span className="w-1.5 h-1.5 bg-white rounded-full"></span> LIVE</span>
+                  <span className="text-sm font-black tracking-wide uppercase">View Squad Cart</span>
+                </>
+              ) : (
+                <>
+                  <span className="bg-orange-600 px-3 py-1 rounded-lg text-xs font-black">{totalCartItems}</span>
+                  <span className="text-sm font-black tracking-wide uppercase">View Your Cart</span>
+                </>
+              )}
             </div>
-            <span className="text-lg font-black">${totalCartPrice.toFixed(2)}</span>
+            {!squadParam && (
+              <span className="text-lg font-black">${totalCartPrice.toFixed(2)}</span>
+            )}
           </button>
         </div>
       )}
 
       {/* Cart Drawer */}
-      <CartSlideOver isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      <CartSlideOver isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} squadId={squadParam} />
 
       {/* Cart Conflict Modal */}
       {pendingItem && (

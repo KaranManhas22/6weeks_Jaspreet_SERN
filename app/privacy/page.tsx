@@ -35,21 +35,34 @@ export default function PrivacyPage() {
       <main className="relative z-10 max-w-3xl mx-auto px-6 py-16">
         <h1 className="text-4xl font-black mb-8">Privacy Policy</h1>
         <div className="prose prose-gray dark:prose-invert max-w-none space-y-6">
-          <p className="font-medium text-lg">Last Updated: July 2026</p>
+          <p className="font-medium text-lg">Last Updated: August 2026</p>
+          <p className="text-gray-600 dark:text-gray-400">
+            This Privacy Policy describes how Foodzie (operated by Jaspreet Bhatia) collects, uses, and shares your personal information.
+          </p>
           
           <h2 className="text-2xl font-bold mt-8">1. Information We Collect</h2>
           <p className="text-gray-600 dark:text-gray-400">
-            We collect information you provide directly to us, such as when you create or modify your account, request on-demand services, contact customer support, or otherwise communicate with us. This includes your name, email, phone number, and campus location.
+            We collect information you provide directly to us when creating an account or placing an order. This includes your name, email, phone number, campus location, and real-time delivery tracking data.
           </p>
 
           <h2 className="text-2xl font-bold mt-8">2. How We Use Information</h2>
           <p className="text-gray-600 dark:text-gray-400">
-            We may use the information we collect about you to provide, maintain, and improve our services, including to facilitate payments, send receipts, provide products and services you request, develop new features, and provide customer support.
+            We use your data strictly to operate the Foodzie platform: facilitating food orders, managing Campus Credits, dispatching riders, resolving disputes, and operating our AI Recommendation Waiter based on your past reviews.
           </p>
 
-          <h2 className="text-2xl font-bold mt-8">3. Sharing of Information</h2>
+          <h2 className="text-2xl font-bold mt-8">3. Information Sharing</h2>
           <p className="text-gray-600 dark:text-gray-400">
-            We may share your information with canteens and delivery riders to enable them to provide the services you request. For example, we share your name and campus location with the delivery rider to facilitate your delivery.
+            Your name, location, and order details are shared with campus Vendors and Delivery Riders exclusively to fulfill your order. We do not sell your personal data to third parties.
+          </p>
+
+          <h2 className="text-2xl font-bold mt-8">4. Data Operator & Contact</h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            Foodzie is solely operated by Jaspreet Bhatia.<br /><br />
+            <strong>Registered Address:</strong><br />
+            93, Mehmadpur, Adampur<br />
+            Jalandhar, 144102<br />
+            Punjab, India<br /><br />
+            <strong>Email:</strong> bhatiajaspreet161@gmail.com
           </p>
         </div>
       </main>

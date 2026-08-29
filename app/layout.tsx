@@ -18,8 +18,9 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: 'Foodzie — Campus Food Delivery',
-  description:
-    'Order hot food from your university canteen in seconds. Students order, vendors manage menus, everyone eats better.',
+  description: 'Order hot food from your university canteen in seconds.',
+  manifest: '/manifest.json',
+  themeColor: '#ea580c',
   keywords: ['campus food', 'university canteen', 'food delivery', 'foodzie'],
   icons: {
     icon: '/favicon.ico',
@@ -33,6 +34,23 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    console.log('ServiceWorker registration successful');
+                  }, function(err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                  });
+                });
+              }
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

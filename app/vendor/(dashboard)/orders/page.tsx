@@ -40,6 +40,7 @@ interface Order {
   createdAt: string;
   deliveryAddress: string;
   isCOD: boolean;
+  scheduledTime?: string;
   customer: {
     name: string;
     email: string;
@@ -298,6 +299,12 @@ function OrderCard({
 
   return (
     <div className={`bg-white dark:bg-gray-900/40 rounded-2xl p-4 shadow-sm border border-gray-205 dark:border-gray-800/80 hover:shadow-md dark:hover:shadow-orange-500/5 hover:-translate-y-0.5 transition-all duration-200 animate-in slide-in-from-top-2 ${getStatusBorder(order.status)}`}>
+      {order.scheduledTime && (
+        <div className="mb-3 flex items-center justify-center gap-2 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-bold py-2 px-3 rounded-xl border border-red-200 dark:border-red-800/50 shadow-sm">
+          <Clock className="w-4 h-4 animate-pulse" />
+          <span className="text-sm">Scheduled for: {new Date(order.scheduledTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        </div>
+      )}
       <div className="flex justify-between items-start mb-3">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-orange-100/50 dark:bg-orange-500/10 flex items-center justify-center">

@@ -1,19 +1,21 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Plus, Minus, ShoppingBag, Loader2, CheckCircle2, MapPin, Building, Compass, BookOpen, Coins, QrCode } from 'lucide-react';
+import { X, Plus, Minus, ShoppingBag, Loader2, CheckCircle2, MapPin, Building, Compass, BookOpen, Coins, QrCode, Clock, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/lib/store/cartStore';
 import { api } from '@/lib/api';
 import { DietaryIcon } from '@/components/DietaryIcon';
 import { useCurrency } from '@/context/CurrencyContext';
+import { io } from 'socket.io-client';
 
 interface CartSlideOverProps {
   isOpen: boolean;
   onClose: () => void;
+  squadId?: string | null;
 }
 
-export function CartSlideOver({ isOpen, onClose }: CartSlideOverProps) {
+export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) {
   const { formatCurrency } = useCurrency();
   const router = useRouter();
   const cart = useCartStore((state) => state.items);
@@ -29,8 +31,44 @@ export function CartSlideOver({ isOpen, onClose }: CartSlideOverProps) {
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [profileFetched, setProfileFetched] = useState(false);
   const [vendorUpi, setVendorUpi] = useState('bhatiajaspreet161@oksbi');
+  const [campusCredits, setCampusCredits] = useState(0);
+  const [useCredits, setUseCredits] = useState(false);
+  const [crossSellItem, setCrossSellItem] = useState<any>(null);
+
+  // Squad Cart State
+  const [squadCartItems, setSquadCartItems] = useState<any[]>([]);
+  const [squadTotal, setSquadTotal] = useState(0);
+  const isSquadMode = !!squadId;
+
+  const fetchSquadCart = async () => {
+    if (!squadId) return;
+    try {
+      const res = await api.get<any>(`/api/squad/${squadId}`);
+      setSquadCartItems(res.items || []);
+      setSquadTotal(res.totalAmount || 0);
+    } catch (err) {
+      console.error('Failed to fetch squad cart', err);
+    }
+  };
 
   useEffect(() => {
+    if (isOpen && isSquadMode) {
+      fetchSquadCart();
+      const socketUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000';
+      const socket = io(socketUrl);
+      socket.on('squadCartUpdated', () => {
+        fetchSquadCart();
+      });
+      return () => {
+        socket.disconnect();
+      };
+    }
+  }, [isOpen, isSquadMode, squadId]);
+
+  useEffect(() => {
+    api.get("/api/auth/me").then(res => {
+      if (res.campusCredits) setCampusCredits(res.campusCredits);
+    }).catch(console.error);
     if (vendorId) {
       api.get<any>(`/api/menu/vendor/${vendorId}`)
         .then(res => {
@@ -42,6 +80,20 @@ export function CartSlideOver({ isOpen, onClose }: CartSlideOverProps) {
     }
   }, [vendorId]);
 
+  
+  useEffect(() => {
+    const itemsToCheck = isSquadMode ? squadCartItems : Object.values(cart);
+    if (itemsToCheck.length > 0 && vendorId) {
+      api.post(`/api/menu/vendor/${vendorId}/cross-sell`, {
+        cartItemIds: itemsToCheck.map(i => i.id)
+      }).then(res => {
+        setCrossSellItem(res.recommendation);
+      }).catch(console.error);
+    } else {
+      setCrossSellItem(null);
+    }
+  }, [cart, squadCartItems, isSquadMode, vendorId]);
+  
   // Address fields
   const [locType, setLocType] = useState<'classroom' | 'park_ground'>('classroom');
   const [uniName, setUniName] = useState('');
@@ -52,9 +104,14 @@ export function CartSlideOver({ isOpen, onClose }: CartSlideOverProps) {
   const [parkDesc, setParkDesc] = useState('');
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'upi'>('upi');
+  const [deliveryTimePref, setDeliveryTimePref] = useState<'asap' | 'scheduled'>('asap');
+  const [scheduledTimeInput, setScheduledTimeInput] = useState('');
 
   const cartItems = Object.values(cart);
-  const total = getTotalPrice();
+  const displayItems = isSquadMode ? squadCartItems : cartItems;
+  const baseTotal = isSquadMode ? squadTotal : getTotalPrice();
+  const discount = useCredits ? Math.min(campusCredits, baseTotal) : 0;
+  const total = Math.max(0, baseTotal - discount);
 
   useEffect(() => {
     if (isOpen && !profileFetched) {
@@ -70,7 +127,7 @@ export function CartSlideOver({ isOpen, onClose }: CartSlideOverProps) {
   }, [isOpen, profileFetched]);
 
   const handleCheckout = async () => {
-    if (cartItems.length === 0 || !vendorId) return;
+    if (displayItems.length === 0 || !vendorId) return;
     setShowAddressModal(true);
   };
 
@@ -103,18 +160,28 @@ export function CartSlideOver({ isOpen, onClose }: CartSlideOverProps) {
   const placeOrder = async (useCOD: boolean, addressToUse: string) => {
     setIsProcessing(true);
     try {
-      const itemsPayload = cartItems.map(item => ({
+      const itemsPayload = displayItems.map(item => ({
         foodItemId: item.id,
         quantity: item.quantity,
         priceAtTime: item.discount ? item.discount.effectivePrice : item.price,
       }));
+
+      let scheduledTimeISO = undefined;
+      if (deliveryTimePref === 'scheduled' && scheduledTimeInput) {
+        const now = new Date();
+        const [hours, minutes] = scheduledTimeInput.split(':').map(Number);
+        now.setHours(hours, minutes, 0, 0);
+        scheduledTimeISO = now.toISOString();
+      }
 
       const res = await api.post<{ success: boolean; foodzieOrderId: string }>('/api/orders', {
         vendorId,
         items: itemsPayload,
         totalAmount: total,
         deliveryAddress: addressToUse,
-        isCOD: useCOD
+        isCOD: useCOD,
+        appliedCredits: useCredits ? discount : 0,
+        scheduledTime: scheduledTimeISO
       });
 
       console.log('✅ Order placed successfully!', res);
@@ -152,6 +219,12 @@ export function CartSlideOver({ isOpen, onClose }: CartSlideOverProps) {
           <div className="flex items-center gap-2 text-gray-900 dark:text-white">
             <ShoppingBag className="w-5 h-5 text-orange-500" />
             <h2 className="text-xl font-bold">Your Cart</h2>
+            {isSquadMode && (
+              <span className="ml-2 flex items-center gap-1.5 px-2.5 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-black uppercase tracking-wider rounded-full border border-green-200 dark:border-green-800">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                Live Squad
+              </span>
+            )}
           </div>
           <button 
             onClick={onClose}
@@ -171,7 +244,7 @@ export function CartSlideOver({ isOpen, onClose }: CartSlideOverProps) {
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Order Confirmed!</h3>
               <p className="text-gray-500 dark:text-gray-400">Your order has been placed successfully.</p>
             </div>
-          ) : cartItems.length === 0 ? (
+          ) : displayItems.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 space-y-4">
               <ShoppingBag className="w-16 h-16 opacity-20" />
               <p className="text-lg">Your cart is empty</p>
@@ -184,7 +257,7 @@ export function CartSlideOver({ isOpen, onClose }: CartSlideOverProps) {
             </div>
           ) : (
             <div className="space-y-6">
-              {cartItems.map((item) => {
+              {displayItems.map((item) => {
                 const price = item.discount ? item.discount.effectivePrice : item.price;
                 return (
                   <div key={item.id} className="flex gap-4 bg-gray-50 dark:bg-gray-900/50 p-3 rounded-2xl border border-gray-200 dark:border-gray-800">
@@ -239,7 +312,7 @@ export function CartSlideOver({ isOpen, onClose }: CartSlideOverProps) {
           )}
         </div>
 
-        {cartItems.length > 0 && !orderSuccess && (
+        {displayItems.length > 0 && !orderSuccess && (
           <div className="p-6 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
             <button 
               onClick={handleCheckout}
@@ -384,6 +457,51 @@ export function CartSlideOver({ isOpen, onClose }: CartSlideOverProps) {
                   </div>
                 </div>
               )}
+
+              {/* Delivery Time Preference */}
+              <div className="space-y-2 pt-2 border-t border-gray-100 dark:border-gray-800">
+                <label className="text-xs font-black text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+                  Delivery Time *
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setDeliveryTimePref('asap')}
+                    className={`flex flex-col items-center justify-center p-3 rounded-2xl border text-center transition-all ${
+                      deliveryTimePref === 'asap'
+                        ? 'border-orange-500 bg-orange-50/50 dark:bg-orange-950/20 text-orange-600 dark:text-orange-400 font-bold shadow-sm'
+                        : 'border-gray-200 dark:border-gray-800 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
+                    }`}
+                  >
+                    <Clock className="w-5 h-5 mb-1 text-orange-500" />
+                    <span className="text-xs">ASAP</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDeliveryTimePref('scheduled')}
+                    className={`flex flex-col items-center justify-center p-3 rounded-2xl border text-center transition-all ${
+                      deliveryTimePref === 'scheduled'
+                        ? 'border-orange-500 bg-orange-50/50 dark:bg-orange-950/20 text-orange-600 dark:text-orange-400 font-bold shadow-sm'
+                        : 'border-gray-200 dark:border-gray-800 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
+                    }`}
+                  >
+                    <Clock className="w-5 h-5 mb-1 text-orange-500" />
+                    <span className="text-xs">Schedule Later</span>
+                  </button>
+                </div>
+                {deliveryTimePref === 'scheduled' && (
+                  <div className="animate-in fade-in duration-300 space-y-1 mt-2">
+                    <label className="text-xs font-black text-gray-400 uppercase tracking-wider">Select Time</label>
+                    <input
+                      type="time"
+                      value={scheduledTimeInput}
+                      onChange={(e) => setScheduledTimeInput(e.target.value)}
+                      className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-500 transition-all text-sm font-medium"
+                      required={deliveryTimePref === 'scheduled'}
+                    />
+                  </div>
+                )}
+              </div>
 
               {/* Payment Method Selector */}
               <div className="space-y-2 pt-2 border-t border-gray-100 dark:border-gray-800">

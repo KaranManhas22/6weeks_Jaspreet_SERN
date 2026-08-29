@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { UtensilsCrossed, ArrowLeft } from 'lucide-react';
+import { UtensilsCrossed, ArrowLeft, ReceiptRefund, Info } from 'lucide-react';
 import { useBrand } from '@/context/BrandContext';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
@@ -33,24 +33,63 @@ export default function RefundsPage() {
       </header>
 
       <main className="relative z-10 max-w-3xl mx-auto px-6 py-16">
-        <h1 className="text-4xl font-black mb-8">Refund & Cancellations</h1>
-        <div className="prose prose-gray dark:prose-invert max-w-none space-y-6">
-          <p className="font-medium text-lg">Last Updated: July 2026</p>
-          
-          <h2 className="text-2xl font-bold mt-8">1. Order Cancellations</h2>
-          <p className="text-gray-600 dark:text-gray-400">
-            Orders can only be cancelled before they are accepted by the canteen. Once a canteen has begun preparing your food, the order cannot be cancelled through the app.
-          </p>
+        <div className="flex items-center gap-4 mb-8">
+          <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center">
+            <ReceiptRefund className="w-6 h-6 text-orange-600 dark:text-orange-500" />
+          </div>
+          <h1 className="text-4xl font-black">Cancellation & Refund Policy</h1>
+        </div>
 
-          <h2 className="text-2xl font-bold mt-8">2. Refunds for Failed Orders</h2>
-          <p className="text-gray-600 dark:text-gray-400">
-            Because payments are processed directly to the canteen's UPI ID, {brandName} does not hold your funds. If an order fails or is rejected after payment, the canteen is responsible for initiating the refund to your original payment method. 
-          </p>
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-2xl p-6 mb-10 flex gap-4">
+          <Info className="w-6 h-6 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+          <div>
+            <h3 className="font-bold text-blue-900 dark:text-blue-300 mb-1">Campus Credits Only</h3>
+            <p className="text-blue-800 dark:text-blue-400 text-sm">
+              All refunds on the Foodzie platform are processed exclusively in the form of <strong>Campus Credits</strong> returned to your wallet. We do not provide cash, UPI, or bank account refunds under any circumstances.
+            </p>
+          </div>
+        </div>
+        
+        <div className="space-y-8">
+          <section>
+            <h2 className="text-xl font-bold mb-3 flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-xs">1</span>
+              Vendor Rejections
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 ml-8">
+              If a vendor rejects your order (e.g., due to an item being out of stock or the kitchen closing), your order is immediately cancelled and 100% of your spent Campus Credits are instantly refunded to your wallet.
+            </p>
+          </section>
 
-          <h2 className="text-2xl font-bold mt-8">3. Quality Disputes</h2>
-          <p className="text-gray-600 dark:text-gray-400">
-            If you receive incorrect or unsatisfactory food, please contact the canteen directly via the contact details provided in your order receipt. {brandName} is not liable for food quality or preparation errors.
-          </p>
+          <section>
+            <h2 className="text-xl font-bold mb-3 flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-xs">2</span>
+              Pre-Preparation Cancellations
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 ml-8">
+              Students can freely cancel their order directly from the app <strong>before</strong> the vendor marks the items as "Preparing". If you cancel during this grace period, you will receive a full refund of your Campus Credits immediately.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold mb-3 flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-xs">3</span>
+              Post-Preparation Cancellation Requests
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 ml-8">
+              Once the vendor confirms the order and begins cooking, direct cancellation is disabled to prevent food waste. You may submit a "Cancellation Request", but the vendor holds the sole discretion to accept or deny it. If the vendor denies the request, no refund is provided, and you are expected to collect your food.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold mb-3 flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-xs">4</span>
+              Uncollected Orders
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 ml-8">
+              If a rider attempts to deliver your order but cannot reach you, or if you fail to pick up a self-pickup order within the allotted time frame, the order will be marked as completed. No refunds will be issued for uncollected food.
+            </p>
+          </section>
         </div>
       </main>
     </div>

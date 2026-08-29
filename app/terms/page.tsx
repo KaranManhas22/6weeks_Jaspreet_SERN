@@ -35,26 +35,26 @@ export default function TermsPage() {
       <main className="relative z-10 max-w-3xl mx-auto px-6 py-16">
         <h1 className="text-4xl font-black mb-8">Terms of Service</h1>
         <div className="prose prose-gray dark:prose-invert max-w-none space-y-6">
-          <p className="font-medium text-lg">Last Updated: July 2026</p>
+          <p className="font-medium text-lg">Last Updated: August 2026</p>
           
-          <h2 className="text-2xl font-bold mt-8">1. Acceptance of Terms</h2>
+          <h2 className="text-2xl font-bold mt-8">1. Introduction</h2>
           <p className="text-gray-600 dark:text-gray-400">
-            By accessing and using the {brandName} platform, you accept and agree to be bound by the terms and provision of this agreement. 
+            Welcome to Foodzie. By accessing our platform, you agree to these Terms of Service. Foodzie is operated independently by Jaspreet Bhatia, based in Punjab, India.
           </p>
 
-          <h2 className="text-2xl font-bold mt-8">2. Description of Service</h2>
+          <h2 className="text-2xl font-bold mt-8">2. Campus Credits System</h2>
           <p className="text-gray-600 dark:text-gray-400">
-            {brandName} is a software platform that connects students with campus canteens and student delivery riders. We do not prepare, package, or physically handle the food. We are a software broker facilitating orders and direct payments.
+            Foodzie uses a virtual "Campus Credits" system to facilitate transactions. Campus Credits hold no real-world fiat value outside the Foodzie platform. Attempting to exploit, hack, or fraudulently acquire Campus Credits will result in immediate account termination.
           </p>
 
-          <h2 className="text-2xl font-bold mt-8">3. User Accounts</h2>
+          <h2 className="text-2xl font-bold mt-8">3. Acceptable Use & Community Guidelines</h2>
           <p className="text-gray-600 dark:text-gray-400">
-            You must provide accurate information when creating an account. You are responsible for safeguarding the password and for all activities that occur under your account.
+            Students and Vendors must interact respectfully. Product reviews must reflect genuine dining experiences. Abusive language in reviews, harassment of delivery riders, or falsified orders are strict violations of our community guidelines.
           </p>
 
-          <h2 className="text-2xl font-bold mt-8">4. Payments</h2>
+          <h2 className="text-2xl font-bold mt-8">4. Jurisdiction</h2>
           <p className="text-gray-600 dark:text-gray-400">
-            {brandName} facilitates direct payment via UPI between the customer and the canteen. Any disputes over payment must be resolved directly with the canteen, although we will provide order logs to assist.
+            These terms are governed by the laws of Punjab, India. Any disputes arising from the use of Foodzie shall be subject to the exclusive jurisdiction of the courts in Jalandhar, Punjab.
           </p>
         </div>
       </main>
