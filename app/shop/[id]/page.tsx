@@ -98,7 +98,6 @@ export default function VendorMenuPage() {
   const [submittingApp, setSubmittingApp] = useState(false);
 
   // Review submission state
-  const [addReviewItem, setAddReviewItem] = useState<FoodItem | null>(null);
   const [newReviewRating, setNewReviewRating] = useState(5);
   const [newReviewComment, setNewReviewComment] = useState('');
   const [submittingReview, setSubmittingReview] = useState(false);
@@ -154,18 +153,20 @@ export default function VendorMenuPage() {
 
   const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!addReviewItem) return;
+    if (!selectedReviewItem) return;
     setSubmittingReview(true);
     try {
       await api.post('/api/reviews', {
         rating: newReviewRating,
         comment: newReviewComment.trim(),
         type: 'FoodItem',
-        foodItemId: addReviewItem.id,
+        foodItemId: selectedReviewItem.id,
         canteenId: vendorId
       });
       
-      setAddReviewItem(null);
+      setNewReviewRating(5);
+      setNewReviewComment('');
+      setSelectedReviewItem(null);
       setNewReviewRating(5);
       setNewReviewComment('');
       
@@ -654,19 +655,6 @@ export default function VendorMenuPage() {
                 <span className="flex items-center gap-1.5">
                   <Star className="w-5 h-5 text-amber-500 fill-amber-500" /> Customer Reviews
                 </span>
-                {studentProfile && (
-                  <button
-                    onClick={() => {
-                      setAddReviewItem(selectedReviewItem);
-                      setSelectedReviewItem(null);
-                      setNewReviewRating(5);
-                      setNewReviewComment('');
-                    }}
-                    className="bg-orange-500 hover:bg-orange-600 text-white font-bold text-[10px] uppercase px-3 py-1.5 rounded-xl shadow-md transition-all active:scale-95 shrink-0"
-                  >
-                    + Add Review
-                  </button>
-                )}
               </h3>
               <p className="text-sm font-semibold text-orange-500">{selectedReviewItem.name}</p>
             </div>
@@ -690,9 +678,48 @@ export default function VendorMenuPage() {
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-black dark:text-gray-400 text-center py-6">No reviews left for this item yet.</p>
+                <p className="text-sm text-black dark:text-gray-400 text-center py-6">No reviews left for this item yet. Be the first to review!</p>
               )}
             </div>
+
+            {studentProfile && (
+              <div className="border-t border-gray-200 dark:border-gray-800 pt-4 mt-2">
+                <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-3">Write a Review</h4>
+                <form onSubmit={handleSubmitReview} className="space-y-3 font-bold text-xs text-gray-700 dark:text-gray-300">
+                  <div className="space-y-1.5">
+                    <div className="flex gap-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setNewReviewRating(star)}
+                          className="p-1 hover:scale-110 transition-transform"
+                        >
+                          <Star className={`w-6 h-6 ${star <= newReviewRating ? 'text-amber-400 fill-amber-400' : 'text-gray-300 dark:text-gray-750'}`} />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <textarea
+                      value={newReviewComment}
+                      onChange={(e) => setNewReviewComment(e.target.value)}
+                      placeholder="e.g. Tastes amazing, perfect spice level!"
+                      rows={2}
+                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 outline-none text-black dark:text-white focus:ring-2 focus:ring-orange-500 font-semibold resize-none"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={submittingReview}
+                    className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5 active:scale-95 disabled:opacity-50 text-[11px] uppercase"
+                  >
+                    {submittingReview && <Loader2 className="w-3 h-3 animate-spin" />}
+                    Submit Review
+                  </button>
+                </form>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -798,67 +825,6 @@ export default function VendorMenuPage() {
         </div>
       )}
 
-      {/* Add Review Modal */}
-      {addReviewItem && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[99] flex items-center justify-center p-6 animate-in fade-in duration-300">
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-6 max-w-md w-full space-y-5 text-left shadow-2xl relative">
-            <button 
-              onClick={() => setAddReviewItem(null)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <div className="border-b border-gray-200 dark:border-gray-800 pb-3">
-              <h3 className="text-lg font-bold text-gray-950 dark:text-white">Write a Review</h3>
-              <p className="text-xs text-gray-550 dark:text-gray-400 mt-1 font-semibold">Share your feedback for <strong className="text-orange-500 font-black">{addReviewItem.name}</strong></p>
-            </div>
-            <form onSubmit={handleSubmitReview} className="space-y-4 font-bold text-xs text-gray-700 dark:text-gray-300">
-              <div className="space-y-2">
-                <label className="text-[9px] text-gray-400 uppercase tracking-wider block">Rating *</label>
-                <div className="flex gap-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      type="button"
-                      onClick={() => setNewReviewRating(star)}
-                      className="p-1 hover:scale-110 transition-transform"
-                    >
-                      <Star className={`w-8 h-8 ${star <= newReviewRating ? 'text-amber-400 fill-amber-400' : 'text-gray-300 dark:text-gray-750'}`} />
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-[9px] text-gray-400 uppercase tracking-wider block font-black">Your Review (Optional)</label>
-                <textarea
-                  value={newReviewComment}
-                  onChange={(e) => setNewReviewComment(e.target.value)}
-                  placeholder="e.g. Tastes amazing, perfect spice level!"
-                  rows={3}
-                  className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl p-3 outline-none text-black dark:text-white focus:ring-2 focus:ring-orange-500 font-semibold resize-none"
-                />
-              </div>
-              <div className="pt-2 flex gap-4 uppercase font-bold text-xs">
-                <button
-                  type="button"
-                  onClick={() => setAddReviewItem(null)}
-                  className="flex-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-white py-3 rounded-xl border border-gray-200 dark:border-gray-700 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={submittingReview}
-                  className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-500/70 text-white py-3 rounded-xl transition-all shadow-lg flex items-center justify-center gap-1.5 active:scale-95 disabled:opacity-50"
-                >
-                  {submittingReview && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                  Submit Review
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
