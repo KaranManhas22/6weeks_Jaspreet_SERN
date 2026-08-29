@@ -479,14 +479,6 @@ export default function VendorMenuPage() {
                                           >
                                             <Star className="w-3 h-3" /> Reviews ({item.reviewCount})
                                           </button>
-                                          {studentProfile && (
-                                            <button 
-                                              onClick={() => { setAddReviewItem(item); setNewReviewRating(5); setNewReviewComment(''); }}
-                                              className="text-[10px] text-gray-400 hover:text-orange-500 font-bold hover:underline"
-                                            >
-                                              + Add Review
-                                            </button>
-                                          )}
                                         </div>
                                       ) : (
                                         <div className="flex items-center gap-3 mt-0.5 flex-wrap">
@@ -496,14 +488,6 @@ export default function VendorMenuPage() {
                                           >
                                             <Star className="w-3 h-3" /> Reviews
                                           </button>
-                                          {studentProfile && (
-                                            <button 
-                                              onClick={() => { setAddReviewItem(item); setNewReviewRating(5); setNewReviewComment(''); }}
-                                              className="text-[10px] text-gray-400 hover:text-orange-500 font-bold hover:underline"
-                                            >
-                                              + Add Review
-                                            </button>
-                                          )}
                                         </div>
                                       )}
                                     </div>
