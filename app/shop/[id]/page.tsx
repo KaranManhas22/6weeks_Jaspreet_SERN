@@ -476,7 +476,7 @@ export default function VendorMenuPage() {
                                           </div>
                                           <button 
                                             onClick={() => setSelectedReviewItem(item)}
-                                            className="flex items-center gap-1 px-2 py-1 bg-gray-100 hover:bg-orange-100 text-gray-600 hover:text-orange-600 rounded-lg text-xs font-semibold transition-colors"
+                                            className="flex items-center gap-1 px-2 py-1 bg-gray-100 dark:bg-orange-500 hover:bg-orange-100 dark:hover:bg-orange-600 text-gray-600 dark:text-white hover:text-orange-600 dark:hover:text-white rounded-lg text-xs font-semibold transition-colors"
                                           >
                                             <Star className="w-3 h-3" /> Reviews ({item.reviewCount})
                                           </button>
@@ -485,7 +485,7 @@ export default function VendorMenuPage() {
                                         <div className="flex items-center gap-3 mt-0.5 flex-wrap">
                                           <button 
                                             onClick={() => setSelectedReviewItem(item)}
-                                            className="flex items-center gap-1 px-2 py-1 bg-gray-100 hover:bg-orange-100 text-gray-500 hover:text-orange-600 rounded-lg text-xs font-medium transition-colors"
+                                            className="flex items-center gap-1 px-2 py-1 bg-gray-100 dark:bg-orange-500 hover:bg-orange-100 dark:hover:bg-orange-600 text-gray-500 dark:text-white hover:text-orange-600 dark:hover:text-white rounded-lg text-xs font-medium transition-colors"
                                           >
                                             <Star className="w-3 h-3" /> Reviews
                                           </button>
