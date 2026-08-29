@@ -126,6 +126,36 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
         .catch(err => console.error('Failed to pre-fill address:', err));
     }
   }, [isOpen, profileFetched]);
+  const handleRemoveItem = async (itemId: string, vId: string) => {
+    if (isSquadMode) {
+      try {
+        await api.post(`/api/squad/${squadId}/add`, {
+          foodItemId: itemId,
+          quantity: -1
+        });
+      } catch (err) {
+        console.error("Failed to remove from squad", err);
+      }
+    } else {
+      removeItem(itemId, vId);
+    }
+  };
+
+  const handleAddItem = async (item: any, vId: string) => {
+    if (isSquadMode) {
+      try {
+        await api.post(`/api/squad/${squadId}/add`, {
+          foodItemId: item.id,
+          quantity: 1
+        });
+      } catch (err) {
+        console.error("Failed to add to squad", err);
+      }
+    } else {
+      addItem(item, vId);
+    }
+  };
+
 
   const handleCheckout = async () => {
     if (displayItems.length === 0 || !vendorId) return;
@@ -286,7 +316,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
                           </button>
                           <span className="w-4 text-center font-semibold text-xs text-gray-900 dark:text-white">{item.quantity}</span>
                           <button 
-                            onClick={() => addItem(item, vendorId!)}
+                            onClick={() => handleAddItem(item, vendorId!)}
                             disabled={!item.isCooked && item.stock <= item.quantity}
                             className="w-6 h-6 flex items-center justify-center text-orange-600 dark:text-orange-500 hover:bg-orange-50 dark:hover:bg-gray-700 rounded transition-colors disabled:opacity-50"
                           >
