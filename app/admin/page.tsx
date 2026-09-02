@@ -85,7 +85,7 @@ function AdminDashboardContent({ onLogout }: { onLogout: () => void }) {
   const [analytics, setAnalytics] = useState<any>(null);
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [editForm, setEditForm] = useState({ name: '', phone: '', email: '', role: '' });
+  const [editForm, setEditForm] = useState({ name: '', phone: '', email: '', role: '', password: '' });
   const [isUpdating, setIsUpdating] = useState(false);
 
   const handleEditClick = () => {
@@ -93,7 +93,8 @@ function AdminDashboardContent({ onLogout }: { onLogout: () => void }) {
       name: selectedUser.name || '',
       phone: selectedUser.phone || '',
       email: selectedUser.email || '',
-      role: selectedUser.role || ''
+      role: selectedUser.role || '',
+      password: ''
     });
     setIsEditing(true);
   };
@@ -366,11 +367,15 @@ function AdminDashboardContent({ onLogout }: { onLogout: () => void }) {
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Role</label>
-                    <select value={editForm.role} onChange={e => setEditForm({...editForm, role: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white">
+                    <select value={editForm.role} onChange={e => setEditForm({...editForm, role: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white mb-4">
                       <option value="Student">Student</option>
                       <option value="Vendor">Vendor</option>
                       <option value="Delivery">Delivery</option>
                     </select>
+                  </div>
+                  <div className="pt-4 border-t border-slate-200 dark:border-slate-700/50">
+                    <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">New Password (Optional)</label>
+                    <input type="text" placeholder="Leave blank to keep unchanged" value={editForm.password} onChange={e => setEditForm({...editForm, password: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white" />
                   </div>
                 </div>
               ) : (
