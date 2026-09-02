@@ -84,6 +84,34 @@ function AdminDashboardContent({ onLogout }: { onLogout: () => void }) {
   const [users, setUsers] = useState<any[]>([]);
   const [analytics, setAnalytics] = useState<any>(null);
   const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({ name: '', phone: '', email: '', role: '' });
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const handleEditClick = () => {
+    setEditForm({
+      name: selectedUser.name || '',
+      phone: selectedUser.phone || '',
+      email: selectedUser.email || '',
+      role: selectedUser.role || ''
+    });
+    setIsEditing(true);
+  };
+
+  const handleUpdateUser = async () => {
+    setIsUpdating(true);
+    try {
+      const updated = await api.patch<any>(`/api/admin/users/${selectedUser.id}`, editForm);
+      setUsers(users.map(u => u.id === selectedUser.id ? { ...u, ...updated } : u));
+      setSelectedUser({ ...selectedUser, ...updated });
+      setIsEditing(false);
+    } catch (err) {
+      console.error('Failed to update user', err);
+      alert('Failed to update user');
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -303,9 +331,9 @@ function AdminDashboardContent({ onLogout }: { onLogout: () => void }) {
       {/* User Details Modal (Slide Over) */}
       {selectedUser && (
         <div className="fixed inset-0 z-[60] flex justify-end">
-          <div className="absolute inset-0 bg-slate-900/20 dark:bg-black/40 backdrop-blur-sm" onClick={() => setSelectedUser(null)}></div>
+          <div className="absolute inset-0 bg-slate-900/20 dark:bg-black/40 backdrop-blur-sm" onClick={() => { setSelectedUser(null); setIsEditing(false); }}></div>
           <div className="relative w-full max-w-md bg-white dark:bg-slate-900 h-full shadow-2xl border-l border-slate-200 dark:border-slate-800 p-6 sm:p-8 flex flex-col overflow-y-auto animate-in slide-in-from-right">
-            <button onClick={() => setSelectedUser(null)} className="absolute top-6 right-6 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors">
+            <button onClick={() => { setSelectedUser(null); setIsEditing(false); }} className="absolute top-6 right-6 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors">
               <X className="w-5 h-5" />
             </button>
             
@@ -322,62 +350,98 @@ function AdminDashboardContent({ onLogout }: { onLogout: () => void }) {
             </div>
 
             <div className="space-y-6 flex-1">
-              {/* Credentials Card for Vendors to send to them */}
-              <div className="bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/30 p-5 rounded-2xl">
-                <h4 className="text-sm font-bold text-orange-800 dark:text-orange-300 flex items-center gap-2 mb-4">
-                  <Key className="w-4 h-4" /> System Credentials
-                </h4>
-                <div className="space-y-3">
+              {isEditing ? (
+                <div className="space-y-4">
                   <div>
-                    <p className="text-xs text-orange-600/80 dark:text-orange-400/80 font-medium uppercase tracking-wider">Login ID (Email)</p>
-                    <div className="flex items-center gap-2 mt-1 bg-white dark:bg-slate-900 p-2.5 rounded-lg border border-orange-100 dark:border-orange-500/20">
-                      <Mail className="w-4 h-4 text-slate-400" />
-                      <span className="text-sm font-medium text-slate-900 dark:text-white select-all">{selectedUser.email}</span>
-                    </div>
+                    <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Name</label>
+                    <input type="text" value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white" />
                   </div>
                   <div>
-                    <p className="text-xs text-orange-600/80 dark:text-orange-400/80 font-medium uppercase tracking-wider">Default Password</p>
-                    <div className="flex items-center gap-2 mt-1 bg-white dark:bg-slate-900 p-2.5 rounded-lg border border-orange-100 dark:border-orange-500/20">
-                      <Key className="w-4 h-4 text-slate-400" />
-                      <span className="text-sm font-mono font-bold text-slate-900 dark:text-white select-all">password123</span>
-                    </div>
+                    <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Email</label>
+                    <input type="email" value={editForm.email} onChange={e => setEditForm({...editForm, email: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white" />
                   </div>
-                  <p className="text-xs text-orange-600 dark:text-orange-400 font-medium mt-2">
-                    Share these credentials securely with the {selectedUser.role.toLowerCase()}.
-                  </p>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Phone</label>
+                    <input type="text" value={editForm.phone} onChange={e => setEditForm({...editForm, phone: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Role</label>
+                    <select value={editForm.role} onChange={e => setEditForm({...editForm, role: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white">
+                      <option value="Student">Student</option>
+                      <option value="Vendor">Vendor</option>
+                      <option value="Delivery">Delivery</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <>
+                  <div className="bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/30 p-5 rounded-2xl">
+                    <h4 className="text-sm font-bold text-orange-800 dark:text-orange-300 flex items-center gap-2 mb-4">
+                      <Key className="w-4 h-4" /> System Credentials
+                    </h4>
+                    <div className="space-y-3">
+                      <div>
+                        <p className="text-xs text-orange-600/80 dark:text-orange-400/80 font-medium uppercase tracking-wider">Login ID (Email)</p>
+                        <div className="flex items-center gap-2 mt-1 bg-white dark:bg-slate-900 p-2.5 rounded-lg border border-orange-100 dark:border-orange-500/20">
+                          <Mail className="w-4 h-4 text-slate-400" />
+                          <span className="text-sm font-medium text-slate-900 dark:text-white select-all">{selectedUser.email}</span>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-xs text-orange-600/80 dark:text-orange-400/80 font-medium uppercase tracking-wider">Default Password</p>
+                        <div className="flex items-center gap-2 mt-1 bg-white dark:bg-slate-900 p-2.5 rounded-lg border border-orange-100 dark:border-orange-500/20">
+                          <Key className="w-4 h-4 text-slate-400" />
+                          <span className="text-sm font-mono font-bold text-slate-900 dark:text-white select-all">password123</span>
+                        </div>
+                      </div>
+                      <p className="text-xs text-orange-600 dark:text-orange-400 font-medium mt-2">
+                        Share these credentials securely with the {selectedUser.role.toLowerCase()}.
+                      </p>
+                    </div>
+                  </div>
 
-              {/* Info List */}
-              <div className="bg-slate-50 dark:bg-slate-800/30 rounded-2xl p-5 border border-slate-100 dark:border-slate-800 space-y-4">
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-slate-400 mt-0.5" />
-                  <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase">University</p>
-                    <p className="text-sm font-medium text-slate-900 dark:text-white mt-0.5">{selectedUser.university?.name || 'Not Assigned'}</p>
+                  <div className="bg-slate-50 dark:bg-slate-800/30 rounded-2xl p-5 border border-slate-100 dark:border-slate-800 space-y-4">
+                    <div className="flex items-start gap-3">
+                      <MapPin className="w-5 h-5 text-slate-400 mt-0.5" />
+                      <div>
+                        <p className="text-xs font-semibold text-slate-500 uppercase">University</p>
+                        <p className="text-sm font-medium text-slate-900 dark:text-white mt-0.5">{selectedUser.university?.name || 'Not Assigned'}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Phone className="w-5 h-5 text-slate-400 mt-0.5" />
+                      <div>
+                        <p className="text-xs font-semibold text-slate-500 uppercase">Contact Phone</p>
+                        <p className="text-sm font-medium text-slate-900 dark:text-white mt-0.5">{selectedUser.phone || 'N/A'}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-emerald-500 mt-0.5" />
+                      <div>
+                        <p className="text-xs font-semibold text-slate-500 uppercase">Account Status</p>
+                        <p className="text-sm font-medium text-slate-900 dark:text-white mt-0.5">Active & Verified</p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Phone className="w-5 h-5 text-slate-400 mt-0.5" />
-                  <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase">Contact Phone</p>
-                    <p className="text-sm font-medium text-slate-900 dark:text-white mt-0.5">{selectedUser.phone || 'N/A'}</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-emerald-500 mt-0.5" />
-                  <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase">Account Status</p>
-                    <p className="text-sm font-medium text-slate-900 dark:text-white mt-0.5">Active & Verified</p>
-                  </div>
-                </div>
-              </div>
+                </>
+              )}
             </div>
 
-            <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800">
-              <button className="w-full bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2">
-                <Edit2 className="w-4 h-4" /> Edit Profile
-              </button>
+            <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex gap-3">
+              {isEditing ? (
+                <>
+                  <button onClick={() => setIsEditing(false)} className="flex-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center">
+                    Cancel
+                  </button>
+                  <button onClick={handleUpdateUser} disabled={isUpdating} className="flex-1 bg-orange-500 hover:bg-orange-400 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2">
+                    {isUpdating ? 'Saving...' : 'Save Profile'}
+                  </button>
+                </>
+              ) : (
+                <button onClick={handleEditClick} className="w-full bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2">
+                  <Edit2 className="w-4 h-4" /> Edit Profile
+                </button>
+              )}
             </div>
           </div>
         </div>
