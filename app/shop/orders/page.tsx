@@ -87,7 +87,16 @@ export default function OrdersPage() {
     try {
       const orders = await api.get<Order[]>('/api/orders/customer');
       if (orders.length > 0) {
-        setOrder(orders[0]); // Show the most recent order
+        let targetId = null;
+        if (typeof window !== 'undefined') {
+          targetId = new URLSearchParams(window.location.search).get('orderId');
+        }
+        if (targetId) {
+          const found = orders.find(o => o.id === targetId);
+          setOrder(found || orders[0]);
+        } else {
+          setOrder(orders[0]); // Show the most recent order
+        }
       }
     } catch (err) {
       console.error('Failed to fetch orders:', err);

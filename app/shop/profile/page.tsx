@@ -262,7 +262,10 @@ export default function StudentProfilePage() {
                     <p className="text-xs text-gray-500 truncate max-w-[70%]">
                       {order.items.map(i => `${i.quantity}x ${i.foodItem.name}`).join(', ')}
                     </p>
-                    <button className="flex items-center gap-1 text-xs font-bold text-orange-500 hover:gap-2 transition-all">
+                    <button 
+                      onClick={() => router.push(`/shop/orders?orderId=${order.id}`)}
+                      className="flex items-center gap-1 text-xs font-bold text-orange-500 hover:gap-2 transition-all"
+                    >
                       Details <ChevronRight className="w-3 h-3" />
                     </button>
                   </div>
