@@ -6,13 +6,15 @@ import {
   TrendingUp, 
   ShoppingBag, 
   Users, 
+  User,
   BarChart3, 
   PieChart, 
   ChevronRight, 
   Loader2,
   ArrowUpRight,
   Target,
-  Trophy
+  Trophy,
+  Award
 } from 'lucide-react';
 import { api } from '@/lib/api';
 

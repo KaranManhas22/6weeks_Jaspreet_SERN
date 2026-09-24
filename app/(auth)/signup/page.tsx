@@ -10,6 +10,8 @@ import {
 } from 'lucide-react';
 import { api, setToken, decodeToken } from '@/lib/api';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { Button } from '@/components/ui/Button';
+import toast from 'react-hot-toast';
 
 interface University {
   id: string;
@@ -94,17 +96,23 @@ function SignupForm() {
     setError(null);
 
     if (!name.trim() || !email.trim() || !password) {
-      setError('Please fill in all required fields.');
+      const msg = 'Please fill in all required fields.';
+      setError(msg);
+      toast.error(msg);
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match.');
+      const msg = 'Passwords do not match.';
+      setError(msg);
+      toast.error(msg);
       return;
     }
 
     if (password.length < 8) {
-      setError('Password must be at least 8 characters.');
+      const msg = 'Password must be at least 8 characters.';
+      setError(msg);
+      toast.error(msg);
       return;
     }
 
@@ -126,6 +134,7 @@ function SignupForm() {
       if (!payload) throw new Error('Invalid token received from server.');
 
       setToken(data.token);
+      toast.success('Account created successfully!');
 
       if (payload.role === 'Vendor') {
         router.replace('/vendor/inventory');
@@ -133,7 +142,9 @@ function SignupForm() {
         router.replace('/shop');
       }
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Registration failed. Please try again.');
+      const errMsg = err instanceof Error ? err.message : 'Registration failed. Please try again.';
+      setError(errMsg);
+      toast.error(errMsg);
     } finally {
       setIsLoading(false);
     }
@@ -420,21 +431,14 @@ function SignupForm() {
                 : "🎓  You'll be taken to the food ordering page after signup."}
             </div>
 
-            <button
+            <Button
               id="signup-submit-btn"
               type="submit"
-              disabled={isLoading}
-              className="md:col-span-2 w-full mt-1 bg-orange-500 hover:bg-orange-400 disabled:bg-orange-500/50 text-white font-bold rounded-xl py-3.5 text-sm transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/35 hover:-translate-y-0.5 disabled:translate-y-0 active:scale-98"
+              isLoading={isLoading}
+              className="md:col-span-2 w-full mt-1 py-3.5 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/35 hover:-translate-y-0.5 active:scale-98"
             >
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Creating account…
-                </>
-              ) : (
-                `Create ${role === 'Vendor' ? 'Vendor' : 'Student'} Account`
-              )}
-            </button>
+              {`Create ${role === 'Vendor' ? 'Vendor' : 'Student'} Account`}
+            </Button>
           </form>
 
           <p className="text-center text-gray-500 text-sm mt-6">

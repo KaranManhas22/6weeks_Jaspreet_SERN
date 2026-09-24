@@ -5,10 +5,13 @@ import { useRouter } from 'next/navigation';
 import { useBrand } from '@/context/BrandContext';
 import Link from 'next/link';
 import {
-  Eye, EyeOff, UtensilsCrossed, Loader2, AlertCircle, ArrowLeft,
+  Eye, EyeOff, UtensilsCrossed, AlertCircle, ArrowLeft,
 } from 'lucide-react';
 import { api, setToken, decodeToken } from '@/lib/api';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import toast from 'react-hot-toast';
 
 interface AuthResponse {
   token: string;
@@ -52,6 +55,7 @@ export default function LoginPage() {
       }
 
       setToken(data.token);
+      toast.success('Successfully logged in!');
 
       if (userRoleLower === 'vendor' || userRoleLower === 'admin') {
         router.replace('/vendor/inventory');
@@ -61,7 +65,9 @@ export default function LoginPage() {
         router.replace('/shop');
       }
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
+      const errMsg = err instanceof Error ? err.message : 'Login failed. Please try again.';
+      setError(errMsg);
+      toast.error(errMsg);
     } finally {
       setIsLoading(false);
     }
@@ -126,65 +132,47 @@ export default function LoginPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Email / Username */}
-            <div>
-              <label htmlFor="login-email" className="block text-xs font-bold text-gray-500 dark:text-gray-400 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                Email address / Username
-              </label>
-              <input
-                id="login-email"
-                type="text"
-                autoComplete="username"
+            <Input
+              id="login-email"
+              type="text"
+              label="Email address / Username"
+              autoComplete="username"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@university.edu or Admin123"
+            />
+
+            <div className="relative">
+              <Input
+                id="login-password"
+                type={showPassword ? 'text' : 'password'}
+                label="Password"
+                autoComplete="current-password"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@university.edu or Admin123"
-                className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white placeholder-gray-500 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all font-medium"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="pr-12"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((p) => !p)}
+                className="absolute right-3 top-9 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors p-1 focus:outline-none focus:ring-2 focus:ring-orange-500/20 rounded-md"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
 
-            {/* Password */}
-            <div>
-              <label htmlFor="login-password" className="block text-xs font-bold text-gray-500 dark:text-gray-400 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  id="login-password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white placeholder-gray-500 rounded-xl px-4 py-3 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all font-medium"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((p) => !p)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors p-1"
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-
-            <button
+            <Button
               id="login-submit-btn"
               type="submit"
-              disabled={isLoading}
-              className="w-full mt-2 bg-orange-500 hover:bg-orange-400 disabled:bg-orange-500/50 text-white font-bold rounded-xl py-3.5 text-sm transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/35 hover:-translate-y-0.5 disabled:translate-y-0 active:scale-98"
+              isLoading={isLoading}
+              className="w-full mt-2 py-3.5 rounded-xl shadow-lg shadow-orange-500/20 hover:shadow-orange-500/35 hover:-translate-y-0.5 active:scale-95"
             >
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Signing in…
-                </>
-              ) : (
-                'Sign In'
-              )}
-            </button>
+              Sign In
+            </Button>
           </form>
 
           <p className="text-center text-gray-500 text-sm mt-6">
