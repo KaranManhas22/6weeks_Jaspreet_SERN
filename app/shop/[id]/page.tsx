@@ -391,15 +391,15 @@ export default function VendorMenuPage() {
 
         {/* Shop Category Navigation */}
         {vendor.categories.length > 0 && (
-          <div className="flex items-center gap-2.5 overflow-x-auto pb-4 mb-8 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
+          <div className="flex items-center gap-3 overflow-x-auto pb-4 mb-8 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
             {['All', ...vendor.categories.map((c) => c.categoryName)].map((catName) => (
               <button
                 key={catName}
                 onClick={() => setActiveCategory(catName)}
-                className={`whitespace-nowrap px-5 py-2.5 rounded-full text-xs font-bold transition-all border ${
+                className={`whitespace-nowrap px-6 py-2.5 rounded-full text-xs font-extrabold tracking-wide uppercase transition-all duration-300 ${
                   activeCategory === catName
-                    ? 'bg-orange-500 text-white border-orange-500 shadow-md shadow-orange-500/15'
-                    : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:border-orange-500/50 hover:bg-orange-50/50'
+                    ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/30 transform scale-105'
+                    : 'bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-500 hover:text-orange-500 dark:hover:text-orange-400 hover:border-orange-500/30 hover:bg-orange-50/50 dark:hover:bg-orange-500/10'
                 }`}
               >
                 {catName}
@@ -440,25 +440,25 @@ export default function VendorMenuPage() {
                         return (
                           <div 
                             key={item.id} 
-                            className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 flex flex-col hover:shadow-md transition-shadow group"
+                            className="bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800/80 rounded-[1.5rem] p-4 flex flex-col hover:border-orange-500/30 dark:hover:border-orange-500/30 hover:shadow-xl hover:shadow-orange-500/5 transition-all duration-300 group"
                           >
                             <div className="flex flex-col sm:flex-row gap-4 w-full">
                               {/* Image */}
-                              <div className="w-full sm:w-24 h-44 sm:h-24 shrink-0 bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 relative">
+                              <div className="w-full sm:w-28 h-44 sm:h-28 shrink-0 bg-gray-50 dark:bg-gray-800/50 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700/50 relative group-hover:shadow-md transition-shadow duration-300">
                                 {item.imageUrl ? (
-                                  <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                  <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out" />
                                 ) : (
                                   <div className="w-full h-full flex items-center justify-center">
-                                    <Store className="w-6 h-6 text-gray-400" />
+                                    <Store className="w-8 h-8 text-orange-500/50" />
                                   </div>
                                 )}
                                 {item.discount && (
-                                  <div className="absolute top-0 right-0 bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-bl-lg">
+                                  <div className="absolute top-0 right-0 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-xl shadow-sm">
                                     -{item.discount.percent}%
                                   </div>
                                 )}
-                                <div className="absolute bottom-1 left-1">
-                                  <DietaryIcon isVegetarian={item.isVegetarian} className="bg-white/90 dark:bg-gray-900/90 shadow-sm" />
+                                <div className="absolute bottom-2 left-2 shadow-sm rounded-full overflow-hidden border border-white/20">
+                                  <DietaryIcon isVegetarian={item.isVegetarian} className="bg-white/95 dark:bg-gray-900/95" />
                                 </div>
                               </div>
                               
@@ -466,90 +466,89 @@ export default function VendorMenuPage() {
                               <div className="flex-1 flex flex-col justify-between">
                                 <div>
                                   <div className="flex items-start justify-between gap-2">
-                                    <div className="flex flex-col">
-                                      <h3 className="font-bold text-gray-900 dark:text-white line-clamp-1">{item.name}</h3>
+                                    <div className="flex flex-col w-full">
+                                      <h3 className="font-extrabold text-gray-900 dark:text-white line-clamp-1 group-hover:text-orange-500 transition-colors">{item.name}</h3>
                                       {item.reviewCount && item.reviewCount > 0 ? (
-                                        <div className="flex items-center gap-3 mt-0.5 flex-wrap">
-                                          <div className="flex items-center gap-1 text-xs text-amber-550 font-semibold">
-                                            <Star className="w-3.5 h-3.5 fill-current" />
+                                        <div className="flex items-center gap-2 mt-1 flex-wrap">
+                                          <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-500/10 px-1.5 py-0.5 rounded-md text-[11px] text-amber-600 dark:text-amber-400 font-bold border border-amber-100 dark:border-amber-500/20">
+                                            <Star className="w-3 h-3 fill-current" />
                                             <span>{item.averageRating?.toFixed(1)}</span>
                                           </div>
                                           <button 
                                             onClick={() => setSelectedReviewItem(item)}
-                                            className="flex items-center gap-1 px-2 py-1 bg-gray-100 dark:bg-orange-500 hover:bg-orange-100 dark:hover:bg-orange-600 text-gray-600 dark:text-white hover:text-orange-600 dark:hover:text-white rounded-lg text-xs font-semibold transition-colors"
+                                            className="text-[10px] uppercase font-bold text-gray-500 hover:text-orange-500 transition-colors"
                                           >
-                                            <Star className="w-3 h-3" /> Reviews ({item.reviewCount})
+                                            Read {item.reviewCount} Reviews
                                           </button>
                                         </div>
                                       ) : (
-                                        <div className="flex items-center gap-3 mt-0.5 flex-wrap">
+                                        <div className="flex items-center gap-2 mt-1 flex-wrap">
                                           <button 
                                             onClick={() => setSelectedReviewItem(item)}
-                                            className="flex items-center gap-1 px-2 py-1 bg-gray-100 dark:bg-orange-500 hover:bg-orange-100 dark:hover:bg-orange-600 text-gray-500 dark:text-white hover:text-orange-600 dark:hover:text-white rounded-lg text-xs font-medium transition-colors"
+                                            className="text-[10px] uppercase font-bold text-gray-400 hover:text-orange-500 transition-colors"
                                           >
-                                            <Star className="w-3 h-3" /> Reviews
+                                            No Reviews Yet
                                           </button>
                                         </div>
                                       )}
                                     </div>
                                   </div>
                                   {item.description && (
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mt-1.5">{item.description}</p>
+                                    <p className="text-[11px] text-gray-500 dark:text-gray-400 line-clamp-2 mt-2 leading-relaxed">{item.description}</p>
                                   )}
 
                                   {/* VERIFIED REVIEWS */}
                                   {item.reviews && item.reviews.length > 0 && (
-                                    <div className="mt-2 flex items-center gap-2">
-                                      <div className="flex items-center text-yellow-400">
-                                        <Star className="w-3.5 h-3.5 fill-current" />
+                                    <div className="mt-2.5 flex items-center gap-1.5 bg-gray-50 dark:bg-gray-800/30 p-1.5 rounded-lg border border-gray-100 dark:border-gray-800/50">
+                                      <div className="flex items-center text-amber-400">
+                                        <Star className="w-3 h-3 fill-current" />
                                         <span className="text-[10px] font-bold text-gray-700 dark:text-gray-300 ml-1">
                                           {(item.reviews.reduce((acc, r) => acc + r.rating, 0) / item.reviews.length).toFixed(1)}
                                         </span>
                                       </div>
-                                      <span className="text-[10px] text-gray-400">({item.reviews.length} reviews)</span>
                                       {item.reviews[0].comment && (
-                                        <span className="text-[10px] text-gray-500 italic truncate max-w-[120px]">
+                                        <span className="text-[10px] text-gray-500 dark:text-gray-400 italic truncate max-w-[120px]">
                                           "{item.reviews[0].comment}"
                                         </span>
                                       )}
                                     </div>
                                   )}
 
-                                  <div className="flex items-center gap-3 mt-2 text-xs font-medium text-gray-600 dark:text-gray-400">
+                                  <div className="flex items-center gap-2 mt-2.5 text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                                     {item.isCooked && (
-                                      <span className="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-md">
-                                        <Clock className="w-3 h-3" /> {item.prepTimeMins} min
+                                      <span className="flex items-center gap-1 bg-gray-100 dark:bg-gray-800/80 px-2 py-1 rounded-md text-orange-600 dark:text-orange-400">
+                                        <Clock className="w-3 h-3" /> {item.prepTimeMins} min prep
                                       </span>
                                     )}
                                     {!item.isCooked && (
-                                      <span className="bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-md">
-                                        {item.stock} in stock
+                                      <span className="bg-gray-100 dark:bg-gray-800/80 px-2 py-1 rounded-md">
+                                        {item.stock} left in stock
                                       </span>
                                     )}
                                   </div>
                                 </div>
                                 
-                                <div className="flex items-center justify-between mt-3">
-                                  <div className="flex items-baseline gap-1.5">
-                                    <span className="font-bold text-lg text-gray-900 dark:text-white">{formatCurrency(currentPrice)}</span>
+                                <div className="flex items-end justify-between mt-4">
+                                  <div className="flex flex-col">
                                     {item.discount && (
-                                      <span className="text-xs text-gray-400 line-through">{formatCurrency(item.price)}</span>
+                                      <span className="text-[10px] text-gray-400 line-through mb-0.5">{formatCurrency(item.price)}</span>
                                     )}
+                                    <span className="font-extrabold text-xl text-gray-900 dark:text-white leading-none">{formatCurrency(currentPrice)}</span>
                                   </div>
                                   
                                   {/* Add to Cart Actions */}
                                   {cartItem ? (
-                                    <div className="flex items-center gap-2 bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/20 rounded-lg p-0.5">
+                                    <div className="flex items-center gap-2 bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/20 rounded-xl p-1 shadow-sm">
                                       <button 
                                         onClick={() => removeItem(item.id)}
-                                        className="w-7 h-7 flex items-center justify-center bg-white dark:bg-gray-800 text-orange-600 dark:text-orange-500 rounded-md shadow-sm hover:bg-orange-100 dark:hover:bg-gray-700 transition-colors"
+                                        className="w-8 h-8 flex items-center justify-center bg-white dark:bg-gray-800 text-orange-600 dark:text-orange-500 rounded-lg shadow-sm hover:bg-orange-100 dark:hover:bg-gray-700 transition-colors"
                                       >
                                         <Minus className="w-4 h-4" />
                                       </button>
-                                      <span className="w-4 text-center font-semibold text-sm text-orange-600 dark:text-orange-500">{cartItem.quantity}</span>
+                                      <span className="w-6 text-center font-bold text-sm text-orange-600 dark:text-orange-500">{cartItem.quantity}</span>
                                       <button 
                                         onClick={() => handleAddToCart(item)}
-                                        className="w-7 h-7 flex items-center justify-center bg-orange-500 text-white rounded-md shadow-sm hover:bg-orange-600 transition-colors"
+                                        className="w-8 h-8 flex items-center justify-center bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-lg shadow-sm hover:from-orange-600 hover:to-orange-700 transition-colors"
                                         disabled={!item.isCooked && item.stock <= cartItem.quantity}
                                       >
                                         <Plus className="w-4 h-4" />
@@ -559,7 +558,7 @@ export default function VendorMenuPage() {
                                     <button 
                                       onClick={() => handleAddToCart(item)}
                                       disabled={!item.isCooked && item.stock <= 0}
-                                      className="flex items-center justify-center w-8 h-8 bg-gray-100 dark:bg-gray-800 hover:bg-orange-500 text-gray-700 dark:text-gray-300 hover:text-white rounded-lg transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                      className="flex items-center justify-center w-10 h-10 bg-gray-50 dark:bg-gray-800 hover:bg-orange-500 border border-gray-200 dark:border-gray-700 hover:border-orange-500 text-gray-700 dark:text-gray-300 hover:text-white rounded-xl transition-all duration-300 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed group-hover:shadow-md"
                                     >
                                       <Plus className="w-5 h-5" />
                                     </button>
@@ -567,7 +566,6 @@ export default function VendorMenuPage() {
                                 </div>
                               </div>
                             </div>
-
                           </div>
                         );
                     })}

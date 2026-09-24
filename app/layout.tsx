@@ -4,6 +4,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { BrandProvider } from '@/context/BrandContext';
 import { CurrencyProvider } from '@/context/CurrencyContext';
+import { ToasterProvider } from '@/components/ToasterProvider';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -58,6 +59,7 @@ export default function RootLayout({
           <BrandProvider>
             <CurrencyProvider>
               {children}
+              <ToasterProvider />
             </CurrencyProvider>
           </BrandProvider>
         </ThemeProvider>

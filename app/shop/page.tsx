@@ -354,18 +354,30 @@ export default function ShopPage() {
       <main className="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full">
         
         {/* Hero Section */}
-        <div className="mb-10 text-center md:text-left relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-500/10 to-amber-500/5 border border-orange-500/20 p-8 md:p-12">
-          <div className="relative z-10">
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight">
-              Your Campus Favorites, <span className="text-orange-500">Delivered.</span>
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 text-lg max-w-xl mx-auto md:mx-0">
-              {selectedUniId 
-                ? `Showing canteens serving ${universities.find(u => u.id === selectedUniId)?.name}. Order ahead and skip the line.`
-                : 'Select a campus to see what\'s cooking.'}
-            </p>
+        <div className="mb-12 relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-50 via-white to-orange-50/50 dark:from-orange-950/20 dark:via-gray-900 dark:to-orange-900/10 border border-orange-100/50 dark:border-orange-500/10 p-8 md:p-14 shadow-sm">
+          <div className="absolute top-0 right-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] dark:opacity-[0.05] mix-blend-overlay pointer-events-none"></div>
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-100 dark:bg-orange-500/20 text-orange-600 dark:text-orange-400 text-sm font-semibold mb-6 border border-orange-200 dark:border-orange-500/20">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+                </span>
+                Live on Campus
+              </div>
+              <h2 className="text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight leading-tight">
+                Your Campus Favorites, <br className="hidden md:block" />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500">Delivered Fast.</span>
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 text-lg md:text-xl max-w-xl mx-auto md:mx-0 font-medium">
+                {selectedUniId 
+                  ? `Showing top canteens serving ${universities.find(u => u.id === selectedUniId)?.name}. Order ahead and skip the line.`
+                  : 'Select a campus above to discover what\'s cooking nearby.'}
+              </p>
+            </div>
           </div>
-          <div className="absolute -right-20 -top-20 w-64 h-64 bg-orange-500/10 blur-3xl rounded-full pointer-events-none" />
+          <div className="absolute -right-32 -top-32 w-96 h-96 bg-orange-500/15 dark:bg-orange-500/10 blur-[80px] rounded-full pointer-events-none" />
+          <div className="absolute -left-32 -bottom-32 w-96 h-96 bg-amber-400/10 dark:bg-amber-500/10 blur-[80px] rounded-full pointer-events-none" />
         </div>
 
         {/* Vendors Grid */}
@@ -389,42 +401,42 @@ export default function ShopPage() {
             {vendors.map(vendor => (
               <div 
                 key={vendor.vendorId} 
-                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl overflow-hidden hover:border-gray-300 dark:hover:border-gray-700 transition-all group shadow-sm hover:shadow-xl hover:shadow-orange-500/5 relative"
+                className="bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800/80 rounded-[1.5rem] overflow-hidden hover:border-orange-500/30 dark:hover:border-orange-500/30 transition-all duration-300 group shadow-sm hover:shadow-xl hover:shadow-orange-500/5 relative flex flex-col"
               >
                 {/* Brand Color Stripe */}
-                <div className="h-2 w-full bg-gradient-to-r from-orange-500 to-amber-500" />
+                <div className="h-1.5 w-full bg-gradient-to-r from-orange-400 to-amber-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out absolute top-0 left-0 z-10" />
                 
-                <div className="p-6">
-                  <div className="flex items-start gap-4 mb-4">
+                <div className="p-6 flex-1 flex flex-col">
+                  <div className="flex items-start gap-4 mb-5">
                     {/* Canteen Logo / Placeholder */}
-                    <div className="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
+                    <div className="w-14 h-14 rounded-2xl bg-orange-50 dark:bg-gray-800 border border-orange-100 dark:border-gray-700 flex items-center justify-center shrink-0 overflow-hidden shadow-sm group-hover:scale-105 transition-transform duration-300">
                       {vendor.vendorLogoUrl ? (
                         <img src={vendor.vendorLogoUrl} alt={vendor.vendorName} className="w-full h-full object-cover" />
                       ) : (
-                        <Store className="w-7 h-7 text-gray-400 dark:text-gray-500" />
+                        <Store className="w-6 h-6 text-orange-500 dark:text-orange-400" />
                       )}
                     </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-orange-500 dark:group-hover:text-orange-400 transition-colors line-clamp-1">
+                    <div className="flex-1">
+                      <h3 className="text-lg font-extrabold text-gray-900 dark:text-white group-hover:text-orange-500 dark:group-hover:text-orange-400 transition-colors line-clamp-1">
                         {vendor.vendorName}
                       </h3>
-                      <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
-                        <MapPin className="w-3 h-3" />
-                        {universities.find(u => u.id === selectedUniId)?.name}
+                      <p className="text-[11px] text-gray-500 font-medium mt-1 flex items-center gap-1 uppercase tracking-wider">
+                        <MapPin className="w-3 h-3 text-orange-500" />
+                        <span className="truncate max-w-[120px]">{universities.find(u => u.id === selectedUniId)?.name}</span>
                       </p>
                     </div>
                   </div>
 
                   {/* Summary / Stats */}
-                  <div className="bg-gray-50 dark:bg-gray-950/50 rounded-xl p-3 flex items-center justify-between mb-6 border border-gray-200 dark:border-gray-800/50">
+                  <div className="bg-gray-50/50 dark:bg-gray-800/30 rounded-xl p-3 flex items-center justify-between mb-6 border border-gray-100 dark:border-gray-800/50">
                     <div className="text-center flex-1">
-                      <p className="text-xs text-gray-500 mb-0.5">Categories</p>
-                      <p className="font-semibold text-gray-700 dark:text-gray-300">{vendor.categories?.length || 0}</p>
+                      <p className="text-[10px] uppercase font-bold tracking-wider text-gray-400 dark:text-gray-500 mb-0.5">Categories</p>
+                      <p className="font-bold text-gray-800 dark:text-gray-200">{vendor.categories?.length || 0}</p>
                     </div>
-                    <div className="w-px h-8 bg-gray-200 dark:bg-gray-800"></div>
+                    <div className="w-px h-6 bg-gray-200 dark:bg-gray-700"></div>
                     <div className="text-center flex-1">
-                      <p className="text-xs text-gray-500 mb-0.5">Items</p>
-                      <p className="font-semibold text-gray-700 dark:text-gray-300">
+                      <p className="text-[10px] uppercase font-bold tracking-wider text-gray-400 dark:text-gray-500 mb-0.5">Items</p>
+                      <p className="font-bold text-gray-800 dark:text-gray-200">
                         {vendor.categories?.reduce((acc, cat) => acc + (cat.items?.length || 0), 0) || 0}
                       </p>
                     </div>
@@ -432,7 +444,7 @@ export default function ShopPage() {
 
                   <button 
                     onClick={() => router.push(`/shop/${vendor.vendorId}`)}
-                    className="w-full bg-gray-100 dark:bg-gray-800 hover:bg-orange-500 text-gray-900 dark:text-white hover:text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-orange-500/20"
+                    className="w-full mt-auto bg-gray-50 dark:bg-gray-800 hover:bg-orange-500 text-gray-700 dark:text-gray-200 hover:text-white font-bold py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-orange-500/20"
                   >
                     View Menu
                   </button>
