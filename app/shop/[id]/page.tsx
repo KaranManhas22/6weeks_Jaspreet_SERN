@@ -476,9 +476,6 @@ export default function VendorMenuPage() {
                                           </div>
                                           <button 
                                             onClick={() => setSelectedReviewItem(item)}
-                                            className="text-[10px] uppercase font-bold text-gray-500 hover:text-orange-500 transition-colors"
-                                          <button 
-                                            onClick={() => setSelectedReviewItem(item)}
                                             className="text-[10px] uppercase font-bold text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-500/20 px-2 py-1 rounded-md hover:bg-orange-200 dark:hover:bg-orange-500/30 transition-colors"
                                           >
                                             {item.reviewCount} Reviews
