@@ -40,6 +40,7 @@ interface Order {
   createdAt: string;
   deliveryAddress: string;
   isCOD: boolean;
+  appliedCredits?: number;
   scheduledTime?: string;
   customer: {
     name: string;
@@ -394,8 +395,18 @@ function OrderCard({
 
       <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-800/50">
         <div className="text-xs">
-          <span className="text-gray-400 dark:text-gray-500">Total: </span>
-          <span className="font-bold text-gray-900 dark:text-white text-sm">{formatCurrency(order.totalAmount)}</span>
+          <div className="text-gray-400 dark:text-gray-500 mb-0.5">Order Subtotal: <span className="text-gray-900 dark:text-gray-300 font-medium">{formatCurrency(order.totalAmount)}</span></div>
+          {order.appliedCredits && order.appliedCredits > 0 ? (
+            <div className="text-orange-500 mb-1.5 flex items-center gap-1">
+              <span className="bg-orange-100 dark:bg-orange-500/20 px-2 py-0.5 rounded-full font-bold">
+                Student Discount: -{formatCurrency(order.appliedCredits)}
+              </span>
+            </div>
+          ) : null}
+          <div className="mt-1 text-gray-900 dark:text-white font-bold text-sm bg-gray-100 dark:bg-gray-800 inline-block px-2 py-1 rounded-lg">
+            {order.isCOD ? 'Collect Cash: ' : 'Paid Online: '}
+            <span className="text-orange-500 ml-1">{formatCurrency(order.totalAmount - (order.appliedCredits || 0))}</span>
+          </div>
         </div>
         
         {order.status === 'Pending' && (

@@ -200,6 +200,22 @@ export default function StudentProfilePage() {
           </div>
 
           <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 border border-gray-200 dark:border-gray-800 shadow-xl shadow-orange-500/5">
+            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span> My Wallet & Points
+            </h3>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-950 p-4 rounded-xl border border-gray-200 dark:border-gray-800">
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Earned Points</span>
+                <span className="text-lg font-bold text-orange-500">{userData?.earnedCredits || 0} pts</span>
+              </div>
+              <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-950 p-4 rounded-xl border border-gray-200 dark:border-gray-800">
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Refunded Balance</span>
+                <span className="text-lg font-bold text-orange-500">${(userData?.refundedCredits || 0).toFixed(2)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 border border-gray-200 dark:border-gray-800 shadow-xl shadow-orange-500/5">
             <button
               onClick={() => {
                 localStorage.removeItem('foodzie_token');
