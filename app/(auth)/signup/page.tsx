@@ -29,7 +29,7 @@ interface JwtPayload {
   exp: number;
 }
 
-type Role = 'Foodie' | 'Vendor';
+type Role = 'Foodie' | 'Vendor' | 'Faculty';
 
 function SignupForm() {
   const { brandName } = useBrand();
@@ -189,7 +189,7 @@ function SignupForm() {
 
           <div className="mb-6">
             <p className="text-xs font-black text-gray-500 dark:text-gray-400 dark:text-gray-400 uppercase tracking-widest mb-3 text-center">I am a…</p>
-            <div className="grid grid-cols-2 gap-3 font-bold">
+            <div className="grid grid-cols-3 gap-3 font-bold">
               <button
                 id="role-student-btn"
                 type="button"
@@ -204,6 +204,23 @@ function SignupForm() {
                 <div className="text-center">
                   <p className="text-sm font-bold">Foodie</p>
                   <p className="text-[9px] opacity-70 mt-0.5">Order food on campus</p>
+                </div>
+              </button>
+
+              <button
+                id="role-faculty-btn"
+                type="button"
+                onClick={() => setRole('Faculty')}
+                className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 ${
+                  role === 'Faculty'
+                    ? 'bg-blue-500/10 border-blue-500 text-blue-600 dark:text-blue-400 shadow-lg shadow-blue-500/10'
+                    : 'border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-300'
+                }`}
+              >
+                <div className="w-6 h-6 flex items-center justify-center border-2 rounded-full font-bold">F</div>
+                <div className="text-center">
+                  <p className="text-sm font-bold">Faculty</p>
+                  <p className="text-[9px] opacity-70 mt-0.5">Teachers & Staff</p>
                 </div>
               </button>
 

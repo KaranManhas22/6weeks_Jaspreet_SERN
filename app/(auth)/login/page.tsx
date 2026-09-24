@@ -171,8 +171,15 @@ export default function LoginPage() {
               isLoading={isLoading}
               className="w-full mt-2 py-3.5 rounded-xl shadow-lg shadow-orange-500/20 hover:shadow-orange-500/35 hover:-translate-y-0.5 active:scale-95"
             >
-              Sign In
+            Sign In
             </Button>
+
+            <div className="pt-2 text-center">
+              <Link href="/guest" className="inline-flex items-center justify-center gap-2 w-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white font-bold py-3.5 px-4 rounded-xl transition-all">
+                <User className="w-5 h-5" />
+                Continue as Guest (No Account)
+              </Link>
+            </div>
           </form>
 
           <p className="text-center text-gray-500 text-sm mt-6">
