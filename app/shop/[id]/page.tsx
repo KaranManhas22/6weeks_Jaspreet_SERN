@@ -477,17 +477,20 @@ export default function VendorMenuPage() {
                                           <button 
                                             onClick={() => setSelectedReviewItem(item)}
                                             className="text-[10px] uppercase font-bold text-gray-500 hover:text-orange-500 transition-colors"
+                                          <button 
+                                            onClick={() => setSelectedReviewItem(item)}
+                                            className="text-[10px] uppercase font-bold text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-500/20 px-2 py-1 rounded-md hover:bg-orange-200 dark:hover:bg-orange-500/30 transition-colors"
                                           >
-                                            Read {item.reviewCount} Reviews
+                                            {item.reviewCount} Reviews
                                           </button>
                                         </div>
                                       ) : (
                                         <div className="flex items-center gap-2 mt-1 flex-wrap">
                                           <button 
                                             onClick={() => setSelectedReviewItem(item)}
-                                            className="text-[10px] uppercase font-bold text-gray-400 hover:text-orange-500 transition-colors"
+                                            className="text-[10px] uppercase font-bold text-white bg-orange-500 hover:bg-orange-600 dark:bg-orange-500 dark:hover:bg-orange-600 px-2 py-1 rounded-md transition-colors"
                                           >
-                                            No Reviews Yet
+                                            Add Review
                                           </button>
                                         </div>
                                       )}
@@ -680,44 +683,42 @@ export default function VendorMenuPage() {
               )}
             </div>
 
-            {studentProfile && (
-              <div className="border-t border-gray-200 dark:border-gray-800 pt-4 mt-2">
-                <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-3">Write a Review</h4>
-                <form onSubmit={handleSubmitReview} className="space-y-3 font-bold text-xs text-gray-700 dark:text-gray-300">
-                  <div className="space-y-1.5">
-                    <div className="flex gap-2">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          type="button"
-                          onClick={() => setNewReviewRating(star)}
-                          className="p-1 hover:scale-110 transition-transform"
-                        >
-                          <Star className={`w-6 h-6 ${star <= newReviewRating ? 'text-amber-400 fill-amber-400' : 'text-gray-300 dark:text-gray-750'}`} />
-                        </button>
-                      ))}
-                    </div>
+            <div className="border-t border-gray-200 dark:border-gray-800 pt-4 mt-2">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-3">Write a Review</h4>
+              <form onSubmit={handleSubmitReview} className="space-y-3 font-bold text-xs text-gray-700 dark:text-gray-300">
+                <div className="space-y-1.5">
+                  <div className="flex gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setNewReviewRating(star)}
+                        className="p-1 hover:scale-110 transition-transform"
+                      >
+                        <Star className={`w-6 h-6 ${star <= newReviewRating ? 'text-amber-400 fill-amber-400' : 'text-gray-300 dark:text-gray-750'}`} />
+                      </button>
+                    ))}
                   </div>
-                  <div className="space-y-1">
-                    <textarea
-                      value={newReviewComment}
-                      onChange={(e) => setNewReviewComment(e.target.value)}
-                      placeholder="e.g. Tastes amazing, perfect spice level!"
-                      rows={2}
-                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 outline-none text-black dark:text-white focus:ring-2 focus:ring-orange-500 font-semibold resize-none"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={submittingReview}
-                    className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5 active:scale-95 disabled:opacity-50 text-[11px] uppercase"
-                  >
-                    {submittingReview && <Loader2 className="w-3 h-3 animate-spin" />}
-                    Submit Review
-                  </button>
-                </form>
-              </div>
-            )}
+                </div>
+                <div className="space-y-1">
+                  <textarea
+                    value={newReviewComment}
+                    onChange={(e) => setNewReviewComment(e.target.value)}
+                    placeholder="e.g. Tastes amazing, perfect spice level!"
+                    rows={2}
+                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 outline-none text-black dark:text-white focus:ring-2 focus:ring-orange-500 font-semibold resize-none"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={submittingReview}
+                  className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5 active:scale-95 disabled:opacity-50 text-[11px] uppercase"
+                >
+                  {submittingReview && <Loader2 className="w-3 h-3 animate-spin" />}
+                  Submit Review
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       )}
