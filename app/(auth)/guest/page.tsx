@@ -1,14 +1,12 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { api } from '@/lib/api';
+import { api, setToken } from '@/lib/api';
 import { User, Phone, MapPin, ArrowRight } from 'lucide-react';
-import { useAuth } from '@/lib/auth';
 import Link from 'next/link';
 
 export default function GuestCheckout() {
   const router = useRouter();
-  const { fetchUser } = useAuth();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [universityId, setUniversityId] = useState('');
@@ -30,8 +28,7 @@ export default function GuestCheckout() {
 
     try {
       const data = await api.post<any>('/api/auth/guest', { name, phone, universityId });
-      localStorage.setItem('token', data.token);
-      await fetchUser();
+      setToken(data.token);
       router.push('/shop');
     } catch (err: any) {
       setError(err.message || 'Failed to start guest session');
