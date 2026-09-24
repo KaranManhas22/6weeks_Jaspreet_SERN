@@ -49,7 +49,7 @@ export default function TermsPage() {
 
           <h2 className="text-2xl font-bold mt-8">3. Acceptable Use & Community Guidelines</h2>
           <p className="text-gray-600 dark:text-gray-400">
-            Students and Vendors must interact respectfully. Product reviews must reflect genuine dining experiences. Abusive language in reviews, harassment of delivery riders, or falsified orders are strict violations of our community guidelines.
+            Foodies and Vendors must interact respectfully. Product reviews must reflect genuine dining experiences. Abusive language in reviews, harassment of delivery riders, or falsified orders are strict violations of our community guidelines.
           </p>
 
           <h2 className="text-2xl font-bold mt-8">4. Jurisdiction</h2>

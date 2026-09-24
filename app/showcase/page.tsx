@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 
 // ─── 1. STUDENT PORTAL (/shop) OVERHAUL ──────────────────────────────────────────
-const StudentView = () => {
+const FoodieView = () => {
   return (
     <div className="relative min-h-[800px] bg-[#F8FAFC] dark:bg-[#020617] pb-24 font-sans selection:bg-orange-500/30 overflow-hidden">
       {/* Organic Header */}
@@ -262,7 +262,7 @@ const AdminView = () => {
             </div>
             <span className="text-emerald-500 font-bold text-sm">+12%</span>
           </div>
-          <p className="text-slate-500 dark:text-slate-400 font-semibold text-sm">New Students</p>
+          <p className="text-slate-500 dark:text-slate-400 font-semibold text-sm">New Foodies</p>
           <p className="text-2xl font-black text-slate-900 dark:text-white mt-1">843</p>
         </div>
 
@@ -289,8 +289,8 @@ const AdminView = () => {
 
 // ─── SHOWCASE SHELL ──────────────────────────────────────────────────────────────
 export default function UIOverhaulShowcase() {
-  const [activeTab, setActiveTab] = useState('Student');
-  const tabs = ['Student', 'Vendor', 'Rider', 'Admin'];
+  const [activeTab, setActiveTab] = useState('Foodie');
+  const tabs = ['Foodie', 'Vendor', 'Rider', 'Admin'];
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
@@ -321,7 +321,7 @@ export default function UIOverhaulShowcase() {
 
       {/* Render Active View */}
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-        {activeTab === 'Student' && <StudentView />}
+        {activeTab === 'Foodie' && <FoodieView />}
         {activeTab === 'Vendor' && <VendorView />}
         {activeTab === 'Rider' && <RiderView />}
         {activeTab === 'Admin' && <AdminView />}

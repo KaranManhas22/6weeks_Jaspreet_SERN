@@ -88,7 +88,7 @@ export default function VendorMenuPage() {
 
   // Job Vacancies & Applications
   const [vacancies, setVacancies] = useState<any[]>([]);
-  const [studentProfile, setStudentProfile] = useState<any>(null);
+  const [studentProfile, setFoodieProfile] = useState<any>(null);
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [selectedVacancy, setSelectedVacancy] = useState<any>(null);
   const [appAge, setAppAge] = useState('');
@@ -134,8 +134,8 @@ export default function VendorMenuPage() {
       // Load student profile if logged in
       try {
         const profile = await api.get<any>('/api/auth/me');
-        if (profile && profile.role === 'Student') {
-          setStudentProfile(profile);
+        if (profile && profile.role === 'Foodie') {
+          setFoodieProfile(profile);
         }
       } catch {
         // not logged in

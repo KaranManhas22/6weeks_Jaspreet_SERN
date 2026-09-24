@@ -185,7 +185,7 @@ export default function VendorSettingsPage() {
               value={form.vendorDescription}
               onChange={(e) => setForm({ ...form, vendorDescription: e.target.value })}
               className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-orange-500 transition-all min-h-[120px]"
-              placeholder="Freshly prepared snacks and meals for hungry students..."
+              placeholder="Freshly prepared snacks and meals for hungry foodies..."
             />
           </div>
 

@@ -67,7 +67,7 @@ export default function RefundsPage() {
               Pre-Preparation Cancellations
             </h2>
             <p className="text-gray-600 dark:text-gray-400 ml-8">
-              Students can freely cancel their order directly from the app <strong>before</strong> the vendor marks the items as "Preparing". If you cancel during this grace period, you will receive a full refund of your Campus Credits immediately.
+              Foodies can freely cancel their order directly from the app <strong>before</strong> the vendor marks the items as "Preparing". If you cancel during this grace period, you will receive a full refund of your Campus Credits immediately.
             </p>
           </section>
 

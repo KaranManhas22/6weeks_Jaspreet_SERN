@@ -47,7 +47,7 @@ export default function AboutPage() {
             Reimagining College Campus Dining
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 dark:text-gray-400 leading-relaxed font-medium">
-            Foodzie is the leading direct-to-vendor campus logistics and dining portal designed to bridge the gap between hungry students, local canteens, and flexible student gig opportunities.
+            Foodzie is the leading direct-to-vendor campus logistics and dining portal designed to bridge the gap between hungry foodies, local canteens, and flexible student gig opportunities.
           </p>
         </div>
 
@@ -56,7 +56,7 @@ export default function AboutPage() {
           {[
             { metric: '12+', label: 'Active Universities', icon: GraduationCap, color: 'text-orange-600 dark:text-orange-400' },
             { metric: '14+', label: 'Registered Canteens', icon: Store, color: 'text-blue-600 dark:text-blue-400' },
-            { metric: '5,000+', label: 'Happy Students Served', icon: Users, color: 'text-green-600 dark:text-green-400' },
+            { metric: '5,000+', label: 'Happy Foodies Served', icon: Users, color: 'text-green-600 dark:text-green-400' },
             { metric: '99.2%', label: 'Delivery Success SLA', icon: Zap, color: 'text-amber-600 dark:text-amber-400' },
           ].map(({ metric, label, icon: Icon, color }) => (
             <div key={label} className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-3xl p-6 shadow-sm flex flex-col items-center text-center hover:scale-[1.02] transition-transform duration-300">
@@ -98,13 +98,13 @@ export default function AboutPage() {
         <section className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-3xl p-8 lg:p-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
           <div className="max-w-3xl space-y-6 text-left">
             <span className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-              Student Gig Network
+              Foodie Gig Network
             </span>
             <h2 className="text-2xl lg:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
-              Flexible delivery jobs built around student schedules.
+              Flexible delivery jobs built around foodie schedules.
             </h2>
             <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm leading-relaxed font-medium">
-              We provide campuses with a self-sufficient student rider economy. Canteen vendors post delivery vacancies directly within their panels, and student applicants can join the local delivery fleet. Earnings are transferred directly to the rider's personal UPI account daily, facilitating pocket money opportunities with complete operational flexibility.
+              We provide campuses with a self-sufficient student rider economy. Canteen vendors post delivery vacancies directly within their panels, and foodie applicants can join the local delivery fleet. Earnings are transferred directly to the rider's personal UPI account daily, facilitating pocket money opportunities with complete operational flexibility.
             </p>
             <div className="pt-2">
               <Link href="/contact" className="inline-flex items-center gap-2 text-orange-500 hover:text-orange-600 font-bold text-sm hover:underline">

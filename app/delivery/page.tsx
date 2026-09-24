@@ -536,7 +536,7 @@ export default function DeliveryDashboard() {
                         <div className="flex items-start gap-2.5">
                           <User className="w-4 h-4 text-orange-400 shrink-0 mt-0.5" />
                           <div>
-                            <span className="text-[9px] text-gray-550 uppercase font-black block">Student Client</span>
+                            <span className="text-[9px] text-gray-550 uppercase font-black block">Foodie Client</span>
                             <p className="font-bold text-white">{order.customer.name}</p>
                             <a 
                               href={`tel:${order.customer.phone}`} 

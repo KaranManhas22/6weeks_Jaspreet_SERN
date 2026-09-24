@@ -45,7 +45,7 @@ interface UserData {
   universityName: string | null;
 }
 
-export default function StudentProfilePage() {
+export default function FoodieProfilePage() {
   const router = useRouter();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);

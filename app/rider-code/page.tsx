@@ -39,7 +39,7 @@ export default function RiderCodePage() {
           
           <h2 className="text-2xl font-bold mt-8">1. Professionalism</h2>
           <p className="text-gray-600 dark:text-gray-400">
-            Student riders represent the {brandName} community. You must remain polite and professional with both canteens and fellow students during pickups and deliveries.
+            Foodie riders represent the {brandName} community. You must remain polite and professional with both canteens and fellow students during pickups and deliveries.
           </p>
 
           <h2 className="text-2xl font-bold mt-8">2. Timeliness & Food Safety</h2>

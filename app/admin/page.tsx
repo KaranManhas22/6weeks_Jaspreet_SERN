@@ -137,12 +137,12 @@ function AdminDashboardContent({ onLogout }: { onLogout: () => void }) {
   }, []);
 
   const vendors = users.filter(u => u.role === 'Canteen Vendor' || u.role === 'Vendor');
-  const students = users.filter(u => u.role === 'Student');
+  const students = users.filter(u => u.role === 'Foodie');
 
   const navItems = [
     { name: 'Analytics', icon: LayoutDashboard },
     { name: 'Vendors', icon: Store },
-    { name: 'Students', icon: Users },
+    { name: 'Foodies', icon: Users },
     { name: 'Settings', icon: Settings },
   ];
 
@@ -255,16 +255,16 @@ function AdminDashboardContent({ onLogout }: { onLogout: () => void }) {
               )}
 
               {/* STUDENTS TAB */}
-              {activeTab === 'Students' && (
+              {activeTab === 'Foodies' && (
                 <>
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-lg font-bold text-slate-900 dark:text-white">Registered Students</h3>
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white">Registered Foodies</h3>
                   </div>
                   <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
                     <table className="w-full text-left border-collapse">
                       <thead>
                         <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-                          <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Student Name</th>
+                          <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Foodie Name</th>
                           <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Email</th>
                           <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">University</th>
                         </tr>
@@ -368,7 +368,7 @@ function AdminDashboardContent({ onLogout }: { onLogout: () => void }) {
                   <div>
                     <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Role</label>
                     <select value={editForm.role} onChange={e => setEditForm({...editForm, role: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white mb-4">
-                      <option value="Student">Student</option>
+                      <option value="Foodie">Foodie</option>
                       <option value="Vendor">Vendor</option>
                       <option value="Delivery">Delivery</option>
                     </select>

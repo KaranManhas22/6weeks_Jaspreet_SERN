@@ -33,7 +33,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading]       = useState(false);
   const [error, setError]               = useState<string | null>(null);
-  const [selectedRole, setSelectedRole] = useState<'Student' | 'Delivery' | 'Vendor'>('Student');
+  const [selectedRole, setSelectedRole] = useState<'Foodie' | 'Delivery' | 'Vendor'>('Foodie');
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -108,7 +108,7 @@ export default function LoginPage() {
 
           {/* Role selector tabs */}
           <div className="flex bg-gray-100 dark:bg-gray-950 p-1 rounded-xl border border-gray-200 dark:border-gray-200 dark:border-gray-800 mb-6 w-full font-bold">
-            {(['Student', 'Delivery', 'Vendor'] as const).map((r) => (
+            {(['Foodie', 'Delivery', 'Vendor'] as const).map((r) => (
               <button
                 key={r}
                 type="button"

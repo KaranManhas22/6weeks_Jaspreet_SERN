@@ -147,7 +147,7 @@ export default function VendorOrdersPage() {
     setDelayingOrderId(orderId);
     try {
       await api.post(`/api/orders/${orderId}/delay`, { delayMinutes: 15 });
-      alert("Student notified of a 15-minute delay.");
+      alert("Foodie notified of a 15-minute delay.");
     } catch (err: any) {
       alert("Failed to delay order: " + err.message);
     } finally {
@@ -399,7 +399,7 @@ function OrderCard({
           {order.appliedCredits && order.appliedCredits > 0 ? (
             <div className="text-orange-500 mb-1.5 flex items-center gap-1">
               <span className="bg-orange-100 dark:bg-orange-500/20 px-2 py-0.5 rounded-full font-bold">
-                Student Discount: -{formatCurrency(order.appliedCredits)}
+                Foodie Discount: -{formatCurrency(order.appliedCredits)}
               </span>
             </div>
           ) : null}

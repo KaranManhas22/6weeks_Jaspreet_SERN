@@ -199,7 +199,7 @@ export default function VendorQRScannerPage() {
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
           <QrCode className="w-8 h-8 text-orange-500" /> Delivery QR Scanner
         </h1>
-        <p className="text-gray-500 dark:text-gray-400">Scan student's verification QR code directly using your camera to confirm delivery.</p>
+        <p className="text-gray-500 dark:text-gray-400">Scan foodie's verification QR code directly using your camera to confirm delivery.</p>
       </div>
 
       <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-6 shadow-sm space-y-6">

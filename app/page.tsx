@@ -230,12 +230,12 @@ export default function LandingPage() {
       <section className="relative z-10 px-6 pb-28 max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 ease-out">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
-          {/* Student CTA */}
+          {/* Foodie CTA */}
           <div className="relative bg-gradient-to-br from-orange-500/20 via-amber-500/10 to-orange-900/30 dark:from-orange-600/25 dark:via-amber-500/15 dark:to-orange-950/50 border border-orange-400/30 dark:border-orange-500/30 rounded-3xl p-8 overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-orange-500/20 transition-all hover:-translate-y-1">
             <div className="absolute top-0 right-0 w-52 h-52 bg-orange-500/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-32 h-32 bg-amber-400/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl pointer-events-none" />
             <span className="inline-block bg-orange-500/20 border border-orange-400/30 text-orange-500 dark:text-orange-300 text-xs font-black px-3 py-1 rounded-full mb-4 uppercase tracking-wider">
-              Student
+              Foodie
             </span>
             <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-3">Hungry? Let&apos;s eat.</h3>
             <p className="text-orange-900/70 dark:text-orange-200/70 text-sm mb-6 font-medium">
@@ -243,7 +243,7 @@ export default function LandingPage() {
             </p>
             <Link
               id="student-signup-btn"
-              href="/signup?role=Student"
+              href="/signup?role=Foodie"
               className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white text-sm font-bold px-5 py-3 rounded-xl transition-all shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 active:scale-95"
             >
               Order Now <ArrowRight className="w-4 h-4" />
@@ -276,7 +276,7 @@ export default function LandingPage() {
       <section className="relative z-10 py-16 overflow-hidden border-t border-gray-200 dark:border-gray-900 bg-white dark:bg-gray-950/35">
         <div className="max-w-6xl mx-auto px-6 mb-8 text-center">
           <span className="text-xs font-black tracking-widest text-orange-500 uppercase">Wall of Love</span>
-          <h2 className="text-3xl font-extrabold mt-2 text-gray-900 dark:text-white">What Students Say About {brandName}</h2>
+          <h2 className="text-3xl font-extrabold mt-2 text-gray-900 dark:text-white">What Foodies Say About {brandName}</h2>
         </div>
 
         {/* Row 1: Right to Left */}
@@ -292,7 +292,7 @@ export default function LandingPage() {
               { name: 'Vikram Sharma', rating: 5, comment: 'No delivery delays! The automated dispatch allocates to canteens riders efficiently.' },
               { name: 'Ananya Joshi', rating: 5, comment: 'Extremely direct and fast. Love the GPay QR integration during checkout.' },
               { name: 'Divya Chawla', rating: 4, comment: 'Highly recommended! The campus food issue is solved once and for all.' },
-              { name: 'Gurpreet Singh', rating: 5, comment: 'Amazing platform. Seamless student reviews help select the best dishes in canteen.' }
+              { name: 'Gurpreet Singh', rating: 5, comment: 'Amazing platform. Seamless foodie reviews help select the best dishes in canteen.' }
             ].concat([
               { name: 'Aarav Mehta', rating: 5, comment: 'Foodzie completely transformed how we get food at LPU campus. Incredible speed!' },
               { name: 'Harpreet Kaur', rating: 5, comment: 'Direct payment to vendors and no middleman means food is highly affordable. Love the model!' },
@@ -303,7 +303,7 @@ export default function LandingPage() {
               { name: 'Vikram Sharma', rating: 5, comment: 'No delivery delays! The automated dispatch allocates to canteens riders efficiently.' },
               { name: 'Ananya Joshi', rating: 5, comment: 'Extremely direct and fast. Love the GPay QR integration during checkout.' },
               { name: 'Divya Chawla', rating: 4, comment: 'Highly recommended! The campus food issue is solved once and for all.' },
-              { name: 'Gurpreet Singh', rating: 5, comment: 'Amazing platform. Seamless student reviews help select the best dishes in canteen.' }
+              { name: 'Gurpreet Singh', rating: 5, comment: 'Amazing platform. Seamless foodie reviews help select the best dishes in canteen.' }
             ]).map((rev, idx) => (
               <div key={idx} className="bg-gray-100/50 dark:bg-gray-900/40 dark:bg-gray-900 border border-gray-200 dark:border-gray-200 dark:border-gray-800 rounded-3xl p-5 w-[320px] shrink-0 shadow-sm">
                 <div className="flex items-center gap-3.5 mb-3">

@@ -29,14 +29,14 @@ interface JwtPayload {
   exp: number;
 }
 
-type Role = 'Student' | 'Vendor';
+type Role = 'Foodie' | 'Vendor';
 
 function SignupForm() {
   const { brandName } = useBrand();
   const router       = useRouter();
   const searchParams = useSearchParams();
 
-  const initialRole = (searchParams.get('role') as Role | null) ?? 'Student';
+  const initialRole = (searchParams.get('role') as Role | null) ?? 'Foodie';
 
   const [role, setRole]                 = useState<Role>(initialRole);
   const [name, setName]                 = useState('');
@@ -193,16 +193,16 @@ function SignupForm() {
               <button
                 id="role-student-btn"
                 type="button"
-                onClick={() => setRole('Student')}
+                onClick={() => setRole('Foodie')}
                 className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 ${
-                  role === 'Student'
+                  role === 'Foodie'
                     ? 'bg-orange-500/10 border-orange-500 text-orange-600 dark:text-orange-400 shadow-lg shadow-orange-500/10'
                     : 'border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-300'
                 }`}
               >
                 <GraduationCap className="w-6 h-6" />
                 <div className="text-center">
-                  <p className="text-sm font-bold">Student</p>
+                  <p className="text-sm font-bold">Foodie</p>
                   <p className="text-[9px] opacity-70 mt-0.5">Order food on campus</p>
                 </div>
               </button>
@@ -437,7 +437,7 @@ function SignupForm() {
               isLoading={isLoading}
               className="md:col-span-2 w-full mt-1 py-3.5 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/35 hover:-translate-y-0.5 active:scale-98"
             >
-              {`Create ${role === 'Vendor' ? 'Vendor' : 'Student'} Account`}
+              {`Create ${role === 'Vendor' ? 'Vendor' : 'Foodie'} Account`}
             </Button>
           </form>
 
