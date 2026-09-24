@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useBrand } from '@/context/BrandContext';
 import Link from 'next/link';
 import {
-  Eye, EyeOff, UtensilsCrossed, AlertCircle, ArrowLeft,
+  Eye, EyeOff, UtensilsCrossed, AlertCircle, ArrowLeft, User, ArrowRight,
 } from 'lucide-react';
 import { api, setToken, decodeToken } from '@/lib/api';
 import { ThemeToggle } from '@/components/ThemeToggle';
