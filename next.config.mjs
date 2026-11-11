@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    allowedDevOrigins: ['18.143.172.203:3000', 'foodzie.store', 'www.foodzie.store'],
+    allowedDevOrigins: ['52.76.154.38:3000', '52.76.154.38', 'foodzie.store', 'www.foodzie.store'],
   },
   images: {
     unoptimized: true,
