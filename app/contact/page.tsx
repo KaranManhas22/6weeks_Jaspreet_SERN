@@ -48,8 +48,8 @@ export default function ContactPage() {
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
               We aim to respond to all inquiries within 24-48 hours.
             </p>
-            <a href="mailto:bhatiajaspreet161@gmail.com" className="text-orange-600 dark:text-orange-500 font-bold hover:underline">
-              bhatiajaspreet161@gmail.com
+            <a href="mailto:support@foodzie.store" className="text-orange-600 dark:text-orange-500 font-bold hover:underline">
+              support@foodzie.store
             </a>
           </div>
 
@@ -68,19 +68,19 @@ export default function ContactPage() {
           </div>
         </div>
 
-        {/* Future Recommendations */}
+        {/* Official Channels Directory */}
         <div className="bg-gradient-to-br from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-900 rounded-3xl p-8 text-white">
           <div className="flex items-center gap-3 mb-4">
             <Lightbulb className="w-6 h-6 text-orange-400" />
-            <h3 className="text-xl font-bold">Planned Email Domains</h3>
+            <h3 className="text-xl font-bold">Official Support Channels</h3>
           </div>
           <p className="text-gray-400 text-sm mb-6">
-            We are in the process of setting up official domain emails. In the future, you will be able to reach us at:
+            You can reach our dedicated campus teams directly at:
           </p>
           <ul className="space-y-3 text-sm text-gray-300">
             <li className="flex items-center gap-3">
               <span className="w-2 h-2 rounded-full bg-orange-500" />
-              <strong className="text-white">support@foodzie.store</strong> — For general student and order issues.
+              <strong className="text-white">support@foodzie.store</strong> — For general foodie and order issues.
             </li>
             <li className="flex items-center gap-3">
               <span className="w-2 h-2 rounded-full bg-orange-500" />

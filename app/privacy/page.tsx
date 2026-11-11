@@ -62,7 +62,7 @@ export default function PrivacyPage() {
             93, Mehmadpur, Adampur<br />
             Jalandhar, 144102<br />
             Punjab, India<br /><br />
-            <strong>Email:</strong> bhatiajaspreet161@gmail.com
+            <strong>Email:</strong> support@foodzie.store
           </p>
         </div>
       </main>

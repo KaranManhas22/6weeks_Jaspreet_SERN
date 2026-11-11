@@ -377,7 +377,7 @@ export default function LandingPage() {
           <div className="text-left space-y-4">
             <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">Support Hub</h4>
             <ul className="space-y-2.5 text-xs font-semibold text-gray-600 dark:text-gray-400">
-              <li>Email: <a href="mailto:bhatiajaspreet161@gmail.com" className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors font-bold">bhatiajaspreet161@gmail.com</a></li>
+              <li>Email: <a href="mailto:support@foodzie.store" className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors font-bold">support@foodzie.store</a></li>
               <li>Phone: <span className="text-gray-900 dark:text-white font-bold">+91 7717670668</span></li>
               <li>Address: <span className="font-medium">93, Mehmadpur, Jalandhar, 144102, Punjab, India</span></li>
             </ul>
