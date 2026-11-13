@@ -37,6 +37,7 @@ import {
   Check
 } from 'lucide-react';
 import { api, decodeToken, getToken } from '@/lib/api';
+import { getFoodImage } from '@/lib/imageHelper';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { getCanteenScheduleStatus } from '@/lib/schedule';
 import { useCartStore } from '@/lib/store/cartStore';
@@ -85,9 +86,12 @@ interface Vendor {
   categories: Category[];
 }
 
-export default function GoMealShopPage() {
+export default function FoodzieShopPage() {
   const router = useRouter();
   const { formatCurrency } = useCurrency();
+
+  // Auth state
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   // User state
   const [userUniName, setUserUniName] = useState<string | null>(null);
@@ -107,6 +111,9 @@ export default function GoMealShopPage() {
   // Filters & Search
   const [searchFoodQuery, setSearchFoodQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
+  const [dietaryFilter, setDietaryFilter] = useState<'all' | 'veg' | 'non-veg'>('all');
+  const [priceFilter, setPriceFilter] = useState<'all' | 'under50' | '50-100' | '100+'>('all');
+  const [sortBy, setSortBy] = useState<'recommended' | 'price-asc' | 'price-desc' | 'rating'>('recommended');
   const [favorites, setFavorites] = useState<string[]>([]);
   const [activeNav, setActiveNav] = useState('Dashboard');
 
@@ -142,53 +149,57 @@ export default function GoMealShopPage() {
   // 1. Initial Load: User auth, campus location, reviews
   useEffect(() => {
     const token = getToken();
-    if (token) {
-      const payload = decodeToken<{ universityName?: string; sub?: string; name?: string }>(token);
-      if (payload?.universityName) {
-        setUserUniName(payload.universityName);
-        setSearchUniQuery(payload.universityName);
-      }
-      if (payload?.name) {
-        setUserName(payload.name);
-      }
+    if (!token) {
+      setIsAuthenticated(false);
+      return;
+    }
+    setIsAuthenticated(true);
 
-      // Fetch user profile for credits and hostel address
-      api.get<any>('/api/auth/me')
-        .then((me) => {
-          if (me.name) setUserName(me.name);
-          const totalC = (me.refundedCredits || 0) + (me.earnedCredits || 0);
-          setUserCredits(totalC);
-          if (me.university?.name) {
-            setUserUniName(me.university.name);
-            setSearchUniQuery(me.university.name);
-          }
-          if (me.hostelRoom || me.address) {
-            setUserAddress(me.hostelRoom || me.address);
-          }
-        })
-        .catch(console.error);
+    const payload = decodeToken<{ universityName?: string; sub?: string; name?: string }>(token);
+    if (payload?.universityName) {
+      setUserUniName(payload.universityName);
+      setSearchUniQuery(payload.universityName);
+    }
+    if (payload?.name) {
+      setUserName(payload.name);
+    }
 
-      // Check review prompts
-      const studentId = payload?.sub;
-      if (studentId) {
-        Promise.all([
-          api.get<any[]>('/api/orders/customer'),
-          api.get<any[]>(`/api/reviews?studentId=${studentId}`)
-        ]).then(([ordersData, reviewsData]) => {
-          const now = Date.now();
-          const unreviewedDelivered = ordersData.find(order => {
-            if (order.status !== 'Delivered' && order.status !== 'Completed') return false;
-            const updatedAtTime = new Date(order.updatedAt || order.createdAt).getTime();
-            const timeDiff = now - updatedAtTime;
-            const isWithinWindow = timeDiff > 10 * 60 * 1000 && timeDiff < 6 * 60 * 60 * 1000;
-            if (!isWithinWindow) return false;
-            return !reviewsData.some(rev => rev.orderId === order.id);
-          });
-          if (unreviewedDelivered) {
-            setPendingReviewOrder(unreviewedDelivered);
-          }
-        }).catch(err => console.error("Error loading review prompt data:", err));
-      }
+    // Fetch user profile for credits and hostel address
+    api.get<any>('/api/auth/me')
+      .then((me) => {
+        if (me.name) setUserName(me.name);
+        const totalC = (me.refundedCredits || 0) + (me.earnedCredits || 0);
+        setUserCredits(totalC);
+        if (me.university?.name) {
+          setUserUniName(me.university.name);
+          setSearchUniQuery(me.university.name);
+        }
+        if (me.hostelRoom || me.address) {
+          setUserAddress(me.hostelRoom || me.address);
+        }
+      })
+      .catch(console.error);
+
+    // Check review prompts
+    const studentId = payload?.sub;
+    if (studentId) {
+      Promise.all([
+        api.get<any[]>('/api/orders/customer'),
+        api.get<any[]>(`/api/reviews?studentId=${studentId}`)
+      ]).then(([ordersData, reviewsData]) => {
+        const now = Date.now();
+        const unreviewedDelivered = ordersData.find(order => {
+          if (order.status !== 'Delivered' && order.status !== 'Completed') return false;
+          const updatedAtTime = new Date(order.updatedAt || order.createdAt).getTime();
+          const timeDiff = now - updatedAtTime;
+          const isWithinWindow = timeDiff > 10 * 60 * 1000 && timeDiff < 6 * 60 * 60 * 1000;
+          if (!isWithinWindow) return false;
+          return !reviewsData.some(rev => rev.orderId === order.id);
+        });
+        if (unreviewedDelivered) {
+          setPendingReviewOrder(unreviewedDelivered);
+        }
+      }).catch(err => console.error("Error loading review prompt data:", err));
     }
 
     // Fetch Universities
@@ -201,12 +212,9 @@ export default function GoMealShopPage() {
         const data = await api.get<{ universities: University[] }>(url);
         setUniversities(data.universities);
 
-        if (token) {
-          const payload = decodeToken<{ universityName?: string }>(token);
-          if (payload?.universityName) {
-            const matchedUni = data.universities.find(u => u.name === payload.universityName);
-            if (matchedUni) setSelectedUniId(matchedUni.id);
-          }
+        if (payload?.universityName) {
+          const matchedUni = data.universities.find(u => u.name === payload.universityName);
+          if (matchedUni) setSelectedUniId(matchedUni.id);
         }
         if (!selectedUniId && data.universities.length > 0) {
           setSelectedUniId(data.universities[0].id);
@@ -277,9 +285,9 @@ export default function GoMealShopPage() {
     return list;
   }, [vendors]);
 
-  // Filtered dishes according to search & category
+  // Filtered dishes according to search, category, dietary, price, and sorting
   const filteredDishes = useMemo(() => {
-    return allDishes.filter((dish) => {
+    const list = allDishes.filter((dish) => {
       const matchesSearch = !searchFoodQuery.trim() || 
         dish.name.toLowerCase().includes(searchFoodQuery.toLowerCase()) ||
         dish.description?.toLowerCase().includes(searchFoodQuery.toLowerCase()) ||
@@ -287,17 +295,31 @@ export default function GoMealShopPage() {
 
       if (!matchesSearch) return false;
 
-      if (activeCategory === 'All') return true;
-      if (activeCategory === 'Bakery') return /croissant|cake|muffin|bread|cookie|pastry|bake/i.test(dish.name);
-      if (activeCategory === 'Burger') return /burger|sandwich|wrap|patty/i.test(dish.name);
-      if (activeCategory === 'Beverage') return /tea|coffee|shake|juice|soda|latte|smoothie|coke|water/i.test(dish.name);
-      if (activeCategory === 'Meals') return /rice|thali|curry|roti|dal|biryani|paneer|lunch|meal/i.test(dish.name);
-      if (activeCategory === 'Pizza') return /pizza|slice|crust/i.test(dish.name);
-      if (activeCategory === 'Desserts') return /ice cream|sweet|halwa|gulab|dessert|brownie|lava/i.test(dish.name);
+      if (activeCategory === 'Bakery' && !/croissant|cake|muffin|bread|cookie|pastry|bake/i.test(dish.name)) return false;
+      if (activeCategory === 'Burger' && !/burger|sandwich|wrap|patty/i.test(dish.name)) return false;
+      if (activeCategory === 'Beverage' && !/tea|coffee|shake|juice|soda|latte|smoothie|coke|water/i.test(dish.name)) return false;
+      if (activeCategory === 'Meals' && !/rice|thali|curry|roti|dal|biryani|paneer|lunch|meal/i.test(dish.name)) return false;
+      if (activeCategory === 'Pizza' && !/pizza|slice|crust/i.test(dish.name)) return false;
+      if (activeCategory === 'Desserts' && !/ice cream|sweet|halwa|gulab|dessert|brownie|lava/i.test(dish.name)) return false;
+
+      // Dietary filter
+      if (dietaryFilter === 'veg' && !dish.isVegetarian) return false;
+      if (dietaryFilter === 'non-veg' && dish.isVegetarian) return false;
+
+      // Price filter
+      if (priceFilter === 'under50' && dish.price >= 50) return false;
+      if (priceFilter === '50-100' && (dish.price < 50 || dish.price > 100)) return false;
+      if (priceFilter === '100+' && dish.price <= 100) return false;
 
       return true;
     });
-  }, [allDishes, searchFoodQuery, activeCategory]);
+
+    if (sortBy === 'price-asc') list.sort((a, b) => a.price - b.price);
+    else if (sortBy === 'price-desc') list.sort((a, b) => b.price - a.price);
+    else if (sortBy === 'rating') list.sort((a, b) => (b.averageRating || 4.5) - (a.averageRating || 4.5));
+
+    return list;
+  }, [allDishes, searchFoodQuery, activeCategory, dietaryFilter, priceFilter, sortBy]);
 
   const toggleFavorite = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -350,10 +372,47 @@ export default function GoMealShopPage() {
     ? universities 
     : universities.filter(u => u.name.toLowerCase().includes(searchUniQuery.toLowerCase()));
 
+  // If not logged in, enforce authentication before displaying any canteen or menu
+  if (isAuthenticated === false) {
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0A0E17] flex flex-col items-center justify-center p-6 text-center font-sans">
+        <div className="w-20 h-20 rounded-3xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 mb-6 shadow-xl shadow-amber-500/10">
+          <Store className="w-10 h-10" />
+        </div>
+        <span className="inline-block px-4 py-1.5 rounded-full bg-amber-400/20 text-amber-700 dark:text-amber-400 font-black text-xs uppercase tracking-wider mb-4">
+          Campus Canteens are Members Only
+        </span>
+        <h1 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white tracking-tight max-w-xl">
+          Sign in to view live canteen menus across your university campus
+        </h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 font-medium mt-3 max-w-md">
+          Foodzie serves colleges and universities worldwide. Sign in or create an account to discover campus dining spots, browse live menus, and place orders.
+        </p>
+        <div className="mt-8 flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm">
+          <Link
+            href="/login?redirect=/shop"
+            className="w-full sm:w-auto flex-1 py-3.5 px-6 rounded-2xl bg-amber-400 hover:bg-amber-500 text-gray-950 font-black text-sm shadow-lg shadow-amber-400/25 transition-all text-center"
+          >
+            Sign In
+          </Link>
+          <Link
+            href="/signup?redirect=/shop"
+            className="w-full sm:w-auto flex-1 py-3.5 px-6 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white font-black text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-center"
+          >
+            Create Account
+          </Link>
+        </div>
+        <Link href="/" className="mt-6 text-xs font-bold text-gray-400 hover:text-amber-500 transition-colors">
+          ← Back to Home
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0A0E17] text-gray-900 dark:text-gray-100 flex flex-col xl:flex-row font-sans selection:bg-amber-400 selection:text-gray-900">
       
-      {/* ── 1. LEFT SIDEBAR NAVIGATION (GoMeal Style) ────────────────────── */}
+      {/* ── 1. LEFT SIDEBAR NAVIGATION ────────────────────── */}
       <aside className="w-full xl:w-64 bg-white dark:bg-[#111622] border-r border-gray-200/80 dark:border-gray-800/80 shrink-0 p-5 flex flex-col justify-between z-20">
         <div>
           {/* Brand Logo */}
@@ -364,7 +423,7 @@ export default function GoMealShopPage() {
               </div>
               <div>
                 <span className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">
-                  Go<span className="text-amber-500">Meal</span><span className="text-amber-500">.</span>
+                  Food<span className="text-amber-500">zie</span><span className="text-amber-500">.</span>
                 </span>
                 <span className="block text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none">Campus Food Portal</span>
               </div>
@@ -593,6 +652,61 @@ export default function GoMealShopPage() {
           </div>
         </div>
 
+        {/* ── FILTER & SORT STRIP (Dietary, Price & Sorting) ─────────── */}
+        <div className="mb-6 bg-white dark:bg-[#111622] border border-gray-200/80 dark:border-gray-800/80 rounded-2xl p-3 sm:p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[10px] font-black uppercase tracking-wider text-gray-400 mr-1 flex items-center gap-1">
+              <SlidersHorizontal className="w-3 h-3 text-amber-500" /> Filters:
+            </span>
+            {/* Dietary Filter */}
+            {(['all', 'veg', 'non-veg'] as const).map((mode) => (
+              <button
+                key={mode}
+                onClick={() => setDietaryFilter(mode)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  dietaryFilter === mode
+                    ? 'bg-amber-400 text-gray-950 shadow-xs'
+                    : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200'
+                }`}
+              >
+                {mode === 'all' ? 'All Food' : mode === 'veg' ? '🟢 Pure Veg' : '🔴 Non-Veg'}
+              </button>
+            ))}
+
+            <div className="h-4 w-px bg-gray-200 dark:bg-gray-700 hidden sm:block mx-1" />
+
+            {/* Price Filter */}
+            {(['all', 'under50', '50-100', '100+'] as const).map((p) => (
+              <button
+                key={p}
+                onClick={() => setPriceFilter(p)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  priceFilter === p
+                    ? 'bg-amber-400 text-gray-950 shadow-xs'
+                    : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200'
+                }`}
+              >
+                {p === 'all' ? 'Any Price' : p === 'under50' ? 'Under ₹50' : p === '50-100' ? '₹50–₹100' : '₹100+'}
+              </button>
+            ))}
+          </div>
+
+          {/* Sort By Dropdown */}
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold text-gray-400 uppercase">Sort:</span>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="bg-gray-100 dark:bg-gray-800 border-none rounded-xl text-xs font-bold px-3 py-1.5 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-400/40 cursor-pointer"
+            >
+              <option value="recommended">Recommended</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="rating">Top Rated ⭐</option>
+            </select>
+          </div>
+        </div>
+
         {/* ── POPULAR DISHES GRID (GoMeal 3-Column Card Layout) ───────────── */}
         <div className="mb-10">
           <div className="flex items-center justify-between mb-4">
@@ -635,15 +749,11 @@ export default function GoMealShopPage() {
 
                       {/* Dish Image */}
                       <div className="w-full h-36 rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800 mb-3 relative flex items-center justify-center">
-                        {dish.imageUrl ? (
-                          <img
-                            src={dish.imageUrl}
-                            alt={dish.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                        ) : (
-                          <UtensilsCrossed className="w-10 h-10 text-gray-300 dark:text-gray-600" />
-                        )}
+                        <img
+                          src={getFoodImage(dish.name, dish.imageUrl)}
+                          alt={dish.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
                         {dish.vendorName && (
                           <span className="absolute bottom-2 left-2 bg-gray-950/80 backdrop-blur-xs text-white text-[9px] font-bold px-2 py-0.5 rounded-lg">
                             {dish.vendorName}
@@ -795,11 +905,11 @@ export default function GoMealShopPage() {
                 className="bg-white dark:bg-[#111622] border border-gray-200/80 dark:border-gray-800/80 rounded-2xl p-3 flex items-center gap-3 hover:border-amber-400 cursor-pointer transition-all shadow-xs"
               >
                 <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 bg-gray-100 dark:bg-gray-800">
-                  {dish.imageUrl ? (
-                    <img src={dish.imageUrl} alt={dish.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <UtensilsCrossed className="w-5 h-5 text-gray-400 m-auto mt-3.5" />
-                  )}
+                  <img
+                    src={getFoodImage(dish.name, dish.imageUrl)}
+                    alt={dish.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h5 className="font-bold text-xs truncate text-gray-900 dark:text-white">{dish.name}</h5>
@@ -900,11 +1010,11 @@ export default function GoMealShopPage() {
                 {Object.values(cart).map((item) => (
                   <div key={item.id} className="flex items-center justify-between gap-3 p-2 rounded-xl bg-gray-50 dark:bg-gray-800/40">
                     <div className="w-10 h-10 rounded-xl overflow-hidden bg-gray-200 dark:bg-gray-700 shrink-0">
-                      {item.imageUrl ? (
-                        <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
-                      ) : (
-                        <UtensilsCrossed className="w-4 h-4 text-gray-400 m-auto mt-3" />
-                      )}
+                      <img
+                        src={getFoodImage(item.name, item.imageUrl)}
+                        alt={item.name}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                     <div className="flex-1 min-w-0">
                       <h5 className="font-bold text-xs truncate text-gray-900 dark:text-white">{item.name}</h5>

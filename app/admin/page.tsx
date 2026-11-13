@@ -23,6 +23,11 @@ export default function AdminPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+  const [adminProfile, setAdminProfile] = useState<{ name: string; email: string; role: string }>({
+    name: 'Admin',
+    email: '',
+    role: 'Super Admin'
+  });
 
   // Check initial token and verify Admin role
   useEffect(() => {
@@ -35,6 +40,12 @@ export default function AdminPage() {
       .then((me) => {
         if (me.role === 'Admin' || me.role === 'Super Admin') {
           setIsAuthenticated(true);
+          const isJaspreet = me.email?.toLowerCase().includes('bhatiajaspreet161@gmail.com') || me.name?.toLowerCase().includes('jaspreet');
+          setAdminProfile({
+            name: isJaspreet ? 'Jaspreet Bhatia' : (me.name === 'Super Admin' ? 'Admin' : (me.name || 'Admin')),
+            email: me.email || '',
+            role: me.role || 'Super Admin'
+          });
         } else {
           setIsAuthenticated(false);
           setError('Access denied. Administrator credentials required.');
@@ -60,6 +71,12 @@ export default function AdminPage() {
       if (res.token) {
         setToken(res.token);
         setIsAuthenticated(true);
+        const isJaspreet = res.user?.email?.toLowerCase().includes('bhatiajaspreet161@gmail.com') || res.user?.name?.toLowerCase().includes('jaspreet');
+        setAdminProfile({
+          name: isJaspreet ? 'Jaspreet Bhatia' : (res.user?.name === 'Super Admin' ? 'Admin' : (res.user?.name || 'Admin')),
+          email: res.user?.email || '',
+          role: res.user?.role || 'Super Admin'
+        });
       }
     } catch (err: any) {
       setError(err.message || 'Invalid Email or Password');
@@ -121,14 +138,14 @@ export default function AdminPage() {
     );
   }
 
-  return <AdminPanelMain onLogout={() => { removeToken(); setIsAuthenticated(false); }} />;
+  return <AdminPanelMain adminProfile={adminProfile} onLogout={() => { removeToken(); setIsAuthenticated(false); }} />;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MAIN ADMIN PANEL WITH FLOWTASK DASHBOARD & USER MANAGEMENT
 // ─────────────────────────────────────────────────────────────────────────────
 
-function AdminPanelMain({ onLogout }: { onLogout: () => void }) {
+function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: string; email: string; role: string }; onLogout: () => void }) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState<'Dashboard' | 'User Management' | 'Canteens' | 'Orders' | 'Settings'>('Dashboard');
@@ -137,6 +154,7 @@ function AdminPanelMain({ onLogout }: { onLogout: () => void }) {
   // Data states
   const [users, setUsers] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
+  const [universities, setUniversities] = useState<any[]>([]);
   const [analytics, setAnalytics] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -144,28 +162,63 @@ function AdminPanelMain({ onLogout }: { onLogout: () => void }) {
   const [searchUserQuery, setSearchUserQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState('All Roles');
   const [statusFilter, setStatusFilter] = useState('All Statuses');
+  const [campusFilter, setCampusFilter] = useState('All Campuses');
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  // Modals
+  // Orders Filters
+  const [orderSearchQuery, setOrderSearchQuery] = useState('');
+  const [orderStatusFilter, setOrderStatusFilter] = useState('All Statuses');
+  const [orderCanteenFilter, setOrderCanteenFilter] = useState('All Canteens');
+
+  // Canteens Filters
+  const [canteenSearchQuery, setCanteenSearchQuery] = useState('');
+  const [canteenUniFilter, setCanteenUniFilter] = useState('All Campuses');
+
+  // Modals & Edit Form State
   const [selectedUserForEdit, setSelectedUserForEdit] = useState<any | null>(null);
+  const [editForm, setEditForm] = useState<any | null>(null);
+  const [isSavingUser, setIsSavingUser] = useState(false);
   const [showAddUserModal, setShowAddUserModal] = useState(false);
-  const [newUserForm, setNewUserForm] = useState({ name: '', email: '', phone: '', role: 'Foodie', password: 'password123' });
+  const [newUserForm, setNewUserForm] = useState({ name: '', email: '', phone: '', role: 'Foodie', universityId: '', password: 'password123' });
   const [isCreatingUser, setIsCreatingUser] = useState(false);
 
   useEffect(() => setMounted(true), []);
 
+  useEffect(() => {
+    if (selectedUserForEdit) {
+      setEditForm({
+        id: selectedUserForEdit.id,
+        name: selectedUserForEdit.name || '',
+        email: selectedUserForEdit.email || '',
+        phone: selectedUserForEdit.phone || '',
+        role: selectedUserForEdit.role || 'Foodie',
+        universityId: selectedUserForEdit.universityId || '',
+        workStatus: selectedUserForEdit.workStatus || 'Active',
+        upi: selectedUserForEdit.upi || selectedUserForEdit.vendorUpi || '',
+        vendorDescription: selectedUserForEdit.vendorDescription || '',
+        earnedCredits: selectedUserForEdit.earnedCredits ?? 0,
+        refundedCredits: selectedUserForEdit.refundedCredits ?? 0,
+        newPassword: ''
+      });
+    } else {
+      setEditForm(null);
+    }
+  }, [selectedUserForEdit]);
+
   const fetchData = async () => {
     try {
-      const [usersData, analyticsData, ordersData] = await Promise.all([
+      const [usersData, analyticsData, ordersData, unisData] = await Promise.all([
         api.get<any[]>('/api/admin/users').catch(() => []),
         api.get<any>('/api/admin/analytics').catch(() => null),
-        api.get<any[]>('/api/admin/orders').catch(() => [])
+        api.get<any[]>('/api/admin/orders').catch(() => []),
+        api.get<{ universities: any[] }>('/api/menu/universities').catch(() => ({ universities: [] }))
       ]);
       setUsers(usersData || []);
       setAnalytics(analyticsData);
       setOrders(ordersData || []);
+      setUniversities(unisData?.universities || []);
     } catch (err) {
       console.error('Failed to load admin panel data', err);
     } finally {
@@ -189,20 +242,71 @@ function AdminPanelMain({ onLogout }: { onLogout: () => void }) {
       }
       // Status filter
       if (statusFilter !== 'All Statuses') {
-        const isActive = user.status !== 'Inactive' && !user.isSuspended;
+        const isActive = user.status !== 'Inactive' && user.workStatus !== 'Suspended' && user.workStatus !== 'Resigned' && !user.isSuspended;
         if (statusFilter === 'Active' && !isActive) return false;
         if (statusFilter === 'Inactive' && isActive) return false;
+      }
+      // Campus filter
+      if (campusFilter !== 'All Campuses') {
+        if (user.universityId !== campusFilter && user.university?.name !== campusFilter) return false;
       }
       // Search
       if (searchUserQuery.trim()) {
         const q = searchUserQuery.toLowerCase();
         const matchesName = user.name?.toLowerCase().includes(q);
         const matchesEmail = user.email?.toLowerCase().includes(q);
-        if (!matchesName && !matchesEmail) return false;
+        const matchesPhone = user.phone?.toLowerCase().includes(q);
+        if (!matchesName && !matchesEmail && !matchesPhone) return false;
       }
       return true;
     });
-  }, [users, roleFilter, statusFilter, searchUserQuery]);
+  }, [users, roleFilter, statusFilter, campusFilter, searchUserQuery]);
+
+  // Filtered Canteens
+  const vendorUsers = useMemo(() => {
+    return users.filter(u => u.role === 'Vendor' || u.role === 'Canteen Vendor');
+  }, [users]);
+
+  const filteredCanteens = useMemo(() => {
+    return vendorUsers.filter(v => {
+      if (canteenUniFilter !== 'All Campuses') {
+        if (v.universityId !== canteenUniFilter && v.university?.name !== canteenUniFilter) return false;
+      }
+      if (canteenSearchQuery.trim()) {
+        const q = canteenSearchQuery.toLowerCase();
+        if (!v.name?.toLowerCase().includes(q) && !v.email?.toLowerCase().includes(q)) return false;
+      }
+      return true;
+    });
+  }, [vendorUsers, canteenUniFilter, canteenSearchQuery]);
+
+  // Unique Canteen Vendors for Orders Filter
+  const uniqueVendorsInOrders = useMemo(() => {
+    const map = new Map<string, string>();
+    orders.forEach(o => {
+      if (o.vendor?.name) map.set(o.vendor.name, o.vendor.name);
+      else if (o.vendorId) map.set(o.vendorId, o.vendorId);
+    });
+    return Array.from(map.values());
+  }, [orders]);
+
+  // Filtered Orders
+  const filteredOrders = useMemo(() => {
+    return orders.filter(o => {
+      if (orderStatusFilter !== 'All Statuses' && o.status !== orderStatusFilter) return false;
+      if (orderCanteenFilter !== 'All Canteens') {
+        if (o.vendor?.name !== orderCanteenFilter && o.vendorId !== orderCanteenFilter) return false;
+      }
+      if (orderSearchQuery.trim()) {
+        const q = orderSearchQuery.toLowerCase();
+        const matchesId = o.id.toLowerCase().includes(q);
+        const matchesCustomer = o.customer?.name?.toLowerCase().includes(q) || o.customer?.email?.toLowerCase().includes(q);
+        const matchesRider = o.deliveryPerson?.name?.toLowerCase().includes(q);
+        if (!matchesId && !matchesCustomer && !matchesRider) return false;
+      }
+      return true;
+    });
+  }, [orders, orderStatusFilter, orderCanteenFilter, orderSearchQuery]);
 
   // Paginated Users
   const paginatedUsers = useMemo(() => {
@@ -379,11 +483,11 @@ function AdminPanelMain({ onLogout }: { onLogout: () => void }) {
 
             <div className="flex items-center gap-3 pl-3 border-l border-gray-200 dark:border-gray-800">
               <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white font-black text-sm shadow-md shadow-indigo-600/20">
-                SA
+                {adminProfile.name.toLowerCase().includes('jaspreet') ? 'JB' : 'AD'}
               </div>
               <div className="hidden sm:block">
-                <span className="block text-xs font-black text-gray-900 dark:text-white leading-none">Admin</span>
-                <span className="text-[10px] text-gray-400 font-semibold leading-none">Super Admin</span>
+                <span className="block text-xs font-black text-gray-900 dark:text-white leading-none">{adminProfile.name}</span>
+                <span className="text-[10px] text-gray-400 font-semibold leading-none">{adminProfile.role}</span>
               </div>
             </div>
           </div>
@@ -397,7 +501,7 @@ function AdminPanelMain({ onLogout }: { onLogout: () => void }) {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight flex items-center gap-2">
-                  Good morning, Sarah! <span className="animate-spin duration-1000">☀️</span>
+                  Good morning, {adminProfile.name}! <span className="animate-spin duration-1000">☀️</span>
                 </h1>
                 <p className="text-xs sm:text-sm text-gray-400 font-medium mt-0.5">
                   Here&apos;s what&apos;s happening with your campus canteens today.
@@ -770,8 +874,20 @@ function AdminPanelMain({ onLogout }: { onLogout: () => void }) {
                   <option value="Inactive">Inactive</option>
                 </select>
 
+                {/* Campus Filter Dropdown */}
+                <select
+                  value={campusFilter}
+                  onChange={(e) => setCampusFilter(e.target.value)}
+                  className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700/80 rounded-2xl px-3 py-2.5 text-xs font-bold text-gray-700 dark:text-gray-300 focus:outline-none max-w-[160px] truncate"
+                >
+                  <option value="All Campuses">All Campuses</option>
+                  {universities.map(u => (
+                    <option key={u.id} value={u.id}>{u.name}</option>
+                  ))}
+                </select>
+
                 <button 
-                  onClick={() => { setSearchUserQuery(''); setRoleFilter('All Roles'); setStatusFilter('All Statuses'); }}
+                  onClick={() => { setSearchUserQuery(''); setRoleFilter('All Roles'); setStatusFilter('All Statuses'); setCampusFilter('All Campuses'); }}
                   className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl border border-gray-200 dark:border-gray-700 text-xs font-bold text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
                   <SlidersHorizontal className="w-3.5 h-3.5" />
@@ -941,26 +1057,79 @@ function AdminPanelMain({ onLogout }: { onLogout: () => void }) {
         {/* ── TAB 3: CANTEENS & MENUS ──────────────────────────────────────── */}
         {activeTab === 'Canteens' && (
           <main className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full animate-in fade-in duration-300">
-            <h1 className="text-2xl font-black text-gray-900 dark:text-white">Registered Campus Canteens</h1>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl font-black text-gray-900 dark:text-white">Registered Campus Canteens</h1>
+                <p className="text-xs text-gray-400 mt-0.5">Dining spots, food courts, and kiosks across colleges worldwide</p>
+              </div>
+              <span className="px-3 py-1.5 rounded-xl bg-orange-500/10 text-orange-600 dark:text-orange-400 text-xs font-black border border-orange-500/20 self-start sm:self-auto">
+                {filteredCanteens.length} Canteens Listed
+              </span>
+            </div>
+
+            {/* Filter Toolbar for Canteens */}
+            <div className="bg-white dark:bg-[#111622] p-4 rounded-3xl border border-gray-200/80 dark:border-gray-800 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+              <div className="relative flex-1 max-w-md">
+                <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={canteenSearchQuery}
+                  onChange={(e) => setCanteenSearchQuery(e.target.value)}
+                  placeholder="Search canteens by name, owner email..."
+                  className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700/80 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                />
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <select
+                  value={canteenUniFilter}
+                  onChange={(e) => setCanteenUniFilter(e.target.value)}
+                  className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700/80 rounded-2xl px-3 py-2.5 text-xs font-bold text-gray-700 dark:text-gray-300 focus:outline-none"
+                >
+                  <option value="All Campuses">All Campuses</option>
+                  {universities.map(u => (
+                    <option key={u.id} value={u.id}>{u.name}</option>
+                  ))}
+                </select>
+
+                <button
+                  onClick={() => { setCanteenSearchQuery(''); setCanteenUniFilter('All Campuses'); }}
+                  className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl border border-gray-200 dark:border-gray-700 text-xs font-bold text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                >
+                  <SlidersHorizontal className="w-3.5 h-3.5" />
+                  <span>Reset</span>
+                </button>
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {users.filter(u => u.role === 'Vendor' || u.role === 'Canteen Vendor').map(v => (
-                <div key={v.id} className="bg-white dark:bg-[#111622] rounded-3xl p-6 border border-gray-200/80 dark:border-gray-800 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <div className="w-12 h-12 rounded-2xl bg-orange-500/10 text-orange-500 flex items-center justify-center font-black text-lg mb-3">
-                      {v.name.charAt(0)}
-                    </div>
-                    <h3 className="font-black text-base text-gray-900 dark:text-white">{v.name}</h3>
-                    <p className="text-xs text-gray-400 mt-0.5">{v.email}</p>
-                    <p className="text-xs text-indigo-500 font-bold mt-2">Campus: {v.university?.name || 'SBBSU Main Campus'}</p>
-                  </div>
-                  <button
-                    onClick={() => setSelectedUserForEdit(v)}
-                    className="mt-4 w-full py-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 text-xs font-bold transition-colors"
-                  >
-                    Manage Canteen
-                  </button>
+              {filteredCanteens.length === 0 ? (
+                <div className="col-span-3 text-center py-12 text-gray-400 font-bold text-xs bg-white dark:bg-[#111622] rounded-3xl border border-dashed border-gray-200 dark:border-gray-800">
+                  No canteens match the selected filter.
                 </div>
-              ))}
+              ) : (
+                filteredCanteens.map(v => (
+                  <div key={v.id} className="bg-white dark:bg-[#111622] rounded-3xl p-6 border border-gray-200/80 dark:border-gray-800 shadow-xs flex flex-col justify-between">
+                    <div>
+                      <div className="w-12 h-12 rounded-2xl bg-orange-500/10 text-orange-500 flex items-center justify-center font-black text-lg mb-3">
+                        {v.name.charAt(0)}
+                      </div>
+                      <h3 className="font-black text-base text-gray-900 dark:text-white">{v.name}</h3>
+                      <p className="text-xs text-gray-400 mt-0.5">{v.email}</p>
+                      <p className="text-xs text-indigo-500 font-bold mt-2">Campus: {v.university?.name || 'General Campus'}</p>
+                      {v.vendorDescription && (
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 line-clamp-2">{v.vendorDescription}</p>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => setSelectedUserForEdit(v)}
+                      className="mt-4 w-full py-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 text-xs font-bold transition-colors"
+                    >
+                      Manage Canteen Details
+                    </button>
+                  </div>
+                ))
+              )}
             </div>
           </main>
         )}
@@ -971,18 +1140,67 @@ function AdminPanelMain({ onLogout }: { onLogout: () => void }) {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h1 className="text-2xl font-black text-gray-900 dark:text-white">Orders &amp; Deliveries Stream</h1>
-                <p className="text-xs text-gray-400 mt-0.5">Tracking all past month orders, canteens, and Punjabi delivery riders across SBBSU</p>
+                <p className="text-xs text-gray-400 mt-0.5">Live monitoring of customer orders, campus canteens, and riders</p>
               </div>
               <span className="px-3 py-1.5 rounded-xl bg-indigo-500/10 text-indigo-500 text-xs font-black border border-indigo-500/20 self-start sm:self-auto">
-                {orders.length} Total Orders
+                {filteredOrders.length} Matching Orders
               </span>
             </div>
 
+            {/* Filter Toolbar for Orders */}
+            <div className="bg-white dark:bg-[#111622] p-4 rounded-3xl border border-gray-200/80 dark:border-gray-800 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+              <div className="relative flex-1 max-w-md">
+                <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={orderSearchQuery}
+                  onChange={(e) => setOrderSearchQuery(e.target.value)}
+                  placeholder="Search by order ID, student name, rider..."
+                  className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700/80 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <select
+                  value={orderStatusFilter}
+                  onChange={(e) => setOrderStatusFilter(e.target.value)}
+                  className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700/80 rounded-2xl px-3 py-2.5 text-xs font-bold text-gray-700 dark:text-gray-300 focus:outline-none"
+                >
+                  <option value="All Statuses">All Statuses</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Preparing">Preparing</option>
+                  <option value="Ready">Ready</option>
+                  <option value="OutForDelivery">Out For Delivery</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+
+                <select
+                  value={orderCanteenFilter}
+                  onChange={(e) => setOrderCanteenFilter(e.target.value)}
+                  className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700/80 rounded-2xl px-3 py-2.5 text-xs font-bold text-gray-700 dark:text-gray-300 focus:outline-none max-w-[170px] truncate"
+                >
+                  <option value="All Canteens">All Canteens</option>
+                  {uniqueVendorsInOrders.map(name => (
+                    <option key={name} value={name}>{name}</option>
+                  ))}
+                </select>
+
+                <button
+                  onClick={() => { setOrderSearchQuery(''); setOrderStatusFilter('All Statuses'); setOrderCanteenFilter('All Canteens'); }}
+                  className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl border border-gray-200 dark:border-gray-700 text-xs font-bold text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                >
+                  <SlidersHorizontal className="w-3.5 h-3.5" />
+                  <span>Reset</span>
+                </button>
+              </div>
+            </div>
+
             <div className="bg-white dark:bg-[#111622] rounded-3xl border border-gray-200/80 dark:border-gray-800 p-6 shadow-xs divide-y divide-gray-100 dark:divide-gray-800/60">
-              {orders.length === 0 ? (
-                <p className="text-center py-12 text-gray-400 text-xs font-bold">No active orders found</p>
+              {filteredOrders.length === 0 ? (
+                <p className="text-center py-12 text-gray-400 text-xs font-bold">No orders match your filter criteria</p>
               ) : (
-                orders.map((o) => {
+                filteredOrders.map((o) => {
                   const isTakeaway = !o.deliveryAddress || o.deliveryAddress.toLowerCase().includes('counter');
                   return (
                     <div key={o.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs hover:bg-gray-50/50 dark:hover:bg-gray-800/30 px-3 -mx-3 rounded-2xl transition-colors">
@@ -1129,105 +1347,222 @@ function AdminPanelMain({ onLogout }: { onLogout: () => void }) {
       )}
 
       {/* ── SLIDE-OVER: EDIT USER / VIEW CREDENTIALS ────────────────────── */}
-      {selectedUserForEdit && (
+      {selectedUserForEdit && editForm && (
         <div className="fixed inset-0 z-50 flex justify-end">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-xs" onClick={() => setSelectedUserForEdit(null)} />
-          <div className="relative w-full max-w-md bg-white dark:bg-[#111622] h-full shadow-2xl p-6 sm:p-8 flex flex-col justify-between overflow-y-auto animate-in slide-in-from-right">
+          <div className="relative w-full max-w-lg bg-white dark:bg-[#111622] h-full shadow-2xl p-6 sm:p-8 flex flex-col justify-between overflow-y-auto animate-in slide-in-from-right">
             <div>
               <div className="flex items-center justify-between mb-6">
-                <span className="text-xs font-black uppercase text-gray-400">User Details</span>
-                <button onClick={() => setSelectedUserForEdit(null)} className="text-gray-400 hover:text-white">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-wider text-indigo-500">Edit User Profile</span>
+                  <h3 className="text-xl font-black text-gray-900 dark:text-white leading-tight mt-0.5">
+                    {editForm.name || 'User'}
+                  </h3>
+                </div>
+                <button onClick={() => setSelectedUserForEdit(null)} className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-colors">
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 rounded-2xl bg-indigo-600/10 text-indigo-600 font-black text-2xl flex items-center justify-center">
-                  {selectedUserForEdit.name?.charAt(0) || 'U'}
-                </div>
-                <div>
-                  <h3 className="text-lg font-black text-gray-900 dark:text-white leading-tight">{selectedUserForEdit.name}</h3>
-                  <span className="text-xs font-bold text-gray-400">{selectedUserForEdit.role}</span>
-                </div>
-              </div>
-
               {/* System Credentials Box */}
               <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 p-4 rounded-2xl mb-6 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-black text-amber-800 dark:text-amber-300">
-                  <Key className="w-4 h-4" /> System Login Credentials
-                </div>
-                <div>
-                  <span className="text-[10px] font-black uppercase text-amber-700/80 dark:text-amber-400/80 block">Login ID</span>
-                  <div className="mt-1 p-2 rounded-xl bg-white dark:bg-gray-900 text-xs font-semibold select-all text-gray-900 dark:text-white border border-amber-200/50">
-                    {selectedUserForEdit.email}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-xs font-black text-amber-800 dark:text-amber-300">
+                    <Key className="w-4 h-4" /> System Access &amp; ID
                   </div>
+                  <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-200 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200">
+                    {editForm.role}
+                  </span>
                 </div>
                 <div>
-                  <span className="text-[10px] font-black uppercase text-amber-700/80 dark:text-amber-400/80 block">Default Password</span>
-                  <div className="mt-1 p-2 rounded-xl bg-white dark:bg-gray-900 text-xs font-mono font-bold select-all text-gray-900 dark:text-white border border-amber-200/50">
-                    password123
+                  <span className="text-[10px] font-black uppercase text-amber-700/80 dark:text-amber-400/80 block">User ID</span>
+                  <div className="mt-1 p-2 rounded-xl bg-white dark:bg-gray-900 text-[11px] font-mono select-all text-gray-600 dark:text-gray-300 border border-amber-200/50 truncate">
+                    {editForm.id}
                   </div>
                 </div>
               </div>
 
-              {/* Edit Details */}
+              {/* Edit Details Form */}
               <div className="space-y-4 text-xs font-bold">
                 <div>
-                  <label className="text-gray-400 uppercase text-[10px] block mb-1">Name</label>
+                  <label className="text-gray-400 uppercase text-[10px] block mb-1">Full Name</label>
                   <input
                     type="text"
-                    value={selectedUserForEdit.name || ''}
-                    onChange={(e) => setSelectedUserForEdit({ ...selectedUserForEdit, name: e.target.value })}
-                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3"
+                    value={editForm.name}
+                    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
-                <div>
-                  <label className="text-gray-400 uppercase text-[10px] block mb-1">Email</label>
-                  <input
-                    type="email"
-                    value={selectedUserForEdit.email || ''}
-                    onChange={(e) => setSelectedUserForEdit({ ...selectedUserForEdit, email: e.target.value })}
-                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3"
-                  />
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-gray-400 uppercase text-[10px] block mb-1">Email Address</label>
+                    <input
+                      type="email"
+                      value={editForm.email}
+                      onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-gray-400 uppercase text-[10px] block mb-1">Phone Number</label>
+                    <input
+                      type="text"
+                      value={editForm.phone}
+                      onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                      placeholder="+91 9876543210"
+                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
                 </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-gray-400 uppercase text-[10px] block mb-1">Role</label>
+                    <select
+                      value={editForm.role}
+                      onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
+                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                      <option value="Foodie">Foodie (Student/Customer)</option>
+                      <option value="Vendor">Vendor (Canteen Owner)</option>
+                      <option value="Delivery">Delivery (Campus Rider)</option>
+                      <option value="Admin">Admin</option>
+                      <option value="Super Admin">Super Admin</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-gray-400 uppercase text-[10px] block mb-1">Work Status</label>
+                    <select
+                      value={editForm.workStatus}
+                      onChange={(e) => setEditForm({ ...editForm, workStatus: e.target.value })}
+                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                      <option value="Active">Active</option>
+                      <option value="OnLeave">On Leave</option>
+                      <option value="Resigned">Resigned</option>
+                      <option value="Suspended">Suspended</option>
+                    </select>
+                  </div>
+                </div>
+
                 <div>
-                  <label className="text-gray-400 uppercase text-[10px] block mb-1">Phone</label>
+                  <label className="text-gray-400 uppercase text-[10px] block mb-1">Campus / University</label>
+                  <select
+                    value={editForm.universityId}
+                    onChange={(e) => setEditForm({ ...editForm, universityId: e.target.value })}
+                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  >
+                    <option value="">None / Worldwide Campus</option>
+                    {universities.map(u => (
+                      <option key={u.id} value={u.id}>{u.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-gray-400 uppercase text-[10px] block mb-1">UPI ID (Vendor/Rider Payouts)</label>
                   <input
                     type="text"
-                    value={selectedUserForEdit.phone || ''}
-                    onChange={(e) => setSelectedUserForEdit({ ...selectedUserForEdit, phone: e.target.value })}
-                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3"
+                    value={editForm.upi}
+                    onChange={(e) => setEditForm({ ...editForm, upi: e.target.value })}
+                    placeholder="e.g. canteen@upi or user@okaxis"
+                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+
+                {(editForm.role === 'Vendor' || editForm.role === 'Canteen Vendor') && (
+                  <div>
+                    <label className="text-gray-400 uppercase text-[10px] block mb-1">Canteen Description / Bio</label>
+                    <textarea
+                      rows={2}
+                      value={editForm.vendorDescription}
+                      onChange={(e) => setEditForm({ ...editForm, vendorDescription: e.target.value })}
+                      placeholder="Specialty meals, canteen timings, dining spot info..."
+                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-gray-400 uppercase text-[10px] block mb-1">Earned Credits (₹)</label>
+                    <input
+                      type="number"
+                      value={editForm.earnedCredits}
+                      onChange={(e) => setEditForm({ ...editForm, earnedCredits: Number(e.target.value) || 0 })}
+                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-gray-400 uppercase text-[10px] block mb-1">Refunded Credits (₹)</label>
+                    <input
+                      type="number"
+                      value={editForm.refundedCredits}
+                      onChange={(e) => setEditForm({ ...editForm, refundedCredits: Number(e.target.value) || 0 })}
+                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-gray-400 uppercase text-[10px] block mb-1">
+                    Reset Password <span className="text-gray-500 font-normal">(leave blank to keep unchanged)</span>
+                  </label>
+                  <input
+                    type="password"
+                    value={editForm.newPassword || ''}
+                    onChange={(e) => setEditForm({ ...editForm, newPassword: e.target.value })}
+                    placeholder="Enter new password to reset"
+                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="pt-6 border-t border-gray-100 dark:border-gray-800 flex gap-3">
+            <div className="pt-6 mt-6 border-t border-gray-100 dark:border-gray-800 flex gap-3">
               <button
+                type="button"
                 onClick={() => setSelectedUserForEdit(null)}
-                className="flex-1 py-3 rounded-2xl bg-gray-100 dark:bg-gray-800 text-xs font-bold"
+                className="flex-1 py-3.5 rounded-2xl bg-gray-100 dark:bg-gray-800 text-xs font-bold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
               >
                 Cancel
               </button>
               <button
+                type="button"
+                disabled={isSavingUser}
                 onClick={async () => {
+                  setIsSavingUser(true);
                   try {
-                    await api.patch(`/api/admin/users/${selectedUserForEdit.id}`, {
-                      name: selectedUserForEdit.name,
-                      email: selectedUserForEdit.email,
-                      phone: selectedUserForEdit.phone,
-                      role: selectedUserForEdit.role
-                    });
-                    setUsers(prev => prev.map(u => u.id === selectedUserForEdit.id ? selectedUserForEdit : u));
-                    toast.success("User updated successfully!");
+                    const payload: any = {
+                      name: editForm.name,
+                      email: editForm.email,
+                      phone: editForm.phone || null,
+                      role: editForm.role,
+                      universityId: editForm.universityId || null,
+                      workStatus: editForm.workStatus,
+                      upi: editForm.upi || null,
+                      vendorDescription: editForm.vendorDescription,
+                      earnedCredits: Number(editForm.earnedCredits) || 0,
+                      refundedCredits: Number(editForm.refundedCredits) || 0,
+                    };
+                    if (editForm.newPassword?.trim()) {
+                      payload.password = editForm.newPassword.trim();
+                    }
+                    const updated = await api.patch<any>(`/api/admin/users/${editForm.id}`, payload);
+                    const matchedUni = universities.find(u => u.id === editForm.universityId);
+                    setUsers(prev => prev.map(u => u.id === editForm.id ? { ...u, ...payload, university: matchedUni || u.university } : u));
+                    toast.success(`User ${editForm.name} updated successfully!`);
                     setSelectedUserForEdit(null);
                   } catch (err: any) {
                     toast.error("Failed to update: " + err.message);
+                  } finally {
+                    setIsSavingUser(false);
                   }
                 }}
-                className="flex-1 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-black shadow-lg shadow-indigo-600/25"
+                className="flex-1 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-black shadow-lg shadow-indigo-600/25 transition-all disabled:opacity-50"
               >
-                Save Changes
+                {isSavingUser ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
           </div>

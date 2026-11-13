@@ -3,7 +3,8 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { ArrowLeft, Store, Clock, Plus, Minus, ShoppingBag, Loader2, User, Leaf, Flame, Star, X, Users, Share2, CalendarClock, ChevronDown, ChevronUp } from 'lucide-react';
-import { api } from '@/lib/api';
+import { api, getToken } from '@/lib/api';
+import { getFoodImage } from '@/lib/imageHelper';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useCartStore } from '@/lib/store/cartStore';
 import { CartSlideOver } from '@/components/CartSlideOver';
@@ -67,6 +68,7 @@ export default function VendorMenuPage() {
 
   const [vendor, setVendor] = useState<VendorMenu | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
   
   // Dietary & Category Filter State
@@ -151,6 +153,13 @@ export default function VendorMenuPage() {
   };
 
   useEffect(() => {
+    const token = getToken();
+    if (!token) {
+      setIsAuthenticated(false);
+      setIsLoading(false);
+      return;
+    }
+    setIsAuthenticated(true);
     fetchVendorMenu();
   }, [vendorId]);
 
@@ -229,6 +238,42 @@ export default function VendorMenuPage() {
       setSubmittingApp(false);
     }
   };
+
+  if (isAuthenticated === false) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-[#0B0F17] flex flex-col items-center justify-center p-6 text-center font-sans">
+        <div className="w-20 h-20 rounded-3xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 mb-6 shadow-xl shadow-amber-500/10">
+          <Store className="w-10 h-10" />
+        </div>
+        <span className="inline-block px-4 py-1.5 rounded-full bg-amber-400/20 text-amber-700 dark:text-amber-400 font-black text-xs uppercase tracking-wider mb-4">
+          Campus Canteens are Members Only
+        </span>
+        <h1 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white tracking-tight max-w-xl">
+          Sign in to view this canteen&apos;s live menu
+        </h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 font-medium mt-3 max-w-md">
+          Foodzie serves colleges and universities worldwide. Sign in or register to browse food items, customize orders, and skip the line.
+        </p>
+        <div className="mt-8 flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm">
+          <Link
+            href={`/login?redirect=/shop/${vendorId}`}
+            className="w-full sm:w-auto flex-1 py-3.5 px-6 rounded-2xl bg-amber-400 hover:bg-amber-500 text-gray-950 font-black text-sm shadow-lg shadow-amber-400/25 transition-all text-center"
+          >
+            Sign In
+          </Link>
+          <Link
+            href={`/signup?redirect=/shop/${vendorId}`}
+            className="w-full sm:w-auto flex-1 py-3.5 px-6 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white font-black text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-center"
+          >
+            Create Account
+          </Link>
+        </div>
+        <Link href="/" className="mt-6 text-xs font-bold text-gray-400 hover:text-amber-500 transition-colors">
+          ← Back to Home
+        </Link>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -505,13 +550,11 @@ export default function VendorMenuPage() {
                             <div className="flex flex-col sm:flex-row gap-4 w-full">
                               {/* Image */}
                               <div className="w-full sm:w-28 h-44 sm:h-28 shrink-0 bg-gray-50 dark:bg-gray-800/50 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700/50 relative group-hover:shadow-md transition-shadow duration-300">
-                                {item.imageUrl ? (
-                                  <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out" />
-                                ) : (
-                                  <div className="w-full h-full flex items-center justify-center">
-                                    <Store className="w-8 h-8 text-orange-500/50" />
-                                  </div>
-                                )}
+                                <img 
+                                  src={getFoodImage(item.name, item.imageUrl)} 
+                                  alt={item.name} 
+                                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out" 
+                                />
                                 {item.discount && (
                                   <div className="absolute top-0 right-0 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-xl shadow-sm">
                                     -{item.discount.percent}%

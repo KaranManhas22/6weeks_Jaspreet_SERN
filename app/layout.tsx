@@ -22,10 +22,10 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Flavoria & Foodzie — Campus Food Dining & Delivery',
-  description: 'Order hot food and pre-schedule meals from your university canteens in seconds.',
+  title: 'Foodzie — Campus Food Dining & Delivery for Colleges Worldwide',
+  description: 'Smart campus food ordering and delivery platform for colleges and universities worldwide.',
   manifest: '/manifest.json',
-  keywords: ['campus food', 'university canteen', 'food delivery', 'foodzie', 'flavoria'],
+  keywords: ['campus food', 'university canteen', 'food delivery', 'foodzie', 'colleges worldwide'],
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon.ico',
