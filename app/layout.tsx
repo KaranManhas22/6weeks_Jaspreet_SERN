@@ -22,10 +22,10 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Foodzie — Campus Food Delivery',
-  description: 'Order hot food from your university canteen in seconds.',
+  title: 'Flavoria & Foodzie — Campus Food Dining & Delivery',
+  description: 'Order hot food and pre-schedule meals from your university canteens in seconds.',
   manifest: '/manifest.json',
-  keywords: ['campus food', 'university canteen', 'food delivery', 'foodzie'],
+  keywords: ['campus food', 'university canteen', 'food delivery', 'foodzie', 'flavoria'],
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon.ico',
@@ -42,14 +42,20 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                    console.log('ServiceWorker registration successful');
-                  }, function(err) {
-                    console.log('ServiceWorker registration failed: ', err);
-                  });
+              // Unregister any stale service workers and purge caches immediately
+              if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                  for (let registration of registrations) {
+                    registration.unregister();
+                  }
                 });
+                if ('caches' in window) {
+                  caches.keys().then(function(names) {
+                    for (let name of names) {
+                      caches.delete(name);
+                    }
+                  });
+                }
               }
             `,
           }}
@@ -58,7 +64,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <BrandProvider>
             <CurrencyProvider>
               {children}
