@@ -49,7 +49,7 @@ const POPULAR_DISHES: DishItem[] = [
     name: 'Creamy Alfredo Pasta',
     desc: 'Rich and creamy white garlic sauce with button mushrooms, Italian herbs, and parmesan.',
     price: '₹140',
-    imageUrl: 'https://images.unsplash.com/photo-1621996346565-e3d5d6281699?w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=600&q=80',
     category: 'Italian & Pasta',
   },
   {

@@ -1,7 +1,7 @@
 const DISH_IMAGE_MAP: Record<string, string> = {
   burger: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80',
   pizza: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80',
-  pasta: 'https://images.unsplash.com/photo-1621996346565-e3d5d6281699?w=600&q=80',
+  pasta: 'https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=600&q=80',
   biryani: 'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=600&q=80',
   thali: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?w=600&q=80',
   paratha: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600&q=80',
