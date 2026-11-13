@@ -550,29 +550,36 @@ function AdminPanelMain({ onLogout }: { onLogout: () => void }) {
                   <span className="text-xs font-bold text-indigo-500 cursor-pointer">View All &gt;</span>
                 </div>
                 <div className="space-y-3">
-                  {[
-                    { name: 'Sarah Miller', role: 'Ops Lead', status: 'Online', statusColor: 'bg-emerald-500' },
-                    { name: 'James Wilson', role: 'Rider #1', status: 'Online', statusColor: 'bg-emerald-500' },
-                    { name: 'Emily Davis', role: 'Kitchen Supervisor', status: 'In Kitchen', statusColor: 'bg-amber-500' },
-                    { name: 'Michael Chen', role: 'Rider #2', status: 'Online', statusColor: 'bg-emerald-500' },
-                    { name: 'Olivia Brown', role: 'Inventory QA', status: 'Away', statusColor: 'bg-gray-400' },
-                  ].map((m) => (
-                    <div key={m.name} className="flex items-center justify-between text-xs font-bold">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-indigo-500/10 text-indigo-600 flex items-center justify-center font-black">
-                          {m.name.charAt(0)}
+                  {(() => {
+                    const activeStaff = users.filter(u => u.role === 'Delivery' || u.role === 'Vendor');
+                    const displayStaff = activeStaff.length > 0 ? activeStaff.slice(0, 6) : [
+                      { name: 'Gurpreet Singh Dhillon', role: 'Delivery', canteen: "Tania'z Cafe" },
+                      { name: 'Harmanpreet Singh Sandhu', role: 'Delivery', canteen: "Tania'z Cafe" },
+                      { name: 'Maninder Singh Gill', role: 'Delivery', canteen: "Narinder's Cafe" },
+                      { name: 'Jaspreet Singh Bajwa', role: 'Delivery', canteen: "Narinder's Cafe" },
+                      { name: 'Arshdeep Singh Sidhu', role: 'Delivery', canteen: 'Student Adda' },
+                      { name: 'Lovepreet Singh Mann', role: 'Delivery', canteen: 'Hunger Cure' },
+                    ];
+                    return displayStaff.map((m: any) => (
+                      <div key={m.id || m.name} className="flex items-center justify-between text-xs font-bold">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-8 h-8 rounded-full bg-indigo-500/10 text-indigo-600 flex items-center justify-center font-black shrink-0">
+                            {m.name.charAt(0)}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-gray-900 dark:text-white truncate">{m.name}</p>
+                            <span className="text-[10px] text-gray-400 font-semibold truncate block">
+                              {m.role === 'Delivery' ? '🏍️ Campus Rider (SBBSU)' : m.role}
+                            </span>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-gray-900 dark:text-white">{m.name}</p>
-                          <span className="text-[10px] text-gray-400 font-semibold">{m.role}</span>
-                        </div>
+                        <span className="flex items-center gap-1.5 text-[11px] text-emerald-500 shrink-0">
+                          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                          Online
+                        </span>
                       </div>
-                      <span className="flex items-center gap-1.5 text-[11px] text-gray-500">
-                        <span className={`w-2 h-2 rounded-full ${m.statusColor}`} />
-                        {m.status}
-                      </span>
-                    </div>
-                  ))}
+                    ));
+                  })()}
                 </div>
               </div>
 
@@ -965,23 +972,81 @@ function AdminPanelMain({ onLogout }: { onLogout: () => void }) {
         {/* ── TAB 4: ORDERS & DELIVERIES ───────────────────────────────────── */}
         {activeTab === 'Orders' && (
           <main className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full animate-in fade-in duration-300">
-            <h1 className="text-2xl font-black text-gray-900 dark:text-white">Live Orders Stream</h1>
-            <div className="bg-white dark:bg-[#111622] rounded-3xl border border-gray-200/80 dark:border-gray-800 p-6 shadow-xs divide-y divide-gray-100 dark:divide-gray-800">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl font-black text-gray-900 dark:text-white">Orders &amp; Deliveries Stream</h1>
+                <p className="text-xs text-gray-400 mt-0.5">Tracking all past month orders, canteens, and Punjabi delivery riders across SBBSU</p>
+              </div>
+              <span className="px-3 py-1.5 rounded-xl bg-indigo-500/10 text-indigo-500 text-xs font-black border border-indigo-500/20 self-start sm:self-auto">
+                {orders.length} Total Orders
+              </span>
+            </div>
+
+            <div className="bg-white dark:bg-[#111622] rounded-3xl border border-gray-200/80 dark:border-gray-800 p-6 shadow-xs divide-y divide-gray-100 dark:divide-gray-800/60">
               {orders.length === 0 ? (
-                <p className="text-center py-10 text-gray-400 text-xs font-bold">No active orders</p>
+                <p className="text-center py-12 text-gray-400 text-xs font-bold">No active orders found</p>
               ) : (
-                orders.map((o) => (
-                  <div key={o.id} className="py-3 flex items-center justify-between text-xs">
-                    <div>
-                      <span className="font-extrabold text-gray-900 dark:text-white block">Order #{o.id.slice(-6)} · {o.customer?.name}</span>
-                      <span className="text-[10px] text-gray-400">{o.deliveryAddress}</span>
+                orders.map((o) => {
+                  const isTakeaway = !o.deliveryAddress || o.deliveryAddress.toLowerCase().includes('counter');
+                  return (
+                    <div key={o.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs hover:bg-gray-50/50 dark:hover:bg-gray-800/30 px-3 -mx-3 rounded-2xl transition-colors">
+                      <div className="space-y-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono font-black text-indigo-500">#{o.id.slice(-6).toUpperCase()}</span>
+                          <span className="font-extrabold text-gray-900 dark:text-white">{o.customer?.name || 'Student'}</span>
+                          <span className="text-[10px] text-gray-400">· {o.customer?.email}</span>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-gray-500 dark:text-gray-400">
+                          <span className="font-bold text-orange-500 flex items-center gap-1">
+                            <Store className="w-3.5 h-3.5" /> {o.vendor?.name || 'Canteen'}
+                          </span>
+                          <span>•</span>
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3 text-gray-400" /> {o.deliveryAddress}
+                          </span>
+                          {o.deliveryPerson ? (
+                            <>
+                              <span>•</span>
+                              <span className="font-extrabold text-blue-500 dark:text-blue-400">
+                                🏍️ Rider: {o.deliveryPerson.name}
+                              </span>
+                            </>
+                          ) : isTakeaway ? (
+                            <>
+                              <span>•</span>
+                              <span className="font-semibold text-gray-400">
+                                🏢 Counter Pickup
+                              </span>
+                            </>
+                          ) : null}
+                        </div>
+                        <p className="text-[10px] text-gray-400">
+                          {new Date(o.createdAt).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                          {o.items?.length > 0 && ` · ${o.items.length} items`}
+                        </p>
+                      </div>
+
+                      <div className="text-left sm:text-right shrink-0">
+                        <span className="font-black text-gray-900 dark:text-white text-sm block">₹{o.totalAmount}</span>
+                        <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-md inline-block mt-0.5 ${
+                          o.status === 'Completed' || o.status === 'Delivered'
+                            ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'
+                            : o.status === 'Cancelled'
+                            ? 'bg-rose-500/10 text-rose-500 border border-rose-500/20'
+                            : 'bg-amber-500/10 text-amber-500 border border-amber-500/20'
+                        }`}>
+                          {o.status}
+                        </span>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <span className="font-black text-gray-900 dark:text-white block">₹{o.totalAmount}</span>
-                      <span className="text-[10px] font-bold text-emerald-500 uppercase">{o.status}</span>
-                    </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           </main>

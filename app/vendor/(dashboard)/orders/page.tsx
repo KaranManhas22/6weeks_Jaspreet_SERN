@@ -344,10 +344,23 @@ export default function BitepointVendorOrdersPage() {
                   </div>
 
                   {/* Date & Time Row */}
-                  <div className="flex items-center justify-between text-[11px] font-semibold text-gray-400 mb-4 pb-3 border-b border-gray-100 dark:border-gray-800">
+                  <div className="flex items-center justify-between text-[11px] font-semibold text-gray-400 mb-3 pb-3 border-b border-gray-100 dark:border-gray-800">
                     <span>{new Date(order.createdAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</span>
                     <span>{new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                   </div>
+
+                  {/* Dedicated Delivery Rider Badge */}
+                  {order.deliveryPerson && (
+                    <div className="flex items-center justify-between gap-2 px-3 py-1.5 mb-3 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 text-[11px] font-bold">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <Bike className="w-3.5 h-3.5 shrink-0" />
+                        <span className="truncate">Rider: {order.deliveryPerson.name}</span>
+                      </div>
+                      {order.deliveryPerson.phone && (
+                        <span className="text-[10px] text-gray-400 shrink-0">{order.deliveryPerson.phone}</span>
+                      )}
+                    </div>
+                  )}
 
                   {/* Scheduled Alert if any */}
                   {order.scheduledTime && (
@@ -409,6 +422,22 @@ export default function BitepointVendorOrdersPage() {
                           </a>
                         </div>
                       )}
+                      {order.deliveryPerson && (
+                        <div className="flex items-center justify-between p-2.5 bg-amber-500/10 rounded-xl border border-amber-500/20 text-xs">
+                          <div className="flex items-center gap-2">
+                            <Bike className="w-4 h-4 text-amber-500" />
+                            <div>
+                              <span className="text-[10px] font-bold uppercase text-gray-400 block">Assigned Delivery Rider</span>
+                              <span className="font-extrabold text-gray-900 dark:text-white">{order.deliveryPerson.name}</span>
+                            </div>
+                          </div>
+                          {order.deliveryPerson.phone && (
+                            <a href={`tel:${order.deliveryPerson.phone}`} className="text-xs font-bold text-amber-500 hover:underline">
+                              {order.deliveryPerson.phone}
+                            </a>
+                          )}
+                        </div>
+                      )}
                       {order.status === 'OutForDelivery' && riderCoords[order.id] && (
                         <div className="mt-2 h-28 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
                           <TrackingMap
@@ -425,7 +454,12 @@ export default function BitepointVendorOrdersPage() {
                 {/* Card Footer: Total & Bitepoint Pill Action Buttons */}
                 <div className="pt-3 border-t border-gray-100 dark:border-gray-800">
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs font-black uppercase text-gray-400">Total</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-black uppercase text-gray-400">Total</span>
+                      <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                        Paid Online ✓
+                      </span>
+                    </div>
                     <span className="text-lg font-black text-gray-900 dark:text-white">
                       {formatCurrency(order.totalAmount)}
                     </span>

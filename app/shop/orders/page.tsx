@@ -4,6 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { io, Socket } from 'socket.io-client';
 import { api, getToken } from '@/lib/api';
+import { useCurrency } from '@/context/CurrencyContext';
 import { 
   CheckCircle2, 
   Package, 
@@ -22,7 +23,8 @@ import {
   User,
   Mail,
   ShieldCheck,
-  Utensils
+  Utensils,
+  Bike
 } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
@@ -69,7 +71,9 @@ const SUCCESS_SOUND = 'https://assets.mixkit.co/active_storage/sfx/1435/1435-pre
 
 export default function OrdersPage() {
   const router = useRouter();
+  const { formatCurrency } = useCurrency();
   const [order, setOrder] = useState<Order | null>(null);
+  const [allOrders, setAllOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showCelebration, setShowCelebration] = useState(false);
   const [riderCoords, setRiderCoords] = useState<{ lat: number; lng: number } | null>(null);
@@ -86,6 +90,7 @@ export default function OrdersPage() {
   const fetchLatestOrder = useCallback(async () => {
     try {
       const orders = await api.get<Order[]>('/api/orders/customer');
+      setAllOrders(orders);
       if (orders.length > 0) {
         let targetId = null;
         if (typeof window !== 'undefined') {
@@ -476,7 +481,7 @@ export default function OrdersPage() {
                       </span>
                       <div>
                         <span className="text-sm font-bold text-gray-900 dark:text-white block">{item.foodItem.name}</span>
-                        <span className="text-xs text-gray-400 font-medium">${item.priceAtTime.toFixed(2)} each</span>
+                        <span className="text-xs text-gray-400 font-medium">{formatCurrency(item.priceAtTime)} each</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
@@ -488,7 +493,7 @@ export default function OrdersPage() {
                         {item.foodItem.isVegetarian ? 'Veg' : 'Non-Veg'}
                       </span>
                       <span className="text-base font-black text-gray-900 dark:text-white min-w-[60px] text-right">
-                        ${(item.priceAtTime * item.quantity).toFixed(2)}
+                        {formatCurrency(item.priceAtTime * item.quantity)}
                       </span>
                     </div>
                   </div>
@@ -497,7 +502,7 @@ export default function OrdersPage() {
 
               <div className="pt-4 border-t border-gray-100 dark:border-gray-800 flex justify-between items-center">
                 <span className="text-sm font-bold text-gray-500 dark:text-gray-400">Total Amount Paid</span>
-                <span className="text-2xl font-black text-orange-500">${order.totalAmount.toFixed(2)}</span>
+                <span className="text-2xl font-black text-orange-500">{formatCurrency(order.totalAmount)}</span>
               </div>
             </div>
 
@@ -649,7 +654,7 @@ export default function OrdersPage() {
                 </div>
                 <div className="flex justify-between text-xs font-medium text-gray-500">
                   <span>Total Amount</span>
-                  <span className="font-black text-orange-500 text-sm">${order.totalAmount.toFixed(2)}</span>
+                  <span className="font-black text-orange-500 text-sm">{formatCurrency(order.totalAmount)}</span>
                 </div>
               </div>
             </div>
@@ -670,6 +675,173 @@ export default function OrdersPage() {
             
           </div>
         </div>
+
+        {/* ── PAST ORDERS HISTORY SECTION ─────────────────────────────────── */}
+        {allOrders.length > 0 && (
+          <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 sm:p-8 border border-gray-200 dark:border-gray-800 shadow-xl shadow-orange-500/5 space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-gray-100 dark:border-gray-800">
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-2xl flex items-center justify-center border border-orange-500/20">
+                  <Package className="w-6 h-6" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-black text-gray-900 dark:text-white">Order History &amp; Records</h2>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Showing all {allOrders.length} orders placed across Sant Baba Bhag Singh University canteens
+                  </p>
+                </div>
+              </div>
+              <span className="px-3.5 py-1.5 bg-orange-500/10 text-orange-600 dark:text-orange-400 text-xs font-black rounded-xl border border-orange-500/20 self-start sm:self-auto">
+                {allOrders.length} Past Orders
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {allOrders.map((histOrder) => {
+                const isSelected = order?.id === histOrder.id;
+                const isTakeaway = !histOrder.deliveryAddress || histOrder.deliveryAddress.toLowerCase().includes('counter') || histOrder.deliveryAddress.toLowerCase().includes('takeaway');
+
+                return (
+                  <div
+                    key={histOrder.id}
+                    className={`p-5 rounded-3xl border transition-all flex flex-col justify-between ${
+                      isSelected
+                        ? 'border-orange-500 ring-2 ring-orange-500/20 bg-orange-50/20 dark:bg-orange-950/20 shadow-lg'
+                        : 'border-gray-200/80 dark:border-gray-800/80 bg-gray-50/50 dark:bg-gray-800/30 hover:border-orange-400/50'
+                    }`}
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-black text-gray-900 dark:text-white">
+                              #{histOrder.id.slice(-6).toUpperCase()}
+                            </span>
+                            {isSelected && (
+                              <span className="text-[10px] font-black px-2 py-0.5 bg-orange-500 text-white rounded-md">
+                                Viewing
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs font-bold text-orange-600 dark:text-orange-400 flex items-center gap-1 mt-0.5">
+                            <Store className="w-3.5 h-3.5" />
+                            {histOrder.vendor.vendorName}
+                          </p>
+                        </div>
+                        <span className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-lg border ${
+                          histOrder.status === 'Completed'
+                            ? 'bg-green-500/10 text-green-600 border-green-500/20'
+                            : histOrder.status === 'Cancelled'
+                            ? 'bg-red-500/10 text-red-600 border-red-500/20'
+                            : 'bg-amber-500/10 text-amber-600 border-amber-500/20'
+                        }`}>
+                          {histOrder.status}
+                        </span>
+                      </div>
+
+                      {/* Date & Time */}
+                      <p className="text-[11px] text-gray-400 font-medium">
+                        {new Date(histOrder.createdAt).toLocaleDateString('en-US', {
+                          weekday: 'short',
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
+
+                      {/* Delivery / Rider Info */}
+                      <div className="p-2.5 rounded-2xl bg-white dark:bg-gray-900/80 border border-gray-100 dark:border-gray-800 space-y-1 text-xs">
+                        <div className="flex items-center gap-1.5 text-gray-500">
+                          <MapPin className="w-3.5 h-3.5 text-orange-500 shrink-0" />
+                          <span className="truncate font-semibold">{histOrder.deliveryAddress}</span>
+                        </div>
+                        {histOrder.rider ? (
+                          <div className="flex items-center justify-between pt-1 border-t border-gray-100 dark:border-gray-800 text-[11px]">
+                            <span className="font-extrabold text-orange-600 dark:text-orange-400 flex items-center gap-1">
+                              🏍️ {histOrder.rider.name}
+                            </span>
+                            {histOrder.rider.phone && (
+                              <span className="text-gray-400 text-[10px]">{histOrder.rider.phone}</span>
+                            )}
+                          </div>
+                        ) : isTakeaway ? (
+                          <div className="pt-1 border-t border-gray-100 dark:border-gray-800 text-[11px] font-bold text-gray-400 flex items-center gap-1">
+                            🏢 Counter Pickup (Self Collection)
+                          </div>
+                        ) : null}
+                      </div>
+
+                      {/* Item Summary */}
+                      <div className="space-y-1 text-xs">
+                        {histOrder.items.slice(0, 3).map((item) => (
+                          <div key={item.id} className="flex justify-between text-gray-600 dark:text-gray-300">
+                            <span className="truncate font-medium">{item.quantity}x {item.foodItem.name}</span>
+                            <span className="font-bold text-gray-900 dark:text-white shrink-0 ml-2">
+                              {formatCurrency(item.priceAtTime * item.quantity)}
+                            </span>
+                          </div>
+                        ))}
+                        {histOrder.items.length > 3 && (
+                          <p className="text-[11px] text-gray-400 font-medium">
+                            +{histOrder.items.length - 3} more items
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Bottom Actions */}
+                    <div className="pt-4 mt-3 border-t border-gray-100 dark:border-gray-800 space-y-2.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-medium text-gray-400">Total Paid</span>
+                        <span className="text-base font-black text-orange-500">
+                          {formatCurrency(histOrder.totalAmount)}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => {
+                            setOrder(histOrder);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                          className={`flex-1 py-2 px-3 text-xs font-bold rounded-xl transition-all text-center ${
+                            isSelected
+                              ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20'
+                              : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200'
+                          }`}
+                        >
+                          {isSelected ? 'Viewing' : 'Track / View'}
+                        </button>
+
+                        <a
+                          href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/orders/${histOrder.id}/receipt`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 text-gray-600 dark:text-gray-300 transition-colors"
+                          title="Download Receipt"
+                        >
+                          <Download className="w-4 h-4" />
+                        </a>
+
+                        {histOrder.status === 'Completed' && histOrder.items.length > 0 && (
+                          <button
+                            onClick={() => setActiveReviewItem(histOrder.items[0])}
+                            className="p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 transition-colors"
+                            title="Rate Food Item"
+                          >
+                            <Star className="w-4 h-4 fill-amber-500" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
       </div>
 

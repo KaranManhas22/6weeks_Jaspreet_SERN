@@ -65,10 +65,9 @@ export default function VendorEmployeesPage() {
   const [payAmount, setPayAmount] = useState('');
 
   // Job Openings & Applications states
-  const [activeTab, setActiveTab] = useState<'employees' | 'vacancies' | 'applications' | 'deposits'>('employees');
+  const [activeTab, setActiveTab] = useState<'employees' | 'vacancies' | 'applications'>('employees');
   const [vacancies, setVacancies] = useState<any[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
-  const [cashDeposits, setCashDeposits] = useState<any[]>([]);
   const [showVacancyModal, setShowVacancyModal] = useState(false);
   const [vacTitle, setVacTitle] = useState('');
   const [vacDescription, setVacDescription] = useState('');
@@ -78,7 +77,6 @@ export default function VendorEmployeesPage() {
   useEffect(() => {
     fetchEmployees();
     fetchJobsAndApps();
-    fetchCashDeposits();
   }, []);
 
   const fetchEmployees = async () => {
@@ -91,27 +89,6 @@ export default function VendorEmployeesPage() {
       setErrorMsg(err.message || 'Failed to fetch employee lists.');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const fetchCashDeposits = async () => {
-    try {
-      const data = await api.get<any[]>('/api/vendor/cash-deposits');
-      setCashDeposits(data || []);
-    } catch (err) {
-      console.error("Failed to load cash deposits", err);
-    }
-  };
-
-  const handleVerifyDeposit = async (id: string) => {
-    if (!confirm("Are you sure you want to verify this rider cash deposit? This will credit the rider and reduce their COD cash balance.")) return;
-    try {
-      await api.patch(`/api/vendor/cash-deposits/${id}/verify`, {});
-      fetchCashDeposits();
-      fetchEmployees();
-      alert("Cash deposit verified successfully!");
-    } catch (err: any) {
-      alert(err.message || "Failed to verify deposit");
     }
   };
 
@@ -319,19 +296,6 @@ export default function VendorEmployeesPage() {
           {pendingAppsCount > 0 && (
             <span className="ml-1.5 bg-orange-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full">
               {pendingAppsCount}
-            </span>
-          )}
-        </button>
-        <button
-          onClick={() => setActiveTab('deposits')}
-          className={`pb-3 font-bold text-xs uppercase tracking-wider border-b-2 transition-all relative ${
-            activeTab === 'deposits' ? 'border-orange-500 text-white' : 'border-transparent text-gray-500 hover:text-gray-350'
-          }`}
-        >
-          Rider COD Audits
-          {cashDeposits.filter(d => d.status === 'Pending').length > 0 && (
-            <span className="ml-1.5 bg-orange-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full animate-pulse">
-              {cashDeposits.filter(d => d.status === 'Pending').length}
             </span>
           )}
         </button>
@@ -623,70 +587,6 @@ export default function VendorEmployeesPage() {
                           </div>
                         ) : (
                           <span className="text-gray-600 text-[10px] italic">Processed</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* RIDER COD DEPOSITS AUDITING TAB */}
-      {activeTab === 'deposits' && (
-        <div className="space-y-6 animate-in fade-in duration-200">
-          <p className="text-xs text-orange-400/80 bg-orange-500/5 border border-orange-500/10 px-4 py-3 rounded-2xl">
-            💡 <strong>COD Audit Workflow</strong>: Verify cash dropped off by riders. Once verified, it resets the rider's outstanding COD cash balance on their performance log.
-          </p>
-
-          {cashDeposits.length === 0 ? (
-            <div className="bg-gray-900 border border-gray-800 rounded-3xl p-12 text-center text-gray-550 space-y-2">
-              <CreditCard className="w-12 h-12 text-gray-700 mx-auto" />
-              <h3 className="font-bold text-white text-sm">No Cash Deposit Logs</h3>
-              <p className="text-xs max-w-sm mx-auto">Submitted rider cash drops will appear here for audit verification.</p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto border border-gray-850 rounded-2xl bg-gray-900 shadow-xl">
-              <table className="w-full text-left border-collapse text-xs">
-                <thead>
-                  <tr className="border-b border-gray-850 text-[10px] text-gray-550 uppercase tracking-widest font-black bg-gray-955">
-                    <th className="p-4">Deposit ID</th>
-                    <th className="p-4">Delivery Staff</th>
-                    <th className="p-4">Amount Dropped</th>
-                    <th className="p-4">Submission Date</th>
-                    <th className="p-4">Status</th>
-                    <th className="p-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-855 text-gray-300 font-semibold">
-                  {cashDeposits.map(dep => (
-                    <tr key={dep.id} className="hover:bg-gray-955/50 transition-colors">
-                      <td className="p-4 font-mono text-white">#D-{dep.id.slice(-6).toUpperCase()}</td>
-                      <td className="p-4">
-                        <p className="font-bold text-white text-sm">{dep.riderName}</p>
-                        <span className="text-[10px] text-gray-550 font-normal">{dep.riderEmail}</span>
-                      </td>
-                      <td className="p-4 text-orange-400 font-black text-sm">{formatCurrency(parseFloat(dep.amount))}</td>
-                      <td className="p-4 text-gray-400">{new Date(dep.createdAt).toLocaleString()}</td>
-                      <td className="p-4">
-                        <span className={`inline-block px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase ${
-                          dep.status === 'Verified' ? 'bg-green-500/10 text-green-400 border border-green-500/15' : 'bg-amber-500/10 text-amber-400 border border-amber-500/15'
-                        }`}>
-                          {dep.status}
-                        </span>
-                      </td>
-                      <td className="p-4 text-right">
-                        {dep.status === 'Pending' ? (
-                          <button
-                            onClick={() => handleVerifyDeposit(dep.id)}
-                            className="bg-green-600 hover:bg-green-700 text-white font-bold px-3 py-1.5 rounded-lg text-[9px] uppercase shadow-md active:scale-95 transition-all"
-                          >
-                            Verify & Approve
-                          </button>
-                        ) : (
-                          <span className="text-gray-500 italic text-[10px]">Settled</span>
                         )}
                       </td>
                     </tr>

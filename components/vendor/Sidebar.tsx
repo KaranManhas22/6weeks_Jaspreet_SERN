@@ -16,6 +16,7 @@ import {
   Users,
   CalendarClock,
   LayoutDashboard,
+  Star,
 } from 'lucide-react';
 import { removeToken } from '@/lib/api';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -26,6 +27,7 @@ const NAV_ITEMS = [
   { href: '/vendor/inventory', label: 'Inventory',        icon: LayoutGrid,                     active: true  },
   { href: '/vendor/schedule',  label: 'Canteen Timings',  icon: CalendarClock,                  active: true  },
   { href: '/vendor/employees', label: 'Employee Manager', icon: Users,                          active: true  },
+  { href: '/vendor/reviews',   label: 'Customer Reviews', icon: Star,                           active: true  },
   { href: '/vendor/analytics', label: 'Analytics',        icon: BarChart2,                      active: true  },
   { href: '/vendor/settings',  label: 'Settings',         icon: Settings,                       active: true  },
 ];
