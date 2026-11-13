@@ -110,36 +110,6 @@ export default function FoodzieLandingPage() {
   return (
     <div className="min-h-screen bg-[#FFFDF9] dark:bg-[#0D1117] text-[#2C2723] dark:text-[#E6EDF3] font-sans transition-colors duration-300">
       
-      {/* ── TOP UTILITY BAR (Global Universities Network) ───────────────── */}
-      <div className="bg-[#FFF8EE] dark:bg-[#161B22] border-b border-[#F0E6D8] dark:border-gray-800 text-[11px] sm:text-xs text-gray-600 dark:text-gray-400 py-2 px-4 sm:px-8">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          
-          {/* Left: Global Coverage & Schedule */}
-          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4">
-            <span className="flex items-center gap-1.5 font-medium">
-              <Globe2 className="w-3.5 h-3.5 text-[#E65100]" />
-              Serving Colleges & Universities Worldwide
-            </span>
-            <span className="hidden md:inline text-gray-300 dark:text-gray-700">|</span>
-            <span className="flex items-center gap-1.5 font-medium">
-              <Clock className="w-3.5 h-3.5 text-[#E65100]" />
-              Multi-Campus Operating Schedules & 24/7 Pre-Ordering
-            </span>
-          </div>
-
-          {/* Right: Contact & Theme Toggle */}
-          <div className="flex items-center gap-4">
-            <a href="tel:+911812711111" className="flex items-center gap-1.5 font-bold text-gray-800 dark:text-gray-200 hover:text-[#E65100] transition-colors">
-              <Phone className="w-3.5 h-3.5 text-[#E65100]" />
-              Support: +91 181 271 1111
-            </a>
-            <span className="text-gray-300 dark:text-gray-700">|</span>
-            <ThemeToggle />
-          </div>
-
-        </div>
-      </div>
-
       {/* ── MAIN NAVBAR (Foodzie Branding) ─────────────────────────────── */}
       <header className="sticky top-0 z-40 bg-[#FFFDF9]/95 dark:bg-[#0D1117]/95 backdrop-blur-md border-b border-[#F0E6D8] dark:border-gray-800">
         <nav className="max-w-7xl mx-auto px-4 sm:px-8 py-4 flex items-center justify-between">
@@ -178,8 +148,9 @@ export default function FoodzieLandingPage() {
             </Link>
           </div>
 
-          {/* Right Action Buttons */}
+          {/* Right Action Buttons & Theme Toggle */}
           <div className="hidden sm:flex items-center gap-3">
+            <ThemeToggle />
             {isLoggedIn ? (
               <>
                 <Link
@@ -216,6 +187,7 @@ export default function FoodzieLandingPage() {
 
           {/* Mobile Menu Hamburger */}
           <div className="flex sm:hidden items-center gap-2">
+            <ThemeToggle />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-gray-800"
