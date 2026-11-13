@@ -83,9 +83,9 @@ export default function FoodzieLandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState('');
-  const [bookingDate, setBookingDate] = useState('');
-  const [bookingTime, setBookingTime] = useState('');
-  const [bookingPeople, setBookingPeople] = useState('2');
+  const [preOrderDate, setPreOrderDate] = useState('');
+  const [mealWindow, setMealWindow] = useState('Lunch Rush (12:30 PM – 2:30 PM)');
+  const [deliveryTarget, setDeliveryTarget] = useState('Hostel Room Delivery');
 
   useEffect(() => {
     const token = getToken();
@@ -96,18 +96,15 @@ export default function FoodzieLandingPage() {
     }
   }, []);
 
-  const handleBookTable = (e: React.FormEvent) => {
+  const handlePreScheduleOrder = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isLoggedIn) {
-      toast.error('Please sign in or create an account to view and book campus canteens!');
-      router.push('/login?redirect=/');
+      toast.error('Please sign in or create an account to view and order from campus canteens!');
+      router.push('/login?redirect=/shop');
       return;
     }
-    if (!bookingDate || !bookingTime) {
-      toast.error('Please select both date and time for pre-scheduling.');
-      return;
-    }
-    toast.success(`Pre-order / table reserved for ${bookingPeople} guests on ${bookingDate} at ${bookingTime}!`);
+    toast.success(`Pre-scheduled for ${mealWindow} (${deliveryTarget})!`);
+    router.push('/shop');
   };
 
   return (
@@ -592,21 +589,38 @@ export default function FoodzieLandingPage() {
               <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
             </div>
 
-            {/* Right Card: Book Table / Pre-Schedule Order Form */}
+            {/* Right Card: Express Campus Pre-Schedule Order Form (Image 0 Layout, Foodzie Logic) */}
             <div className="lg:col-span-5 bg-white dark:bg-[#0D1117] rounded-[36px] p-8 sm:p-10 border border-[#F0E6D8] dark:border-gray-800 shadow-xl flex flex-col justify-between">
               <div>
                 <span className="text-xs font-black uppercase tracking-[0.2em] text-[#E65100] block mb-1">
-                  RESERVATION & PRE-ORDERS
+                  CAMPUS PRE-ORDERS &amp; ROOM DELIVERY
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-serif font-black text-gray-900 dark:text-white mb-2">
                   Pre-Schedule Your Meal
                 </h3>
                 <p className="text-xs text-gray-500 mb-6">
-                  Reserve a table in advance or pre-schedule a hot meal delivery during canteen open timings.
+                  Skip canteen lines between lectures. Pre-schedule your favorite hot meal for hostel delivery or express counter pickup.
                 </p>
 
-                <form onSubmit={handleBookTable} className="space-y-4">
-                  {/* Date & Time Row */}
+                <form onSubmit={handlePreScheduleOrder} className="space-y-4">
+                  {/* Delivery Location / Drop-off */}
+                  <div>
+                    <label className="text-[11px] font-black uppercase tracking-wider text-gray-400 block mb-1.5">
+                      Campus Drop-off or Pickup Point
+                    </label>
+                    <select
+                      value={deliveryTarget}
+                      onChange={(e) => setDeliveryTarget(e.target.value)}
+                      className="w-full bg-[#FFFDF9] dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl px-4 py-3 text-xs font-bold text-gray-800 dark:text-gray-200 focus:outline-none focus:border-[#E65100]"
+                    >
+                      <option value="Hostel Room Delivery">Hostel Room Delivery (Direct to Block)</option>
+                      <option value="Canteen Express Counter Pickup">Canteen Express Counter Pickup</option>
+                      <option value="Faculty / Department Building">Faculty / Department Building</option>
+                      <option value="Central Library / Student Center">Central Library / Student Center</option>
+                    </select>
+                  </div>
+
+                  {/* Meal Window & Date Row */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-[11px] font-black uppercase tracking-wider text-gray-400 block mb-1.5">
@@ -614,47 +628,33 @@ export default function FoodzieLandingPage() {
                       </label>
                       <input
                         type="date"
-                        value={bookingDate}
-                        onChange={(e) => setBookingDate(e.target.value)}
+                        value={preOrderDate}
+                        onChange={(e) => setPreOrderDate(e.target.value)}
                         className="w-full bg-[#FFFDF9] dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl px-3 py-3 text-xs font-bold text-gray-800 dark:text-gray-200 focus:outline-none focus:border-[#E65100]"
                       />
                     </div>
                     <div>
                       <label className="text-[11px] font-black uppercase tracking-wider text-gray-400 block mb-1.5">
-                        Select Time
+                        Meal Window
                       </label>
-                      <input
-                        type="time"
-                        value={bookingTime}
-                        onChange={(e) => setBookingTime(e.target.value)}
+                      <select
+                        value={mealWindow}
+                        onChange={(e) => setMealWindow(e.target.value)}
                         className="w-full bg-[#FFFDF9] dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl px-3 py-3 text-xs font-bold text-gray-800 dark:text-gray-200 focus:outline-none focus:border-[#E65100]"
-                      />
+                      >
+                        <option value="Breakfast Rush (8:30 AM – 10:30 AM)">Breakfast (8:30 – 10:30 AM)</option>
+                        <option value="Lunch Rush (12:30 PM – 2:30 PM)">Lunch (12:30 – 2:30 PM)</option>
+                        <option value="Evening Snacks (4:30 PM – 6:30 PM)">Evening (4:30 – 6:30 PM)</option>
+                        <option value="Dinner & Late Study (7:30 PM – 10:30 PM)">Dinner (7:30 – 10:30 PM)</option>
+                      </select>
                     </div>
-                  </div>
-
-                  {/* Guests / People */}
-                  <div>
-                    <label className="text-[11px] font-black uppercase tracking-wider text-gray-400 block mb-1.5">
-                      Number of People
-                    </label>
-                    <select
-                      value={bookingPeople}
-                      onChange={(e) => setBookingPeople(e.target.value)}
-                      className="w-full bg-[#FFFDF9] dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl px-4 py-3 text-xs font-bold text-gray-800 dark:text-gray-200 focus:outline-none focus:border-[#E65100]"
-                    >
-                      <option value="1">1 Person (Quick Meal)</option>
-                      <option value="2">2 People (Pair)</option>
-                      <option value="4">4 People (Small Group)</option>
-                      <option value="6">6 People (Team Lunch)</option>
-                      <option value="8+">8+ People (Society / Class Gathering)</option>
-                    </select>
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full bg-[#E65100] hover:bg-[#D84315] text-white font-black text-xs uppercase tracking-wider py-4 rounded-2xl shadow-xl shadow-orange-500/25 transition-all hover:scale-[1.02] active:scale-95 mt-2"
+                    className="w-full bg-[#E65100] hover:bg-[#D84315] text-white font-black text-xs uppercase tracking-wider py-4 rounded-2xl shadow-xl shadow-orange-500/25 transition-all hover:scale-[1.02] active:scale-95 mt-2 cursor-pointer"
                   >
-                    {isLoggedIn ? "CONFIRM PRE-SCHEDULE ORDER" : "SIGN IN TO PRE-SCHEDULE"}
+                    {isLoggedIn ? "BROWSE CANTEENS & PRE-ORDER NOW →" : "SIGN IN TO PRE-SCHEDULE →"}
                   </button>
                 </form>
               </div>
