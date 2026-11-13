@@ -2,398 +2,599 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { UtensilsCrossed, Zap, ShieldCheck, Star, ArrowRight, Flame, Package, Clock, Menu, X } from 'lucide-react';
+import { 
+  UtensilsCrossed, 
+  Flame, 
+  Clock, 
+  Heart, 
+  ArrowRight, 
+  CalendarClock, 
+  Sparkles, 
+  Store, 
+  CheckCircle2, 
+  Menu, 
+  X, 
+  MapPin, 
+  ChevronRight,
+  ShieldCheck,
+  Star
+} from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useBrand } from '@/context/BrandContext';
 
+interface SampleDish {
+  id: string;
+  name: string;
+  category: string;
+  prepTime: string;
+  price: number;
+  imageUrl: string;
+  canteen: string;
+  isVeg: boolean;
+}
+
+const SAMPLE_DISHES: SampleDish[] = [
+  {
+    id: '1',
+    name: 'Spicy Crispy Paneer Burger with Fries',
+    category: 'Snack & Fast Food',
+    prepTime: '15 Mins',
+    price: 65,
+    imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80',
+    canteen: 'Central Canteen',
+    isVeg: true,
+  },
+  {
+    id: '2',
+    name: 'Authentic Amritsari Chole Bhature',
+    category: 'North Indian Meal',
+    prepTime: '20 Mins',
+    price: 70,
+    imageUrl: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?w=600&q=80',
+    canteen: 'Punjabi Zaika',
+    isVeg: true,
+  },
+  {
+    id: '3',
+    name: 'Butter Tossed Aloo Pyaz Paratha',
+    category: 'Breakfast Special',
+    prepTime: '12 Mins',
+    price: 45,
+    imageUrl: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600&q=80',
+    canteen: 'Hostel 3 Mess',
+    isVeg: true,
+  },
+  {
+    id: '4',
+    name: 'Fresh Garden Veg Deluxe Thali',
+    category: 'Full Thali',
+    prepTime: '15 Mins',
+    price: 120,
+    imageUrl: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&q=80',
+    canteen: 'Student Hub Kitchen',
+    isVeg: true,
+  },
+  {
+    id: '5',
+    name: 'Dum Hydrabadi Veg Biryani Bowl',
+    category: 'Biryani Special',
+    prepTime: '18 Mins',
+    price: 130,
+    imageUrl: 'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=600&q=80',
+    canteen: 'Biryani Express',
+    isVeg: true,
+  },
+  {
+    id: '6',
+    name: 'Creamy Mango Lassi & Masala Chai',
+    category: 'Cold Drinks & Tea',
+    prepTime: '5 Mins',
+    price: 50,
+    imageUrl: 'https://images.unsplash.com/photo-1571556094541-01beeb958ce7?w=600&q=80',
+    canteen: 'Verka Canteen',
+    isVeg: true,
+  },
+];
+
+const CATEGORIES = [
+  { name: 'Breakfast', icon: '🥞', count: '14 Dishes', gradient: 'from-amber-50 to-amber-100/70 dark:from-amber-950/30 dark:to-amber-900/20' },
+  { name: 'Vegetarian', icon: '🥗', count: '28 Dishes', gradient: 'from-emerald-50 to-emerald-100/70 dark:from-emerald-950/30 dark:to-emerald-900/20' },
+  { name: 'Parathas', icon: '🫓', count: '10 Dishes', gradient: 'from-orange-50 to-orange-100/70 dark:from-orange-950/30 dark:to-orange-900/20' },
+  { name: 'Thalis & Meals', icon: '🍛', count: '8 Combos', gradient: 'from-red-50 to-red-100/70 dark:from-red-950/30 dark:to-red-900/20' },
+  { name: 'Fast Food', icon: '🍔', count: '22 Dishes', gradient: 'from-rose-50 to-rose-100/70 dark:from-rose-950/30 dark:to-rose-900/20' },
+  { name: 'Beverages', icon: '🧋', count: '16 Drinks', gradient: 'from-sky-50 to-sky-100/70 dark:from-sky-950/30 dark:to-sky-900/20' },
+];
+
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [bookmarked, setBookmarked] = useState<Record<string, boolean>>({});
   const { brandName } = useBrand();
 
+  const toggleBookmark = (id: string) => {
+    setBookmarked(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100/50 dark:bg-gray-900/40 dark:bg-gray-950 text-gray-900 dark:text-white overflow-x-hidden transition-colors duration-300 relative">
-
-      {/* Branded Background Pattern Overlay */}
-      <div className="absolute inset-0 bg-[url('/foodzie_bg_pattern.jpg')] bg-repeat opacity-[0.03] dark:opacity-[0.08] pointer-events-none z-0" />
-
-      {/* ── Ambient background glows ─────────────────────────────── */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute -top-32 -left-32 w-[600px] h-[600px] bg-orange-600/10 dark:bg-orange-600/10 rounded-full blur-[120px]" />
-        <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-orange-500/5 dark:bg-orange-500/8 rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 left-1/3 w-[500px] h-[300px] bg-amber-600/5 dark:bg-amber-600/8 rounded-full blur-[100px]" />
-      </div>
-
-      {/* ── Nav ──────────────────────────────────────────────────── */}
-      <nav className="relative z-30 flex items-center justify-between px-6 py-5 max-w-7xl mx-auto">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/30">
-            <UtensilsCrossed className="w-5 h-5 text-white" />
-          </div>
-          <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">{brandName}</span>
-        </div>
-        
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-6">
-          <Link href="/about" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
-            About Us
-          </Link>
-          <Link href="/contact" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
-            Contact
-          </Link>
-          <div className="w-px h-5 bg-gray-200 dark:bg-gray-800" />
-          <ThemeToggle />
-          <Link
-            href="/login"
-            className="text-sm font-medium text-gray-650 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-950/60"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/signup"
-            className="text-sm font-semibold bg-orange-500 hover:bg-orange-400 text-white px-4 py-2 rounded-xl transition-all duration-200 shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40"
-          >
-            Get Started
-          </Link>
-        </div>
-
-        {/* Mobile Menu Trigger */}
-        <div className="flex md:hidden items-center gap-3">
-          <ThemeToggle />
-          <button 
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-900 rounded-xl transition-colors"
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
-      </nav>
-
-      {/* Mobile Menu Overlay */}
-      <div className={`fixed inset-0 bg-white/95 dark:bg-gray-950/95 backdrop-blur-md z-20 md:hidden flex flex-col items-center justify-center gap-8 transition-all duration-300 ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
-        <Link 
-          href="/about" 
-          onClick={() => setMobileMenuOpen(false)}
-          className="text-2xl font-bold text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-        >
-          About Us
-        </Link>
-        <Link 
-          href="/contact" 
-          onClick={() => setMobileMenuOpen(false)}
-          className="text-2xl font-bold text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-        >
-          Contact
-        </Link>
-        <Link 
-          href="/login" 
-          onClick={() => setMobileMenuOpen(false)}
-          className="text-2xl font-bold text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-        >
-          Sign in
-        </Link>
-        <Link 
-          href="/signup" 
-          onClick={() => setMobileMenuOpen(false)}
-          className="text-xl font-bold bg-orange-500 hover:bg-orange-400 text-white px-8 py-3 rounded-2xl shadow-lg shadow-orange-500/25 transition-all"
-        >
-          Get Started
-        </Link>
-      </div>
-
-      {/* ── Hero ─────────────────────────────────────────────────── */}
-      <section className="relative z-10 max-w-7xl mx-auto px-6 pt-12 pb-24 animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out">
-        <div className="flex flex-col items-center justify-center max-w-4xl mx-auto">
-          {/* Center: Text & CTA */}
-          <div className="text-center space-y-6 flex flex-col items-center">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 text-orange-600 dark:text-orange-400 rounded-full px-4 py-1.5 text-xs font-bold tracking-wide uppercase">
-              <Zap className="w-3.5 h-3.5" />
-              Campus Food Delivery — Reimagined
-            </div>
-
-            {/* Headline */}
-            <h1 className="text-5xl sm:text-6xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-white">
-              Hot food,{' '}
-              <span className="text-orange-500 dark:text-orange-400">
-                right on campus.
-              </span>
-            </h1>
-
-            <p className="text-lg text-gray-600 dark:text-gray-400 dark:text-gray-400 leading-relaxed font-medium max-w-xl mx-auto lg:mx-0">
-              Order from your university canteen in seconds. Vendors manage menus effortlessly. Everyone eats better.
-            </p>
-
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link
-                id="hero-get-started-btn"
-                href="/signup"
-                className="group flex items-center gap-2.5 bg-orange-500 hover:bg-orange-400 text-white font-bold text-base px-8 py-4 rounded-2xl transition-all duration-200 shadow-xl shadow-orange-500/20 hover:shadow-orange-500/35 hover:-translate-y-0.5 w-full sm:w-auto justify-center"
-              >
-                Get Started — It&apos;s Free
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link
-                href="/login"
-                className="text-gray-500 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-sm font-semibold transition-colors underline underline-offset-4 decoration-gray-300 dark:decoration-gray-700 hover:decoration-gray-500"
-              >
-                Already have an account? Sign in
-              </Link>
-            </div>
-
-            {/* Social proof */}
-            <div className="flex items-center justify-center gap-1.5 pt-4 text-xs font-bold text-gray-500 dark:text-gray-400">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-              ))}
-              <span className="ml-2 text-gray-500">Loved by 500+ students across 12 universities</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Feature cards ────────────────────────────────────────── */}
-      <section className="relative z-10 px-6 pb-24 max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 ease-out">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-
-          {/* Card 1 */}
-          <div className="group bg-white dark:bg-gray-900/70 border border-gray-200 dark:border-gray-800 hover:border-orange-500/30 rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-xl hover:shadow-orange-500/5">
-            <div className="w-11 h-11 bg-orange-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-orange-500/20 transition-colors">
-              <Flame className="w-5 h-5 text-orange-600 dark:text-orange-400 dark:text-orange-400" />
-            </div>
-            <h3 className="font-bold text-gray-900 dark:text-white mb-2">Cooked to Order</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-500 leading-relaxed font-medium">
-              Fresh samosas, biryani, and more — made when you order. No cold food, ever.
-            </p>
-          </div>
-
-          {/* Card 2 */}
-          <div className="group bg-white dark:bg-gray-900/70 border border-gray-200 dark:border-gray-200 dark:border-gray-800 hover:border-orange-500/30 rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-xl hover:shadow-orange-500/5">
-            <div className="w-11 h-11 bg-blue-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-500/20 transition-colors">
-              <Package className="w-5 h-5 text-blue-600 dark:text-blue-400 dark:text-blue-400" />
-            </div>
-            <h3 className="font-bold text-gray-900 dark:text-white mb-2">Packaged Items</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-500 leading-relaxed font-medium">
-              Grab chips, drinks, and snacks with real-time stock tracking. Know before you go.
-            </p>
-          </div>
-
-          {/* Card 3 */}
-          <div className="group bg-white dark:bg-gray-900/70 border border-gray-200 dark:border-gray-200 dark:border-gray-800 hover:border-orange-500/30 rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-xl hover:shadow-orange-500/5">
-            <div className="w-11 h-11 bg-green-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-green-500/20 transition-colors">
-              <Clock className="w-5 h-5 text-green-600 dark:text-green-400 dark:text-green-400" />
-            </div>
-            <h3 className="font-bold text-gray-900 dark:text-white mb-2">Live Order Tracking</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-500 leading-relaxed font-medium">
-              Watch your order go from pending → preparing → delivered with live tracking, so you always know exactly where your food is.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Menu Collage Card Banner Section ────────────────────────── */}
-      <section className="relative z-10 px-6 pb-24 max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 ease-out">
-        <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-200 dark:border-gray-800 rounded-3xl overflow-hidden shadow-lg flex flex-col lg:flex-row items-center gap-8 p-8 lg:p-12">
-          {/* Collage Preview */}
-          <div className="w-full lg:w-1/2 aspect-video rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-inner shrink-0">
-            <img 
-              src="/campus_food_menu.jpg" 
-              alt="Campus Canteen menu favorites" 
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-            />
-          </div>
-          {/* Section Info */}
-          <div className="space-y-4 text-left">
-            <span className="bg-orange-500/10 text-orange-600 dark:text-orange-400 dark:text-orange-400 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
-              Explore Canteens
+    <div className="min-h-screen bg-[#FAFAFA] dark:bg-[#0B0F17] text-gray-900 dark:text-white transition-colors duration-300 font-sans">
+      
+      {/* ── Top Minimalist Navigation (Flowbase Style) ──────────────── */}
+      <header className="sticky top-0 z-40 bg-[#FAFAFA]/90 dark:bg-[#0B0F17]/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800/80 transition-colors">
+        <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          {/* Logo with stylish period */}
+          <Link href="/" className="flex items-center gap-1 group">
+            <span className="text-2xl font-black tracking-tight text-gray-900 dark:text-white font-mono">
+              {brandName}<span className="text-orange-500">.</span>
             </span>
-            <h2 className="text-3xl font-black text-gray-900 dark:text-white leading-tight tracking-tight">
-              Enjoy freshly prepared canteen favorites on demand.
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm leading-relaxed font-medium">
-              From hot cheese burgers and spicy samosas to authentic paneer meals and fresh fruit smoothies, {brandName} connects you directly with all the kitchens on your campus. Zero markup, zero hidden commissions.
-            </p>
-            <div className="pt-2">
-              <Link 
-                href="/signup" 
-                className="inline-flex items-center gap-2 text-orange-500 hover:text-orange-600 font-bold text-sm hover:underline"
-              >
-                Browse canteen menus near you <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+          </Link>
 
-      {/* ── Role split section ────────────────────────────────────── */}
-      <section className="relative z-10 px-6 pb-28 max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 ease-out">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-
-          {/* Foodie CTA */}
-          <div className="relative bg-gradient-to-br from-orange-500/20 via-amber-500/10 to-orange-900/30 dark:from-orange-600/25 dark:via-amber-500/15 dark:to-orange-950/50 border border-orange-400/30 dark:border-orange-500/30 rounded-3xl p-8 overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-orange-500/20 transition-all hover:-translate-y-1">
-            <div className="absolute top-0 right-0 w-52 h-52 bg-orange-500/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-amber-400/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl pointer-events-none" />
-            <span className="inline-block bg-orange-500/20 border border-orange-400/30 text-orange-500 dark:text-orange-300 text-xs font-black px-3 py-1 rounded-full mb-4 uppercase tracking-wider">
-              Foodie
-            </span>
-            <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-3">Hungry? Let&apos;s eat.</h3>
-            <p className="text-orange-900/70 dark:text-orange-200/70 text-sm mb-6 font-medium">
-              Browse your canteen menu, order in one tap, and get it delivered to your hostel.
-            </p>
-            <Link
-              id="student-signup-btn"
-              href="/signup?role=Foodie"
-              className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white text-sm font-bold px-5 py-3 rounded-xl transition-all shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 active:scale-95"
-            >
-              Order Now <ArrowRight className="w-4 h-4" />
+          {/* Desktop Nav Links */}
+          <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-gray-600 dark:text-gray-300">
+            <Link href="/shop" className="hover:text-orange-500 transition-colors">
+              Canteens
+            </Link>
+            <Link href="#menu-special" className="hover:text-orange-500 transition-colors">
+              Trending Dishes
+            </Link>
+            <Link href="#canteen-timings" className="hover:text-orange-500 transition-colors flex items-center gap-1">
+              <CalendarClock className="w-4 h-4 text-orange-500" />
+              Operating Hours
+            </Link>
+            <Link href="/about" className="hover:text-orange-500 transition-colors">
+              About Us
             </Link>
           </div>
 
-          {/* Vendor CTA */}
-          <div className="relative bg-gradient-to-br from-blue-500/20 via-violet-500/10 to-indigo-900/30 dark:from-blue-600/25 dark:via-violet-500/15 dark:to-indigo-950/50 border border-blue-400/30 dark:border-blue-500/30 rounded-3xl p-8 overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 transition-all hover:-translate-y-1">
-            <div className="absolute top-0 right-0 w-52 h-52 bg-blue-500/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-violet-400/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl pointer-events-none" />
-            <span className="inline-block bg-blue-500/20 border border-blue-400/30 text-blue-600 dark:text-blue-300 text-xs font-black px-3 py-1 rounded-full mb-4 uppercase tracking-wider">
-              Canteen Vendor
-            </span>
-            <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-3">Grow your canteen.</h3>
-            <p className="text-blue-900/70 dark:text-blue-200/70 text-sm mb-6 font-medium">
-              Manage your menu, track inventory, and process orders — all from one dashboard.
-            </p>
+          {/* Right Action Buttons */}
+          <div className="hidden md:flex items-center gap-4">
+            <ThemeToggle />
             <Link
-              id="vendor-signup-btn"
-              href="/signup?role=Vendor"
-              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold px-5 py-3 rounded-xl transition-all shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 active:scale-95"
+              href="/login"
+              className="text-sm font-bold text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white px-3 py-2 transition-colors"
             >
-              Open Your Store <ArrowRight className="w-4 h-4" />
+              Sign In
+            </Link>
+            <Link
+              href="/signup"
+              className="bg-black dark:bg-white dark:text-black text-white hover:bg-neutral-800 dark:hover:bg-neutral-200 text-xs font-black uppercase tracking-wider px-5 py-3 rounded-2xl transition-all shadow-md active:scale-95"
+            >
+              Get Started
+            </Link>
+          </div>
+
+          {/* Mobile Hamburger */}
+          <div className="flex md:hidden items-center gap-3">
+            <ThemeToggle />
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      {/* Mobile Drawer */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm md:hidden flex flex-col justify-end">
+          <div className="bg-white dark:bg-gray-900 rounded-t-3xl p-6 space-y-5 animate-in slide-in-from-bottom duration-300">
+            <div className="flex justify-between items-center pb-3 border-b border-gray-100 dark:border-gray-800">
+              <span className="font-black text-lg">{brandName}<span className="text-orange-500">.</span></span>
+              <button onClick={() => setMobileMenuOpen(false)} className="p-1 text-gray-400">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="flex flex-col gap-4 text-base font-bold">
+              <Link href="/shop" onClick={() => setMobileMenuOpen(false)}>Browse Canteens</Link>
+              <Link href="#canteen-timings" onClick={() => setMobileMenuOpen(false)}>Canteen Operating Hours</Link>
+              <Link href="/about" onClick={() => setMobileMenuOpen(false)}>About Story</Link>
+              <Link href="/login" onClick={() => setMobileMenuOpen(false)}>Sign In</Link>
+            </div>
+            <Link
+              href="/signup"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block w-full text-center bg-orange-500 text-white font-bold py-3.5 rounded-2xl shadow-lg"
+            >
+              Get Started Free
             </Link>
           </div>
         </div>
-      </section>
+      )}
 
-      {/* ── Reviews Marquee ────────────────────────────────────────── */}
-      <section className="relative z-10 py-16 overflow-hidden border-t border-gray-200 dark:border-gray-900 bg-white dark:bg-gray-950/35">
-        <div className="max-w-6xl mx-auto px-6 mb-8 text-center">
-          <span className="text-xs font-black tracking-widest text-orange-500 uppercase">Wall of Love</span>
-          <h2 className="text-3xl font-extrabold mt-2 text-gray-900 dark:text-white">What Foodies Say About {brandName}</h2>
-        </div>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-16 sm:space-y-24">
 
-        {/* Row 1: Right to Left */}
-        <div className="w-full flex overflow-hidden select-none gap-6 relative">
-          <div className="animate-marquee flex gap-6 py-4 whitespace-nowrap">
-            {[
-              { name: 'Aarav Mehta', rating: 5, comment: 'Foodzie completely transformed how we get food at LPU campus. Incredible speed!' },
-              { name: 'Harpreet Kaur', rating: 5, comment: 'Direct payment to vendors and no middleman means food is highly affordable. Love the model!' },
-              { name: 'Ishaan Gupta', rating: 4, comment: 'Best app for hostels. Getting food delivered right to our hostel gates is a blessing.' },
-              { name: 'Simranjeet Singh', rating: 5, comment: 'I got hired as a delivery rider through this app. Super fast application and payout direct to my UPI.' },
-              { name: 'Jaspreet Bhatia', rating: 5, comment: 'A transparent and direct marketplace. Canteen vendors can scale without external commissions.' },
-              { name: 'Riya Sen', rating: 4, comment: 'The UI is extremely beautiful, especially in dark mode. Placing orders is super fast.' },
-              { name: 'Vikram Sharma', rating: 5, comment: 'No delivery delays! The automated dispatch allocates to canteens riders efficiently.' },
-              { name: 'Ananya Joshi', rating: 5, comment: 'Extremely direct and fast. Love the GPay QR integration during checkout.' },
-              { name: 'Divya Chawla', rating: 4, comment: 'Highly recommended! The campus food issue is solved once and for all.' },
-              { name: 'Gurpreet Singh', rating: 5, comment: 'Amazing platform. Seamless foodie reviews help select the best dishes in canteen.' }
-            ].concat([
-              { name: 'Aarav Mehta', rating: 5, comment: 'Foodzie completely transformed how we get food at LPU campus. Incredible speed!' },
-              { name: 'Harpreet Kaur', rating: 5, comment: 'Direct payment to vendors and no middleman means food is highly affordable. Love the model!' },
-              { name: 'Ishaan Gupta', rating: 4, comment: 'Best app for hostels. Getting food delivered right to our hostel gates is a blessing.' },
-              { name: 'Simranjeet Singh', rating: 5, comment: 'I got hired as a delivery rider through this app. Super fast application and payout direct to my UPI.' },
-              { name: 'Jaspreet Bhatia', rating: 5, comment: 'A transparent and direct marketplace. Canteen vendors can scale without external commissions.' },
-              { name: 'Riya Sen', rating: 4, comment: 'The UI is extremely beautiful, especially in dark mode. Placing orders is super fast.' },
-              { name: 'Vikram Sharma', rating: 5, comment: 'No delivery delays! The automated dispatch allocates to canteens riders efficiently.' },
-              { name: 'Ananya Joshi', rating: 5, comment: 'Extremely direct and fast. Love the GPay QR integration during checkout.' },
-              { name: 'Divya Chawla', rating: 4, comment: 'Highly recommended! The campus food issue is solved once and for all.' },
-              { name: 'Gurpreet Singh', rating: 5, comment: 'Amazing platform. Seamless foodie reviews help select the best dishes in canteen.' }
-            ]).map((rev, idx) => (
-              <div key={idx} className="bg-gray-100/50 dark:bg-gray-900/40 dark:bg-gray-900 border border-gray-200 dark:border-gray-200 dark:border-gray-800 rounded-3xl p-5 w-[320px] shrink-0 shadow-sm">
-                <div className="flex items-center gap-3.5 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-orange-500/10 dark:bg-orange-500/20 flex items-center justify-center font-bold text-orange-600 dark:text-orange-400 text-sm">
-                    {rev.name[0]}
+        {/* ── 1. SIGNATURE PASTEL ICE-BLUE HERO CARD (Flowbase #E7FAFE) ─ */}
+        <section className="relative bg-[#E7FAFE] dark:bg-slate-900/70 rounded-[32px] sm:rounded-[40px] p-8 sm:p-12 lg:p-16 overflow-hidden border border-sky-100 dark:border-slate-800 shadow-xl shadow-sky-500/5">
+          <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-10 lg:gap-14">
+            
+            {/* Left Content Column */}
+            <div className="space-y-6 max-w-xl text-left">
+              <div className="inline-flex items-center gap-2 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-sm border border-black/5 dark:border-white/5">
+                <span className="text-orange-500 text-sm">🔥</span>
+                <span className="text-[11px] font-black uppercase tracking-wider text-gray-800 dark:text-gray-200">
+                  Today&apos;s Campus Special
+                </span>
+              </div>
+
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 dark:text-white tracking-tight leading-[1.1]">
+                Spicy Crispy Paneer Deluxe
+              </h1>
+
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed font-medium">
+                Freshly prepared to order on your campus. Crispy paneer patty topped with fresh slaw, house mint chutney, and spiced fries. 100% direct-to-vendor dining.
+              </p>
+
+              {/* Editorial Metadata Tags */}
+              <div className="flex flex-wrap items-center gap-3 text-xs font-bold text-gray-700 dark:text-gray-300">
+                <span className="bg-black/5 dark:bg-white/10 px-4 py-2 rounded-full flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-gray-500" /> 15 Minutes
+                </span>
+                <span className="bg-black/5 dark:bg-white/10 px-4 py-2 rounded-full flex items-center gap-1.5">
+                  <UtensilsCrossed className="w-3.5 h-3.5 text-gray-500" /> Fast Food Special
+                </span>
+              </div>
+
+              {/* Author & Action Pill */}
+              <div className="pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-black/5 dark:border-white/5">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-orange-500 text-white font-black flex items-center justify-center text-sm shadow-md">
+                    CC
                   </div>
                   <div>
-                    <h4 className="font-bold text-sm text-gray-900 dark:text-white">{rev.name}</h4>
-                    <div className="flex gap-0.5 mt-0.5">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className={`w-3 h-3 fill-amber-500 ${i < rev.rating ? 'text-amber-500' : 'text-gray-700'}`} />
-                      ))}
-                    </div>
+                    <h4 className="text-sm font-extrabold text-gray-900 dark:text-white">Central Canteen</h4>
+                    <span className="text-xs text-gray-500">SBBS University Campus</span>
                   </div>
                 </div>
-                <p className="text-xs text-gray-600 dark:text-gray-400 dark:text-gray-400 leading-relaxed whitespace-normal font-medium">{rev.comment}</p>
+
+                <Link
+                  href="/shop"
+                  className="bg-black dark:bg-white dark:text-black text-white hover:bg-neutral-800 dark:hover:bg-neutral-200 font-bold text-xs sm:text-sm px-7 py-4 rounded-2xl flex items-center justify-center gap-2.5 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-black/10"
+                >
+                  Order Now <ArrowRight className="w-4 h-4" />
+                </Link>
               </div>
+            </div>
+
+            {/* Right Food Plate Hero Graphic */}
+            <div className="relative w-full lg:w-1/2 flex items-center justify-center">
+              <div className="relative w-72 h-72 sm:w-96 sm:h-96 rounded-full overflow-hidden shadow-2xl border-4 border-white dark:border-gray-800">
+                <img 
+                  src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=80" 
+                  alt="Today Special Dish"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" 
+                />
+              </div>
+
+              {/* Floating Circular Seal Badge */}
+              <div className="absolute top-2 left-4 sm:left-10 w-24 h-24 bg-black text-white rounded-full flex flex-col items-center justify-center text-center p-2 shadow-2xl rotate-12 border-2 border-white/20">
+                <span className="text-[9px] font-black uppercase tracking-widest text-amber-400">★ 100% ★</span>
+                <span className="text-[10px] font-black uppercase leading-tight mt-0.5">CAMPUS<br/>FRESH</span>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* ── 2. CATEGORIES ROW WITH PASTEL GRADIENTS ─────────────────── */}
+        <section className="space-y-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+                Categories
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-500 mt-1">Explore what your university canteens are serving today</p>
+            </div>
+
+            <Link
+              href="/shop"
+              className="bg-[#E7FAFE] hover:bg-[#d8f5fc] text-gray-900 font-bold text-xs px-4 py-2.5 rounded-xl transition-colors"
+            >
+              View All Categories
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+            {CATEGORIES.map((cat) => (
+              <Link
+                key={cat.name}
+                href="/shop"
+                className={`bg-gradient-to-b ${cat.gradient} p-6 rounded-3xl flex flex-col items-center text-center space-y-2 border border-black/5 dark:border-white/5 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 group`}
+              >
+                <span className="text-4xl group-hover:scale-110 transition-transform duration-300">
+                  {cat.icon}
+                </span>
+                <h3 className="font-bold text-sm text-gray-900 dark:text-white">
+                  {cat.name}
+                </h3>
+                <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500">
+                  {cat.count}
+                </span>
+              </Link>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ── Footer Section ────────────────────────────────────────── */}
-      <footer className="relative z-10 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 pt-16 pb-8 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
-          {/* Column 1: Brand & Bio */}
-          <div className="space-y-4 text-left">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-                <UtensilsCrossed className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-extrabold text-lg text-gray-900 dark:text-white">{brandName}</span>
-            </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed font-semibold">
-              The direct-to-vendor dining portal built for college campuses. Order, track, and support local canteen merchants directly.
+        {/* ── 3. SIMPLE AND TASTY DISHES (3-Column Grid + Green Tile) ─── */}
+        <section id="menu-special" className="space-y-10">
+          <div className="text-center max-w-xl mx-auto space-y-2">
+            <h2 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white tracking-tight">
+              Simple and tasty campus recipes
+            </h2>
+            <p className="text-xs sm:text-sm text-gray-500 leading-relaxed font-medium">
+              Made to order by canteen chefs. Delivered directly to your hostel gate, department block, or campus lawn.
             </p>
-            <div className="flex items-center gap-3 pt-2">
-              <span className="inline-flex items-center gap-1 bg-green-500/10 text-green-600 dark:text-green-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-500/10">
-                ● Live 12 Campuses
-              </span>
-              <span className="inline-flex items-center gap-1 bg-orange-500/10 text-orange-600 dark:text-orange-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-orange-500/10">
-                ★ 4.9 Rating
-              </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {SAMPLE_DISHES.slice(0, 5).map((dish) => (
+              <div
+                key={dish.id}
+                className="bg-white dark:bg-gray-900/80 rounded-3xl p-5 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative group flex flex-col justify-between"
+              >
+                <div>
+                  {/* Food Photo Container */}
+                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-4 bg-gray-100 dark:bg-gray-800">
+                    <img 
+                      src={dish.imageUrl} 
+                      alt={dish.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                    />
+
+                    {/* Bookmark Heart Pill */}
+                    <button
+                      type="button"
+                      onClick={() => toggleBookmark(dish.id)}
+                      className="absolute top-3 right-3 w-9 h-9 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md rounded-full flex items-center justify-center transition-colors shadow-md"
+                      title="Favorite dish"
+                    >
+                      <Heart 
+                        className={`w-4 h-4 transition-colors ${
+                          bookmarked[dish.id] ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'
+                        }`} 
+                      />
+                    </button>
+                  </div>
+
+                  <h3 className="font-extrabold text-base text-gray-900 dark:text-white line-clamp-1 mb-1">
+                    {dish.name}
+                  </h3>
+                  <p className="text-xs text-gray-500 mb-3">{dish.canteen}</p>
+                </div>
+
+                <div className="pt-3 border-t border-gray-100 dark:border-gray-800/60 flex items-center justify-between text-xs">
+                  <span className="flex items-center gap-1 font-semibold text-gray-500">
+                    <Clock className="w-3.5 h-3.5 text-orange-500" /> {dish.prepTime}
+                  </span>
+                  <div className="flex items-center gap-3">
+                    <span className="font-black text-orange-600 dark:text-orange-400 text-base">
+                      ₹{dish.price}
+                    </span>
+                    <Link
+                      href="/shop"
+                      className="bg-black dark:bg-white dark:text-black text-white hover:bg-neutral-800 text-xs font-bold px-3 py-1.5 rounded-xl transition-all"
+                    >
+                      Order
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* Signature Flowbase Organic Green Value Card */}
+            <div className="bg-[#1E3A2F] rounded-3xl p-8 text-white flex flex-col items-center justify-between text-center relative overflow-hidden shadow-xl">
+              <div className="absolute inset-0 bg-radial from-emerald-500/10 to-transparent pointer-events-none" />
+              
+              <div className="space-y-2 relative z-10">
+                <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">
+                  ★ HEALTHY CAMPUS LIVING ★
+                </span>
+                <h3 className="text-2xl font-black leading-tight tracking-tight">
+                  Don&apos;t forget to eat healthy food
+                </h3>
+              </div>
+
+              <div className="my-6 relative z-10 w-36 h-36 rounded-full overflow-hidden shadow-2xl border-2 border-emerald-400/30">
+                <img 
+                  src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80" 
+                  alt="Healthy Bowl" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              <div className="space-y-3 relative z-10">
+                <p className="text-xs text-emerald-100/80 leading-relaxed">
+                  Clean cooking, certified ingredients, and direct canteen pricing.
+                </p>
+                <span className="text-xs font-mono font-bold text-emerald-300 block">
+                  www.foodzie.store
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── 4. CANTEEN TIMINGS & PRE-SCHEDULE FEATURE SECTION ───────── */}
+        <section id="canteen-timings" className="bg-gradient-to-br from-orange-500/5 via-amber-500/5 to-transparent border border-orange-200/60 dark:border-gray-800 rounded-[36px] p-8 sm:p-12 lg:p-14">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            {/* Left Description Column */}
+            <div className="lg:col-span-7 space-y-6 text-left">
+              <div className="inline-flex items-center gap-2 bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider">
+                <CalendarClock className="w-4 h-4" />
+                Canteen Operating Hours & Pre-Scheduling
+              </div>
+
+              <h2 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white tracking-tight leading-tight">
+                Canteens aren&apos;t open 24/7. <br />
+                <span className="text-orange-500">Pre-schedule your meals during off-time!</span>
+              </h2>
+
+              <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed font-medium">
+                Each campus canteen sets its daily opening and closing hours, weekly off-days, and upcoming holiday schedules. When canteens are closed, you can build your order and pre-schedule it so it arrives as soon as the kitchen fires up.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                <div className="p-4 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 space-y-1">
+                  <span className="text-lg">🟢</span>
+                  <h4 className="text-xs font-black text-gray-900 dark:text-white">Live Open / Closed</h4>
+                  <p className="text-[11px] text-gray-500">Know instantly before placing an order.</p>
+                </div>
+                <div className="p-4 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 space-y-1">
+                  <span className="text-lg">⏰</span>
+                  <h4 className="text-xs font-black text-gray-900 dark:text-white">Pre-Schedule Orders</h4>
+                  <p className="text-[11px] text-gray-500">Order at midnight for 9:00 AM breakfast.</p>
+                </div>
+                <div className="p-4 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 space-y-1">
+                  <span className="text-lg">📅</span>
+                  <h4 className="text-xs font-black text-gray-900 dark:text-white">Holiday Advance Notice</h4>
+                  <p className="text-[11px] text-gray-500">Vendors log festivals & exam closures.</p>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <Link
+                  href="/shop"
+                  className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs sm:text-sm px-6 py-3.5 rounded-2xl shadow-lg shadow-orange-500/20 transition-all hover:scale-105 active:scale-95"
+                >
+                  Browse Open Campus Canteens <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Right Interactive Schedule Preview Card */}
+            <div className="lg:col-span-5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-6 shadow-xl space-y-4">
+              <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-3">
+                <div className="flex items-center gap-2.5">
+                  <Store className="w-5 h-5 text-orange-500" />
+                  <span className="font-extrabold text-sm text-gray-900 dark:text-white">Sant Baba Bhag Singh Canteen</span>
+                </div>
+                <span className="bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400 text-[10px] font-black uppercase px-2 py-0.5 rounded-full">
+                  🟢 Open Now
+                </span>
+              </div>
+
+              <div className="space-y-2 text-xs">
+                {[
+                  { day: 'Monday', hours: '08:00 — 21:00', status: 'Open' },
+                  { day: 'Tuesday', hours: '08:00 — 21:00', status: 'Open' },
+                  { day: 'Wednesday', hours: '08:00 — 21:00', status: 'Open' },
+                  { day: 'Thursday', hours: '08:00 — 21:00', status: 'Open' },
+                  { day: 'Friday', hours: '08:00 — 21:00', status: 'Open' },
+                  { day: 'Saturday', hours: '09:00 — 19:00', status: 'Open' },
+                  { day: 'Sunday', hours: 'Closed (Weekly Off)', status: 'Closed' },
+                ].map((row) => (
+                  <div key={row.day} className="flex items-center justify-between py-1 border-b border-gray-50 dark:border-gray-850">
+                    <span className="font-bold text-gray-700 dark:text-gray-300">{row.day}</span>
+                    <span className={`font-mono text-[11px] font-bold ${row.status === 'Closed' ? 'text-rose-500' : 'text-gray-500'}`}>
+                      {row.hours}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-2 text-[11px] text-gray-400 bg-gray-50 dark:bg-gray-800/50 p-2.5 rounded-xl border border-gray-100 dark:border-gray-800">
+                💡 Canteens can edit their weekly hours and post advance holidays anytime in the vendor dashboard.
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* ── 5. CHEF & VALUE BANNER ("Everyone can be a chef...") ─────── */}
+        <section className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-[36px] p-8 sm:p-12 overflow-hidden shadow-sm flex flex-col lg:flex-row items-center justify-between gap-10">
+          <div className="space-y-6 max-w-lg text-left">
+            <span className="bg-orange-500/10 text-orange-600 dark:text-orange-400 text-xs font-black px-3.5 py-1.5 rounded-full uppercase tracking-wider">
+              Campus Merchants & Student Riders
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white tracking-tight leading-tight">
+              Direct campus dining with zero middleman commissions.
+            </h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
+              Unlike commercial delivery aggregators who take 30% from small cooks, {brandName} connects students directly with canteen vendors through UPI. Transparent pricing, hot food, and flexible part-time earnings for campus riders.
+            </p>
+            <div className="flex flex-wrap gap-4 pt-2">
+              <Link
+                href="/signup?role=Vendor"
+                className="bg-black dark:bg-white dark:text-black text-white hover:bg-neutral-800 text-xs font-black uppercase tracking-wider px-6 py-3.5 rounded-2xl transition-all shadow-md active:scale-95"
+              >
+                Register Your Canteen
+              </Link>
+              <Link
+                href="/shop"
+                className="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 text-gray-800 dark:text-gray-200 text-xs font-black uppercase tracking-wider px-6 py-3.5 rounded-2xl transition-all"
+              >
+                Find Canteens
+              </Link>
             </div>
           </div>
 
-          {/* Column 2: Quick Links */}
-          <div className="text-left space-y-4">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">Navigation</h4>
-            <ul className="space-y-2.5 text-xs font-semibold">
-              <li><Link href="/" className="text-gray-600 dark:text-gray-400 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">Home Landing</Link></li>
-              <li><Link href="/about" className="text-gray-600 dark:text-gray-400 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">About Story</Link></li>
-              <li><Link href="/contact" className="text-gray-600 dark:text-gray-400 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">Contact Support</Link></li>
-              <li><Link href="/login" className="text-gray-600 dark:text-gray-400 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">Portal Login</Link></li>
-              <li><Link href="/signup" className="text-gray-600 dark:text-gray-400 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">Merchant Signup</Link></li>
+          <div className="w-full lg:w-1/2 aspect-video rounded-3xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-md">
+            <img 
+              src="/campus_food_menu.jpg" 
+              alt="Campus Canteen Cooking" 
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" 
+            />
+          </div>
+        </section>
+
+      </main>
+
+      {/* ── 6. CLEAN MINIMALIST EDITORIAL FOOTER ───────────────────────── */}
+      <footer className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 pt-16 pb-12 mt-20 transition-colors">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+          
+          <div className="space-y-4 text-left">
+            <span className="text-2xl font-black tracking-tight text-gray-900 dark:text-white font-mono">
+              {brandName}<span className="text-orange-500">.</span>
+            </span>
+            <p className="text-xs text-gray-500 leading-relaxed">
+              The direct campus food delivery network. Enjoy fresh canteen dishes, transparent prices, and smart pre-scheduled delivery.
+            </p>
+            <div className="flex items-center gap-2 pt-1 text-[11px] font-bold text-gray-400">
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+              Serving University Campuses in Punjab & India
+            </div>
+          </div>
+
+          <div className="text-left space-y-3">
+            <h4 className="text-xs font-black uppercase tracking-wider text-gray-400">Navigation</h4>
+            <ul className="space-y-2 text-xs font-bold text-gray-600 dark:text-gray-400">
+              <li><Link href="/shop" className="hover:text-orange-500 transition-colors">Explore Canteens</Link></li>
+              <li><Link href="#canteen-timings" className="hover:text-orange-500 transition-colors">Canteen Operating Hours</Link></li>
+              <li><Link href="/about" className="hover:text-orange-500 transition-colors">Our Story</Link></li>
+              <li><Link href="/contact" className="hover:text-orange-500 transition-colors">Contact Support</Link></li>
             </ul>
           </div>
 
-          {/* Column 3: Legal Policy */}
-          <div className="text-left space-y-4">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">Legal & Terms</h4>
-            <ul className="space-y-2.5 text-xs font-semibold">
-              <li><Link href="/terms" className="text-gray-600 dark:text-gray-400 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">Terms of Service</Link></li>
-              <li><Link href="/privacy" className="text-gray-600 dark:text-gray-400 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">Privacy Policy</Link></li>
-              <li><Link href="/refunds" className="text-gray-600 dark:text-gray-400 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">Refund & Cancellations</Link></li>
-              <li><Link href="/rider-code" className="text-gray-600 dark:text-gray-400 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">Rider Code of Conduct</Link></li>
+          <div className="text-left space-y-3">
+            <h4 className="text-xs font-black uppercase tracking-wider text-gray-400">Portals & Roles</h4>
+            <ul className="space-y-2 text-xs font-bold text-gray-600 dark:text-gray-400">
+              <li><Link href="/signup?role=Foodie" className="hover:text-orange-500 transition-colors">Student Foodie Portal</Link></li>
+              <li><Link href="/signup?role=Vendor" className="hover:text-orange-500 transition-colors">Canteen Merchant Portal</Link></li>
+              <li><Link href="/signup?role=Delivery" className="hover:text-orange-500 transition-colors">Campus Delivery Rider</Link></li>
+              <li><Link href="/login" className="hover:text-orange-500 transition-colors">Staff Login</Link></li>
             </ul>
           </div>
 
-          {/* Column 4: Support Contact */}
-          <div className="text-left space-y-4">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">Support Hub</h4>
-            <ul className="space-y-2.5 text-xs font-semibold text-gray-600 dark:text-gray-400">
-              <li>Email: <a href="mailto:support@foodzie.store" className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors font-bold">support@foodzie.store</a></li>
-              <li>Phone: <span className="text-gray-900 dark:text-white font-bold">+91 7717670668</span></li>
-              <li>Address: <span className="font-medium">93, Mehmadpur, Jalandhar, 144102, Punjab, India</span></li>
+          <div className="text-left space-y-3">
+            <h4 className="text-xs font-black uppercase tracking-wider text-gray-400">Legal & Terms</h4>
+            <ul className="space-y-2 text-xs font-bold text-gray-600 dark:text-gray-400">
+              <li><Link href="/terms" className="hover:text-orange-500 transition-colors">Terms of Service</Link></li>
+              <li><Link href="/privacy" className="hover:text-orange-500 transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/refunds" className="hover:text-orange-500 transition-colors">Cancellation & Refund Policy</Link></li>
+              <li><Link href="/rider-code" className="hover:text-orange-500 transition-colors">Rider Code of Conduct</Link></li>
             </ul>
           </div>
+
         </div>
 
-        {/* Footer Bottom copyright & info */}
-        <div className="max-w-7xl mx-auto px-6 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400">
-          <p className="font-semibold">
-            © {new Date().getFullYear()} {brandName}. Built with ❤️ for college campus dining.
-          </p>
-          <p className="font-semibold">
-            Designed and built by Jaspreet Bhatia. All rights reserved.
-          </p>
+        <div className="max-w-7xl mx-auto px-6 pt-8 border-t border-gray-100 dark:border-gray-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400">
+          <p>© {new Date().getFullYear()} {brandName}. Crafted with ❤️ for college campus dining.</p>
+          <p>Direct Online UPI Pre-Paid Orders Only.</p>
         </div>
       </footer>
+
     </div>
   );
 }

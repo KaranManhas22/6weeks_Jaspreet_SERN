@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { api } from "@/lib/api";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -14,23 +15,12 @@ export default function ForgotPasswordPage() {
     setMessage("");
 
     try {
-      const res = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      if (res.ok) {
-        setStatus("success");
-        setMessage("If an account exists, a password reset link has been sent to your email.");
-      } else {
-        const data = await res.json().catch(() => ({}));
-        setStatus("error");
-        setMessage(data.message || "Failed to send reset email.");
-      }
-    } catch (err) {
+      await api.post("/api/auth/forgot-password", { email });
+      setStatus("success");
+      setMessage("If an account exists, a password reset link has been sent to your email.");
+    } catch (err: any) {
       setStatus("error");
-      setMessage("An error occurred. Please try again later.");
+      setMessage(err.message || "Failed to send reset email. Please try again later.");
     }
   };
 

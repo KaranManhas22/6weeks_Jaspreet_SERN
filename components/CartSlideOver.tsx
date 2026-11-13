@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Plus, Minus, ShoppingBag, Loader2, CheckCircle2, MapPin, Building, Compass, BookOpen, Coins, QrCode, Clock, Users } from 'lucide-react';
+import { X, Plus, Minus, ShoppingBag, Loader2, CheckCircle2, MapPin, Building, Compass, BookOpen, Coins, QrCode, Clock, Users, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/lib/store/cartStore';
 import { api } from '@/lib/api';
 import { DietaryIcon } from '@/components/DietaryIcon';
 import { useCurrency } from '@/context/CurrencyContext';
+import { getCanteenScheduleStatus } from '@/lib/schedule';
 import { io } from 'socket.io-client';
 
 interface CartSlideOverProps {
@@ -30,7 +31,8 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
   const [showUpiModal, setShowUpiModal] = useState(false);
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [profileFetched, setProfileFetched] = useState(false);
-  const [vendorUpi, setVendorUpi] = useState('bhatiajaspreet161@oksbi');
+  const [vendorUpi, setVendorUpi] = useState('');
+  const [vendorSchedule, setVendorSchedule] = useState<any>(null);
   const [campusCredits, setCampusCredits] = useState(0);
   const [useCredits, setUseCredits] = useState(false);
   const [crossSellItem, setCrossSellItem] = useState<any>(null);
@@ -73,11 +75,14 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
     if (vendorId) {
       api.get<any>(`/api/menu/vendor/${vendorId}`)
         .then(res => {
-          if (res.vendorUpi) {
-            setVendorUpi(res.vendorUpi);
+          if (res.vendorUpi || res.upi) {
+            setVendorUpi(res.vendorUpi || res.upi);
+          }
+          if (res.canteenSchedule) {
+            setVendorSchedule(res.canteenSchedule);
           }
         })
-        .catch(err => console.error("Error fetching vendor UPI", err));
+        .catch(err => console.error("Error fetching vendor details", err));
     }
   }, [vendorId]);
 
@@ -113,6 +118,14 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
   const baseTotal = isSquadMode ? squadTotal : getTotalPrice();
   const discount = useCredits ? Math.min(campusCredits, baseTotal) : 0;
   const total = Math.max(0, baseTotal - discount);
+
+  const canteenStatus = getCanteenScheduleStatus(vendorSchedule);
+
+  useEffect(() => {
+    if (!canteenStatus.isOpen && deliveryTimePref === 'asap') {
+      setDeliveryTimePref('scheduled');
+    }
+  }, [canteenStatus.isOpen, deliveryTimePref]);
 
   useEffect(() => {
     if (isOpen && !profileFetched) {
@@ -164,6 +177,18 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
 
   const handleAddressSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!canteenStatus.isOpen && deliveryTimePref === 'asap') {
+      alert(`This canteen is currently closed (${canteenStatus.reason}). Please select a pre-scheduled delivery time during open hours.`);
+      setDeliveryTimePref('scheduled');
+      return;
+    }
+
+    if (deliveryTimePref === 'scheduled' && !scheduledTimeInput) {
+      alert("Please select a valid scheduled delivery time.");
+      return;
+    }
+
     let addr = '';
     if (locType === 'classroom') {
       if (!uniName.trim() || !blockName.trim() || !floorNum.trim() || !roomNum.trim()) {
@@ -179,16 +204,11 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
       addr = `Park/Ground | College: ${uniName.trim()} | Park/Ground Name: ${parkName.trim()} | Description: ${parkDesc.trim()}`;
     }
     setDeliveryAddress(addr);
-    
-    if (paymentMethod === 'cod') {
-      placeOrder(true, addr);
-    } else {
-      setShowAddressModal(false);
-      setShowUpiModal(true);
-    }
+    setShowAddressModal(false);
+    setShowUpiModal(true);
   };
 
-  const placeOrder = async (useCOD: boolean, addressToUse: string) => {
+  const placeOrder = async (addressToUse: string) => {
     setIsProcessing(true);
     try {
       const itemsPayload = displayItems.map(item => ({
@@ -210,7 +230,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
         items: itemsPayload,
         totalAmount: total,
         deliveryAddress: addressToUse,
-        isCOD: useCOD,
+        isCOD: false,
         appliedCredits: useCredits ? discount : 0,
         scheduledTime: scheduledTimeISO
       });
@@ -512,21 +532,36 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
 
               {/* Delivery Time Preference */}
               <div className="space-y-2 pt-2 border-t border-gray-100 dark:border-gray-800">
-                <label className="text-xs font-black text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
-                  Delivery Time *
-                </label>
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-black text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+                    Delivery Time *
+                  </label>
+                  {!canteenStatus.isOpen && (
+                    <span className="text-[10px] font-bold text-rose-500 bg-rose-50 dark:bg-rose-950/40 px-2 py-0.5 rounded-full">
+                      Canteen Closed Now
+                    </span>
+                  )}
+                </div>
+
+                {!canteenStatus.isOpen && (
+                  <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 text-[11px] font-semibold text-amber-800 dark:text-amber-300">
+                    ⏰ {canteenStatus.reason}. Pre-schedule your delivery time for upcoming open hours!
+                  </div>
+                )}
+
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
+                    disabled={!canteenStatus.isOpen}
                     onClick={() => setDeliveryTimePref('asap')}
                     className={`flex flex-col items-center justify-center p-3 rounded-2xl border text-center transition-all ${
                       deliveryTimePref === 'asap'
                         ? 'border-orange-500 bg-orange-50/50 dark:bg-orange-950/20 text-orange-600 dark:text-orange-400 font-bold shadow-sm'
                         : 'border-gray-200 dark:border-gray-800 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
-                    }`}
+                    } ${!canteenStatus.isOpen ? 'opacity-40 cursor-not-allowed' : ''}`}
                   >
                     <Clock className="w-5 h-5 mb-1 text-orange-500" />
-                    <span className="text-xs">ASAP</span>
+                    <span className="text-xs font-bold">ASAP {canteenStatus.isOpen ? '' : '(Unavailable)'}</span>
                   </button>
                   <button
                     type="button"
@@ -538,12 +573,12 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
                     }`}
                   >
                     <Clock className="w-5 h-5 mb-1 text-orange-500" />
-                    <span className="text-xs">Schedule Later</span>
+                    <span className="text-xs font-bold">Pre-Schedule</span>
                   </button>
                 </div>
                 {deliveryTimePref === 'scheduled' && (
                   <div className="animate-in fade-in duration-300 space-y-1 mt-2">
-                    <label className="text-xs font-black text-gray-400 uppercase tracking-wider">Select Time</label>
+                    <label className="text-xs font-black text-gray-400 uppercase tracking-wider">Select Delivery Time Slot</label>
                     <input
                       type="time"
                       value={scheduledTimeInput}
@@ -551,40 +586,23 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
                       className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-500 transition-all text-sm font-medium"
                       required={deliveryTimePref === 'scheduled'}
                     />
+                    <p className="text-[10px] text-gray-400">
+                      Standard canteen open hours: {canteenStatus.todayHours?.open || '08:00'} - {canteenStatus.todayHours?.close || '21:00'}
+                    </p>
                   </div>
                 )}
               </div>
 
               {/* Payment Method Selector */}
               <div className="space-y-2 pt-2 border-t border-gray-100 dark:border-gray-800">
-                <label className="text-xs font-black text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
-                  Select Payment Method *
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod('upi')}
-                    className={`flex flex-col items-center justify-center p-3 rounded-2xl border text-center transition-all ${
-                      paymentMethod === 'upi'
-                        ? 'border-orange-500 bg-orange-50/50 dark:bg-orange-950/20 text-orange-600 dark:text-orange-400 font-bold shadow-sm'
-                        : 'border-gray-200 dark:border-gray-800 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
-                    }`}
-                  >
-                    <QrCode className="w-5 h-5 mb-1 text-orange-500" />
-                    <span className="text-xs">Direct UPI Pay</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod('cod')}
-                    className={`flex flex-col items-center justify-center p-3 rounded-2xl border text-center transition-all ${
-                      paymentMethod === 'cod'
-                        ? 'border-orange-500 bg-orange-50/50 dark:bg-orange-950/20 text-orange-600 dark:text-orange-400 font-bold shadow-sm'
-                        : 'border-gray-200 dark:border-gray-800 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
-                    }`}
-                  >
-                    <Coins className="w-5 h-5 mb-1 text-orange-500" />
-                    <span className="text-xs">Cash on Delivery</span>
-                  </button>
+                <div className="p-3.5 rounded-2xl bg-orange-50/60 dark:bg-orange-950/20 border border-orange-200/60 dark:border-orange-900/40 flex items-center gap-3">
+                  <div className="p-2 bg-orange-500 rounded-xl text-white">
+                    <QrCode className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 text-left">
+                    <p className="text-xs font-bold text-gray-900 dark:text-white">Direct Online UPI Payment</p>
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400">Scan & pay instantly via GPay / PhonePe / Paytm / UPI</p>
+                  </div>
                 </div>
               </div>
 
@@ -592,7 +610,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
                 type="submit"
                 className="w-full mt-4 flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg shadow-orange-500/20"
               >
-                {paymentMethod === 'cod' ? 'Confirm & Place Order' : 'Proceed to UPI Payment'}
+                Proceed to UPI Payment
               </button>
             </form>
           </div>
@@ -625,7 +643,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
               {/* QR Code */}
               <div className="bg-white p-3 rounded-2xl inline-block border border-gray-100 shadow-sm">
                 <img 
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=${vendorUpi}&pn=Foodzie&am=${total.toFixed(2)}&cu=INR`)}`} 
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=${vendorUpi || 'vendor@upi'}&pn=Foodzie&am=${total.toFixed(2)}&cu=INR`)}`} 
                   alt="UPI QR Code" 
                   className="w-44 h-44"
                 />
@@ -634,7 +652,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
               <div className="text-sm space-y-2">
                 <p className="text-gray-500 dark:text-gray-400">Recipient UPI Address:</p>
                 <p className="font-mono font-bold text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-xl break-all">
-                  {vendorUpi}
+                  {vendorUpi || "Pending Vendor UPI Setup"}
                 </p>
               </div>
             </div>
@@ -642,14 +660,14 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
             {/* Actions */}
             <div className="space-y-2 pt-2">
               <a 
-                href={`upi://pay?pa=${vendorUpi}&pn=Foodzie&am=${total.toFixed(2)}&cu=INR`}
+                href={`upi://pay?pa=${vendorUpi || 'vendor@upi'}&pn=Foodzie&am=${total.toFixed(2)}&cu=INR`}
                 className="w-full flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg shadow-orange-500/20 md:hidden"
               >
                 Pay via Mobile App
               </a>
 
               <button 
-                onClick={() => placeOrder(false, deliveryAddress)}
+                onClick={() => placeOrder(deliveryAddress)}
                 disabled={isProcessing}
                 className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 disabled:bg-green-600/70 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg shadow-green-600/20"
               >

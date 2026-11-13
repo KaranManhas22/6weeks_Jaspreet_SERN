@@ -3,6 +3,7 @@
 import { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { api } from "@/lib/api";
 
 function ResetPasswordForm() {
   const [newPassword, setNewPassword] = useState("");
@@ -39,26 +40,15 @@ function ResetPasswordForm() {
     setMessage("");
 
     try {
-      const res = await fetch("/api/auth/reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, newPassword }),
-      });
-
-      if (res.ok) {
-        setStatus("success");
-        setMessage("Password reset successfully. Redirecting to login...");
-        setTimeout(() => {
-          router.push("/login");
-        }, 2000);
-      } else {
-        const data = await res.json().catch(() => ({}));
-        setStatus("error");
-        setMessage(data.message || "Failed to reset password. The link might be expired.");
-      }
-    } catch (err) {
+      await api.post("/api/auth/reset-password", { token, newPassword });
+      setStatus("success");
+      setMessage("Password reset successfully. Redirecting to login...");
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
+    } catch (err: any) {
       setStatus("error");
-      setMessage("An error occurred. Please try again later.");
+      setMessage(err.message || "Failed to reset password. The link might be expired.");
     }
   };
 

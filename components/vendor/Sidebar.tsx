@@ -13,19 +13,21 @@ import {
   ChevronRight,
   ChevronLeft,
   X,
-  QrCode,
   Users,
+  CalendarClock,
+  LayoutDashboard,
 } from 'lucide-react';
 import { removeToken } from '@/lib/api';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
 const NAV_ITEMS = [
-  { href: '/vendor/inventory', label: 'Inventory',  icon: LayoutGrid,     active: true  },
-  { href: '/vendor/orders',    label: 'Orders',     icon: ClipboardList,  active: true  },
-  { href: '/vendor/scan',      label: 'Scan QR',    icon: QrCode,         active: true  },
-  { href: '/vendor/employees', label: 'Employee Manager',  icon: Users,   active: true  },
-  { href: '/vendor/analytics', label: 'Analytics',  icon: BarChart2,      active: true  },
-  { href: '/vendor/settings',  label: 'Settings',   icon: Settings,       active: true  },
+  { href: '/vendor',           label: 'Dashboard',        icon: LayoutDashboard, exact: true,  active: true  },
+  { href: '/vendor/orders',    label: 'Orders (Kitchen)', icon: ClipboardList,                  active: true  },
+  { href: '/vendor/inventory', label: 'Inventory',        icon: LayoutGrid,                     active: true  },
+  { href: '/vendor/schedule',  label: 'Canteen Timings',  icon: CalendarClock,                  active: true  },
+  { href: '/vendor/employees', label: 'Employee Manager', icon: Users,                          active: true  },
+  { href: '/vendor/analytics', label: 'Analytics',        icon: BarChart2,                      active: true  },
+  { href: '/vendor/settings',  label: 'Settings',         icon: Settings,                       active: true  },
 ];
 
 interface SidebarProps {
@@ -99,8 +101,8 @@ export default function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, o
             </p>
           )}
 
-          {NAV_ITEMS.map(({ href, label, icon: Icon, active }) => {
-            const isActive = pathname.startsWith(href);
+          {NAV_ITEMS.map(({ href, label, icon: Icon, active, exact }: any) => {
+            const isActive = exact ? pathname === href : pathname.startsWith(href);
 
             if (!active) {
               return (

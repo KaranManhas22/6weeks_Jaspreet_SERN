@@ -226,7 +226,35 @@ export default function OrdersPage() {
   const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL || 'http://localhost:3000';
   
   const receiptUrl = `${API_URL}/api/orders/${order.id}/receipt`;
-  const verificationLink = `${FRONTEND_URL}/vendor/verify-delivery/${order.id}`;
+  const verificationCode = `F-${order.id.slice(-6).toUpperCase()}`;
+
+  const [isCancelling, setIsCancelling] = useState(false);
+
+  const handleCancelOrder = async () => {
+    if (!order) return;
+    const confirmed = window.confirm(
+      "Foodzie Order Cancellation Policy:\n\n" +
+      "• 100% Instant Refund: Available while your order is Pending or Confirmed.\n" +
+      "• Your full order payment will be refunded directly to your Foodzie wallet credits.\n" +
+      "• Once the canteen begins cooking (Preparing status), cancellation is no longer possible.\n\n" +
+      "Are you sure you want to cancel this order?"
+    );
+    if (!confirmed) return;
+
+    setIsCancelling(true);
+    try {
+      const res = await api.post<{ success: boolean; message: string; refundedAmount: number }>(
+        `/api/orders/${order.id}/cancel`,
+        {}
+      );
+      alert(res.message || "Order cancelled successfully. 100% refund credited to your wallet.");
+      setOrder(prev => prev ? { ...prev, status: 'Cancelled' } : null);
+    } catch (err: any) {
+      alert(err.message || "Failed to cancel order.");
+    } finally {
+      setIsCancelling(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-24 pb-16 px-4 sm:px-6 lg:px-8">
@@ -303,6 +331,35 @@ export default function OrdersPage() {
                   </span>
                 </div>
               </div>
+
+              {/* Order Cancellation Status & Actions */}
+              {(order.status === 'Pending' || order.status === 'Confirmed') && (
+                <div className="mb-8 p-4 bg-orange-50/70 dark:bg-orange-950/20 border border-orange-200/80 dark:border-orange-900/40 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <div className="text-left text-xs text-gray-700 dark:text-gray-300">
+                    <span className="font-bold text-orange-600 dark:text-orange-400 block mb-0.5">Cancellation Policy</span>
+                    100% full refund to your Foodzie wallet is available before kitchen preparation begins.
+                  </div>
+                  <button
+                    onClick={handleCancelOrder}
+                    disabled={isCancelling}
+                    className="w-full sm:w-auto px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-xs font-bold rounded-xl transition-all shadow-sm shrink-0"
+                  >
+                    {isCancelling ? 'Cancelling...' : 'Cancel Order'}
+                  </button>
+                </div>
+              )}
+
+              {order.status === 'Preparing' && (
+                <div className="mb-8 p-3 bg-blue-50/60 dark:bg-blue-950/20 border border-blue-200/60 dark:border-blue-900/40 rounded-2xl text-xs text-blue-700 dark:text-blue-300 text-left">
+                  <span className="font-bold">In the Kitchen:</span> The canteen is actively cooking your items. Orders in preparation cannot be cancelled per Foodzie policy.
+                </div>
+              )}
+
+              {order.status === 'Cancelled' && (
+                <div className="mb-8 p-3.5 bg-red-50/70 dark:bg-red-950/20 border border-red-200 dark:border-red-900/40 rounded-2xl text-xs text-red-700 dark:text-red-300 text-left font-bold">
+                  This order was cancelled. 100% of your paid amount has been refunded back to your Foodzie credits wallet.
+                </div>
+              )}
 
               {/* Timeline Progress Bar */}
               <div className="relative max-w-xl mx-auto px-4 sm:px-8 py-4">
@@ -502,19 +559,24 @@ export default function OrdersPage() {
 
                 <div className="space-y-1">
                   <h3 className="text-lg font-black text-gray-900 dark:text-white flex items-center justify-center gap-2">
-                    Delivery Verification QR
+                    Rider Delivery Verification QR
                   </h3>
                   <p className="text-xs font-medium text-gray-600 dark:text-gray-400 max-w-xs leading-relaxed">
-                    Show this QR code to the delivery driver upon arrival. Once scanned, your delivery is securely verified.
+                    Present this QR code or 6-digit confirmation code to your delivery rider upon delivery.
                   </p>
                 </div>
 
                 <div className="bg-white p-4 rounded-3xl border-2 border-orange-100 dark:border-gray-800 shadow-xl shadow-orange-500/5 relative group">
                   <img 
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(verificationLink)}`} 
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(verificationCode)}`} 
                     alt="Delivery verification QR" 
                     className="w-48 h-48 sm:w-52 sm:h-52 object-contain transition-transform group-hover:scale-105 duration-300"
                   />
+                </div>
+
+                <div className="bg-orange-50 dark:bg-orange-950/30 px-5 py-2.5 rounded-2xl border border-orange-200 dark:border-orange-900/50 text-center w-full">
+                  <span className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 block tracking-wider">Rider Confirmation Code</span>
+                  <span className="text-xl font-black font-mono tracking-widest text-orange-600 dark:text-orange-400">{verificationCode}</span>
                 </div>
 
                 <div className="flex items-center gap-2 text-xs font-bold text-orange-600 dark:text-orange-400 bg-orange-500/10 px-3.5 py-1.5 rounded-full border border-orange-500/20">

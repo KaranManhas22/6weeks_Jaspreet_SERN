@@ -2,13 +2,14 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
-import { ArrowLeft, Store, Clock, Plus, Minus, ShoppingBag, Loader2, User, Leaf, Flame, Star, X, Users, Share2 } from 'lucide-react';
+import { ArrowLeft, Store, Clock, Plus, Minus, ShoppingBag, Loader2, User, Leaf, Flame, Star, X, Users, Share2, CalendarClock, ChevronDown, ChevronUp } from 'lucide-react';
 import { api } from '@/lib/api';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useCartStore } from '@/lib/store/cartStore';
 import { CartSlideOver } from '@/components/CartSlideOver';
 import { DietaryIcon } from '@/components/DietaryIcon';
 import { useCurrency } from '@/context/CurrencyContext';
+import { getCanteenScheduleStatus } from '@/lib/schedule';
 import Link from 'next/link';
 
 interface Review {
@@ -50,6 +51,7 @@ interface VendorMenu {
   vendorName: string;
   vendorLogoUrl: string | null;
   universityId: string;
+  canteenSchedule?: any;
   categories: Category[];
 }
 
@@ -90,6 +92,7 @@ export default function VendorMenuPage() {
   const [vacancies, setVacancies] = useState<any[]>([]);
   const [studentProfile, setFoodieProfile] = useState<any>(null);
   const [showApplyModal, setShowApplyModal] = useState(false);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [selectedVacancy, setSelectedVacancy] = useState<any>(null);
   const [appAge, setAppAge] = useState('');
   const [appCity, setAppCity] = useState('');
@@ -288,6 +291,63 @@ export default function VendorMenuPage() {
 
       <main className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
         
+        {/* Canteen Operating Hours & Live Status Card */}
+        {vendor && (() => {
+          const canteenStatus = getCanteenScheduleStatus(vendor.canteenSchedule);
+          return (
+            <div className="mb-8 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-5 sm:p-6 shadow-sm space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3.5">
+                  <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-sm ${
+                    canteenStatus.isOpen 
+                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' 
+                      : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20'
+                  }`}>
+                    <Clock className="w-5 h-5 animate-pulse" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className={`w-2.5 h-2.5 rounded-full ${canteenStatus.isOpen ? 'bg-emerald-500' : 'bg-rose-500'}`} />
+                      <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                        canteenStatus.isOpen 
+                          ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400' 
+                          : 'bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400'
+                      }`}>
+                        {canteenStatus.isOpen ? 'Open Now' : 'Closed'}
+                      </span>
+                      <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                        {canteenStatus.reason}
+                      </span>
+                    </div>
+                    <p className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white mt-1">
+                      {canteenStatus.isOpen 
+                        ? `Kitchen is active & cooking fresh meals today (${canteenStatus.dayName}) until ${canteenStatus.todayHours?.close}` 
+                        : `Canteen is currently closed. You can pre-schedule your order during checkout for delivery when we open!`}
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setShowScheduleModal(true)}
+                  className="text-xs font-bold text-orange-600 dark:text-orange-400 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/20 px-4 py-2.5 rounded-xl transition-all flex items-center gap-1.5 self-start sm:self-auto shrink-0"
+                >
+                  <CalendarClock className="w-4 h-4" /> View Full Timings & Holidays
+                </button>
+              </div>
+
+              {!canteenStatus.isOpen && (
+                <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 p-3 rounded-2xl flex items-center gap-2 text-xs font-semibold text-amber-800 dark:text-amber-300">
+                  <span className="text-sm">⏰</span>
+                  <span>
+                    <strong>Pre-Schedule Open:</strong> You can add dishes to your cart now! At checkout, pick a scheduled time slot during the canteen&apos;s open hours.
+                  </span>
+                </div>
+              )}
+            </div>
+          );
+        })()}
+
         {/* Job hiring banner */}
         {vacancies.length > 0 && studentProfile && (
           <div className="mb-8 p-6 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in fade-in duration-300">
@@ -820,6 +880,100 @@ export default function VendorMenuPage() {
           </div>
         </div>
       )}
+
+      {/* Canteen Full Operating Hours & Advance Holidays Modal */}
+      {showScheduleModal && vendor && (() => {
+        const schedule = vendor.canteenSchedule || {
+          weekly: [
+            { day: 'Monday', open: '08:00', close: '21:00', isClosed: false },
+            { day: 'Tuesday', open: '08:00', close: '21:00', isClosed: false },
+            { day: 'Wednesday', open: '08:00', close: '21:00', isClosed: false },
+            { day: 'Thursday', open: '08:00', close: '21:00', isClosed: false },
+            { day: 'Friday', open: '08:00', close: '21:00', isClosed: false },
+            { day: 'Saturday', open: '09:00', close: '19:00', isClosed: false },
+            { day: 'Sunday', open: '10:00', close: '16:00', isClosed: true },
+          ],
+          specialDates: []
+        };
+        const weekly = schedule.weekly || [];
+        const specialDates = schedule.specialDates || [];
+
+        return (
+          <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-[99] flex items-center justify-center p-6 animate-in fade-in duration-300">
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-6 max-w-lg w-full space-y-6 text-left shadow-2xl relative max-h-[90vh] overflow-y-auto">
+              <button 
+                onClick={() => setShowScheduleModal(false)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="border-b border-gray-100 dark:border-gray-800 pb-3">
+                <div className="flex items-center gap-2">
+                  <CalendarClock className="w-5 h-5 text-orange-500" />
+                  <h3 className="text-lg font-black text-gray-900 dark:text-white">
+                    {vendor.vendorName} — Schedule
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Official operating hours and advance holiday closures.</p>
+              </div>
+
+              {/* Weekly Hours */}
+              <div className="space-y-2">
+                <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider block">Weekly Operating Hours</span>
+                <div className="space-y-1.5 divide-y divide-gray-100 dark:divide-gray-800 text-xs">
+                  {weekly.map((d: any) => (
+                    <div key={d.day} className="flex items-center justify-between py-2">
+                      <span className="font-bold text-gray-900 dark:text-white">{d.day}</span>
+                      {d.isClosed ? (
+                        <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400">
+                          Closed (Off Day)
+                        </span>
+                      ) : (
+                        <span className="font-mono font-bold text-gray-600 dark:text-gray-300">
+                          {d.open} — {d.close}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Advance Holidays */}
+              {specialDates.length > 0 && (
+                <div className="space-y-2 pt-2 border-t border-gray-100 dark:border-gray-800">
+                  <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider block">Upcoming Holiday & Event Off-Days</span>
+                  <div className="space-y-2">
+                    {specialDates.map((sd: any) => (
+                      <div key={sd.date} className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-2xl flex items-center justify-between text-xs">
+                        <div>
+                          <span className="font-mono font-bold text-gray-900 dark:text-white block">{sd.date}</span>
+                          <span className="text-gray-500 text-[11px]">{sd.reason}</span>
+                        </div>
+                        <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400">
+                          {sd.isClosed ? 'All Day Closed' : `${sd.open} - ${sd.close}`}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="p-3 bg-orange-50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-900/40 rounded-2xl text-[11px] text-gray-600 dark:text-gray-300">
+                💡 <strong>Pre-Schedule Tip:</strong> Even when the canteen is closed, you can build your order and select a scheduled delivery slot during our open hours!
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowScheduleModal(false)}
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-2xl shadow-md transition-all text-xs uppercase"
+              >
+                Close Timings
+              </button>
+            </div>
+          </div>
+        );
+      })()}
 
     </div>
   );

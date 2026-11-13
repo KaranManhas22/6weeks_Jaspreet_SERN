@@ -573,11 +573,11 @@ export default function DeliveryDashboard() {
                       <div className="flex justify-between items-center text-xs">
                         <div>
                           <span className="text-[9px] text-gray-550 uppercase font-black block">Payment mode</span>
-                          <span className="font-bold text-white">{order.isCOD ? '💵 Cash on Delivery (COD)' : '📱 Paid via UPI'}</span>
+                          <span className="font-bold text-green-400">📱 Pre-paid Online (UPI)</span>
                         </div>
                         <div className="text-right">
                           <span className="text-[9px] text-gray-550 uppercase font-black block">Amount to Collect</span>
-                          <span className="font-black text-orange-500">{formatCurrency(order.totalAmount)}</span>
+                          <span className="font-bold text-white">₹0.00 (Pre-paid)</span>
                         </div>
                       </div>
 
@@ -621,9 +621,9 @@ export default function DeliveryDashboard() {
               </div>
 
               <div className="bg-gray-900 border border-gray-850 rounded-3xl p-6 space-y-2 shadow-sm">
-                <span className="text-[10px] text-gray-550 font-black uppercase tracking-wider block">Collected COD Cash</span>
-                <h3 className="text-3xl font-black text-orange-400">{formatCurrency(statsData?.stats.pendingCashCOD ?? 0)}</h3>
-                <p className="text-[11px] text-gray-500">Collected Cash due to return to canteen</p>
+                <span className="text-[10px] text-gray-550 font-black uppercase tracking-wider block">Completed Deliveries</span>
+                <h3 className="text-3xl font-black text-green-400">{statsData?.stats.completedDeliveries ?? 0}</h3>
+                <p className="text-[11px] text-gray-500">Verified contactless student deliveries</p>
               </div>
             </div>
 
@@ -695,7 +695,7 @@ export default function DeliveryDashboard() {
                           <td className="py-3.5 px-4">{trip.vendor.name}</td>
                           <td className="py-3.5 px-4 truncate max-w-[150px]">{trip.deliveryAddress}</td>
                           <td className="py-3.5 px-4">
-                            <span className="block text-[10px]">{trip.isCOD ? '💵 COD Cash' : '📱 Pre-paid UPI'}</span>
+                            <span className="block text-[10px] text-green-400 font-bold">📱 Pre-paid UPI</span>
                             <span className="text-[10px] text-gray-550 font-mono">Total: {formatCurrency(trip.totalAmount)}</span>
                           </td>
                           <td className="py-3.5 px-4">
@@ -723,16 +723,10 @@ export default function DeliveryDashboard() {
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div>
                   <h3 className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-                    💵 Cash Deposit Drops
+                    💵 Cash Deposit History (Archived)
                   </h3>
-                  <p className="text-xs text-gray-500 mt-1">Log cash dropped off physically at the canteen shop</p>
+                  <p className="text-xs text-gray-500 mt-1">Cash on delivery has been phased out; all orders are pre-paid online.</p>
                 </div>
-                <button
-                  onClick={() => setShowDepositModal(true)}
-                  className="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-lg shadow-orange-500/10 active:scale-95 transition-all uppercase"
-                >
-                  Drop Cash at Shop
-                </button>
               </div>
 
               <div className="overflow-x-auto">

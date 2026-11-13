@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
@@ -17,11 +17,14 @@ const geistMono = localFont({
   weight: '100 900',
 });
 
+export const viewport: Viewport = {
+  themeColor: '#ea580c',
+};
+
 export const metadata: Metadata = {
   title: 'Foodzie — Campus Food Delivery',
   description: 'Order hot food from your university canteen in seconds.',
   manifest: '/manifest.json',
-  themeColor: '#ea580c',
   keywords: ['campus food', 'university canteen', 'food delivery', 'foodzie'],
   icons: {
     icon: '/favicon.ico',
