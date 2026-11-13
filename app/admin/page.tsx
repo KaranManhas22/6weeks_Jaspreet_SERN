@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Inter, Poppins } from 'next/font/google';
 import { useTheme } from 'next-themes';
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -17,9 +16,6 @@ import {
 } from 'lucide-react';
 import { api, setToken, getToken, removeToken } from '@/lib/api';
 import toast from 'react-hot-toast';
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-poppins' });
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -277,7 +273,7 @@ function AdminPanelMain({ onLogout }: { onLogout: () => void }) {
   ];
 
   return (
-    <div className={`min-h-screen bg-[#F8FAFC] dark:bg-[#0B0F17] flex font-sans text-gray-900 dark:text-gray-100 ${inter.variable} ${poppins.variable}`}>
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B0F17] flex font-sans text-gray-900 dark:text-gray-100">
       
       {/* ── 1. DARK NAVY/INDIGO SIDEBAR (Image 6 Admin Panel Style) ─────── */}
       <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#0F172A] text-white flex flex-col justify-between transition-transform duration-300 ${
