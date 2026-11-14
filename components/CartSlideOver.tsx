@@ -116,8 +116,10 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
   const cartItems = Object.values(cart);
   const displayItems = isSquadMode ? squadCartItems : cartItems;
   const baseTotal = isSquadMode ? squadTotal : getTotalPrice();
-  const discount = useCredits ? Math.min(campusCredits, baseTotal) : 0;
-  const total = Math.max(0, baseTotal - discount);
+  // Foodie Credit Points allow up to 50% discount per meal, ensuring realistic non-zero platform transactions
+  const maxCreditsDiscount = Math.floor(baseTotal * 0.5);
+  const discount = useCredits ? Math.min(campusCredits, maxCreditsDiscount) : 0;
+  const total = Math.max(20, baseTotal - discount);
 
   const canteenStatus = getCanteenScheduleStatus(vendorSchedule);
 
@@ -643,7 +645,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
               {/* QR Code */}
               <div className="bg-white p-3 rounded-2xl inline-block border border-gray-100 shadow-sm">
                 <img 
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=${vendorUpi || 'vendor@upi'}&pn=Foodzie&am=${total.toFixed(2)}&cu=INR`)}`} 
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=${vendorUpi || 'sbbsu.canteen@okhdfcbank'}&pn=Foodzie&am=${total.toFixed(2)}&cu=INR`)}`} 
                   alt="UPI QR Code" 
                   className="w-44 h-44"
                 />
@@ -652,7 +654,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
               <div className="text-sm space-y-2">
                 <p className="text-gray-500 dark:text-gray-400">Recipient UPI Address:</p>
                 <p className="font-mono font-bold text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-xl break-all">
-                  {vendorUpi || "Pending Vendor UPI Setup"}
+                  {vendorUpi || "sbbsu.canteen@okhdfcbank"}
                 </p>
               </div>
             </div>
@@ -660,7 +662,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
             {/* Actions */}
             <div className="space-y-2 pt-2">
               <a 
-                href={`upi://pay?pa=${vendorUpi || 'vendor@upi'}&pn=Foodzie&am=${total.toFixed(2)}&cu=INR`}
+                href={`upi://pay?pa=${vendorUpi || 'sbbsu.canteen@okhdfcbank'}&pn=Foodzie&am=${total.toFixed(2)}&cu=INR`}
                 className="w-full flex items-center justify-center bg-[#E65100] hover:bg-[#D84315] text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg shadow-orange-500/20 md:hidden"
               >
                 Pay via Mobile App
