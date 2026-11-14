@@ -250,10 +250,11 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
       clearCart();
       setShowUpiModal(false);
       setShowAddressModal(false);
+      const orderTargetId = res.foodzieOrderId || (res as any).order?.id;
       setTimeout(() => {
         setOrderSuccess(false);
         onClose();
-        router.push('/shop/orders');
+        router.push(orderTargetId ? `/shop/orders?orderId=${orderTargetId}` : '/shop/orders');
       }, 1500);
     } catch (err: any) {
       console.error('Failed to place order:', err);

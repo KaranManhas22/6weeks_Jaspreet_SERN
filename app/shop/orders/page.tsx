@@ -73,6 +73,7 @@ export default function OrdersPage() {
   const { formatCurrency } = useCurrency();
   const [order, setOrder] = useState<Order | null>(null);
   const [allOrders, setAllOrders] = useState<Order[]>([]);
+  const [visibleOrderLimit, setVisibleOrderLimit] = useState(12);
   const [isLoading, setIsLoading] = useState(true);
   const [showCelebration, setShowCelebration] = useState(false);
   const [riderCoords, setRiderCoords] = useState<{ lat: number; lng: number } | null>(null);
@@ -89,18 +90,23 @@ export default function OrdersPage() {
   const fetchLatestOrder = useCallback(async () => {
     try {
       const orders = await api.get<Order[]>('/api/orders/customer');
-      setAllOrders(orders);
-      if (orders.length > 0) {
-        let targetId = null;
-        if (typeof window !== 'undefined') {
-          targetId = new URLSearchParams(window.location.search).get('orderId');
+      if (Array.isArray(orders)) {
+        setAllOrders(orders);
+        if (orders.length > 0) {
+          let targetId = null;
+          if (typeof window !== 'undefined') {
+            targetId = new URLSearchParams(window.location.search).get('orderId');
+          }
+          if (targetId) {
+            const found = orders.find(o => o.id === targetId);
+            setOrder(found || orders[0]);
+          } else {
+            setOrder(orders[0]); // Show the most recent order
+          }
         }
-        if (targetId) {
-          const found = orders.find(o => o.id === targetId);
-          setOrder(found || orders[0]);
-        } else {
-          setOrder(orders[0]); // Show the most recent order
-        }
+      } else {
+        setAllOrders([]);
+        setOrder(null);
       }
     } catch (err) {
       console.error('Failed to fetch orders:', err);
@@ -281,11 +287,11 @@ export default function OrdersPage() {
                   Order Tracking
                 </h1>
                 <span className="text-xs font-black px-2.5 py-0.5 bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-md uppercase">
-                  #{order.id.slice(-6).toUpperCase()}
+                  #{order?.id ? order.id.slice(-6).toUpperCase() : '------'}
                 </span>
               </div>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 flex items-center gap-1.5">
-                <Store className="w-3.5 h-3.5 text-orange-500" /> {order.vendor.vendorName} • Placed on {new Date(order.createdAt).toLocaleDateString()}
+                <Store className="w-3.5 h-3.5 text-orange-500" /> {order?.vendor?.vendorName || (order?.vendor as any)?.name || 'Campus Canteen'} • Placed on {order?.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'Today'}
               </p>
             </div>
           </div>
@@ -409,7 +415,7 @@ export default function OrdersPage() {
                   </h3>
                   <div className="flex items-center gap-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/80 px-3.5 py-1.5 rounded-xl border border-gray-200/50 dark:border-gray-700/50">
                     <Store className="w-3.5 h-3.5 text-orange-500" />
-                    <span>{order.vendor.vendorName}</span>
+                    <span>{order?.vendor?.vendorName || (order?.vendor as any)?.name || 'Campus Canteen'}</span>
                   </div>
                 </div>
                 
@@ -417,11 +423,11 @@ export default function OrdersPage() {
                   <TrackingMap 
                     riderLat={riderCoords.lat}
                     riderLng={riderCoords.lng}
-                    canteenName={order.vendor.vendorName}
+                    canteenName={order?.vendor?.vendorName || (order?.vendor as any)?.name || 'Campus Canteen'}
                   />
                 </div>
 
-                {order.rider && (
+                {order?.rider && (
                   <div className="flex items-center justify-between p-4 bg-orange-500/5 dark:bg-orange-500/10 rounded-2xl border border-orange-500/15">
                     <div className="flex items-center gap-3.5">
                       <div className="w-12 h-12 bg-orange-500 text-white rounded-2xl flex items-center justify-center font-bold text-xl shadow-md shadow-orange-500/20">
@@ -454,7 +460,7 @@ export default function OrdersPage() {
                   </div>
                   <div>
                     <h3 className="text-lg font-black text-gray-900 dark:text-white">Order Summary</h3>
-                    <p className="text-xs text-gray-500">{order.items.length} {order.items.length === 1 ? 'item' : 'items'} ordered from {order.vendor.vendorName}</p>
+                    <p className="text-xs text-gray-500">{(order?.items || []).length} {(order?.items || []).length === 1 ? 'item' : 'items'} ordered from {order?.vendor?.vendorName || (order?.vendor as any)?.name || 'Campus Canteen'}</p>
                   </div>
                 </div>
 
@@ -471,27 +477,27 @@ export default function OrdersPage() {
 
               {/* Detailed Items List */}
               <div className="space-y-3">
-                {order.items.map(item => (
+                {(order?.items || []).map(item => (
                   <div key={item.id} className="flex justify-between items-center p-4 bg-gray-50 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-gray-800 hover:border-orange-500/30 transition-colors">
                     <div className="flex items-center gap-3.5">
                       <span className="w-8 h-8 bg-orange-500 text-white rounded-xl flex items-center justify-center font-black text-xs shadow-sm shadow-orange-500/20">
                         {item.quantity}x
                       </span>
                       <div>
-                        <span className="text-sm font-bold text-gray-900 dark:text-white block">{item.foodItem.name}</span>
-                        <span className="text-xs text-gray-400 font-medium">{formatCurrency(item.priceAtTime)} each</span>
+                        <span className="text-sm font-bold text-gray-900 dark:text-white block">{item.foodItem?.name || 'Campus Food Item'}</span>
+                        <span className="text-xs text-gray-400 font-medium">{formatCurrency(item.priceAtTime || 0)} each</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <span className={`text-[10px] px-2.5 py-1 rounded-md font-black uppercase tracking-wider border ${
-                        item.foodItem.isVegetarian 
+                        item.foodItem?.isVegetarian 
                           ? 'bg-green-50 text-green-700 border-green-200 dark:bg-green-500/10 dark:text-green-400 dark:border-green-500/20' 
                           : 'bg-red-50 text-red-700 border-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20'
                       }`}>
-                        {item.foodItem.isVegetarian ? 'Veg' : 'Non-Veg'}
+                        {item.foodItem?.isVegetarian ? 'Veg' : 'Non-Veg'}
                       </span>
                       <span className="text-base font-black text-gray-900 dark:text-white min-w-[60px] text-right">
-                        {formatCurrency(item.priceAtTime * item.quantity)}
+                        {formatCurrency((item.priceAtTime || 0) * (item.quantity || 1))}
                       </span>
                     </div>
                   </div>
@@ -500,7 +506,7 @@ export default function OrdersPage() {
 
               <div className="pt-4 border-t border-gray-100 dark:border-gray-800 flex justify-between items-center">
                 <span className="text-sm font-bold text-gray-500 dark:text-gray-400">Total Amount Paid</span>
-                <span className="text-2xl font-black text-orange-500">{formatCurrency(order.totalAmount)}</span>
+                <span className="text-2xl font-black text-orange-500">{formatCurrency(order?.totalAmount || 0)}</span>
               </div>
             </div>
 
@@ -518,12 +524,12 @@ export default function OrdersPage() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {order.items.map(item => {
+                  {(order?.items || []).map(item => {
                     const isReviewed = reviewedItemIds.includes(item.foodItemId);
                     return (
                       <div key={item.id} className="flex flex-col justify-between gap-4 p-5 bg-gray-50 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-gray-800">
                         <div className="space-y-1">
-                          <span className="text-sm font-bold text-gray-900 dark:text-white block">{item.foodItem.name}</span>
+                          <span className="text-sm font-bold text-gray-900 dark:text-white block">{item.foodItem?.name || 'Campus Food Item'}</span>
                           <p className="text-[11px] text-gray-400">How did this taste?</p>
                         </div>
 
@@ -607,12 +613,12 @@ export default function OrdersPage() {
                   Drop-off Address
                 </span>
                 <p className="text-sm font-bold text-gray-800 dark:text-gray-200 leading-relaxed">
-                  {order.deliveryAddress}
+                  {order?.deliveryAddress || 'Campus Delivery · Main Gate & Campus Commons'}
                 </p>
               </div>
 
               {/* Recipient Details */}
-              {order.customer && (
+              {order?.customer && (
                 <div className="space-y-3 pt-2">
                   <span className="text-xs font-black text-gray-400 uppercase tracking-wider block">
                     Recipient Details
@@ -624,7 +630,7 @@ export default function OrdersPage() {
                       </div>
                       <div className="overflow-hidden">
                         <p className="text-[11px] text-gray-400 font-medium">Customer Name</p>
-                        <p className="font-bold text-gray-900 dark:text-white truncate">{order.customer.name}</p>
+                        <p className="font-bold text-gray-900 dark:text-white truncate">{order.customer?.name || 'Campus Foodie'}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 text-sm">
@@ -633,7 +639,7 @@ export default function OrdersPage() {
                       </div>
                       <div className="overflow-hidden">
                         <p className="text-[11px] text-gray-400 font-medium">Email Address</p>
-                        <p className="font-bold text-gray-900 dark:text-white truncate">{order.customer.email}</p>
+                        <p className="font-bold text-gray-900 dark:text-white truncate">{order.customer?.email || 'student@foodzie.store'}</p>
                       </div>
                     </div>
                   </div>
@@ -644,15 +650,15 @@ export default function OrdersPage() {
               <div className="pt-4 border-t border-gray-100 dark:border-gray-800 space-y-2.5">
                 <div className="flex justify-between text-xs font-medium text-gray-500">
                   <span>Vendor</span>
-                  <span className="font-bold text-gray-900 dark:text-white">{order.vendor.vendorName}</span>
+                  <span className="font-bold text-gray-900 dark:text-white">{order?.vendor?.vendorName || (order?.vendor as any)?.name || 'Campus Canteen'}</span>
                 </div>
                 <div className="flex justify-between text-xs font-medium text-gray-500">
                   <span>Order Date</span>
-                  <span className="font-bold text-gray-900 dark:text-white">{new Date(order.createdAt).toLocaleDateString()}</span>
+                  <span className="font-bold text-gray-900 dark:text-white">{order?.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'Today'}</span>
                 </div>
                 <div className="flex justify-between text-xs font-medium text-gray-500">
                   <span>Total Amount</span>
-                  <span className="font-black text-orange-500 text-sm">{formatCurrency(order.totalAmount)}</span>
+                  <span className="font-black text-orange-500 text-sm">{formatCurrency(order?.totalAmount || 0)}</span>
                 </div>
               </div>
             </div>
@@ -685,7 +691,7 @@ export default function OrdersPage() {
                 <div>
                   <h2 className="text-xl font-black text-gray-900 dark:text-white">Order History &amp; Records</h2>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Showing all {allOrders.length} orders placed across Sant Baba Bhag Singh University canteens
+                    Showing {Math.min(visibleOrderLimit, allOrders.length)} of {allOrders.length} orders placed across Sant Baba Bhag Singh University canteens
                   </p>
                 </div>
               </div>
@@ -695,7 +701,7 @@ export default function OrdersPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {allOrders.map((histOrder) => {
+              {allOrders.slice(0, visibleOrderLimit).map((histOrder) => {
                 const isSelected = order?.id === histOrder.id;
                 const isTakeaway = !histOrder.deliveryAddress || histOrder.deliveryAddress.toLowerCase().includes('counter') || histOrder.deliveryAddress.toLowerCase().includes('takeaway');
 
@@ -713,7 +719,7 @@ export default function OrdersPage() {
                         <div>
                           <div className="flex items-center gap-2">
                             <span className="text-xs font-black text-gray-900 dark:text-white">
-                              #{histOrder.id.slice(-6).toUpperCase()}
+                              #{histOrder?.id ? histOrder.id.slice(-6).toUpperCase() : '------'}
                             </span>
                             {isSelected && (
                               <span className="text-[10px] font-black px-2 py-0.5 bg-orange-500 text-white rounded-md">
@@ -723,7 +729,7 @@ export default function OrdersPage() {
                           </div>
                           <p className="text-xs font-bold text-orange-600 dark:text-orange-400 flex items-center gap-1 mt-0.5">
                             <Store className="w-3.5 h-3.5" />
-                            {histOrder.vendor.vendorName}
+                            {histOrder?.vendor?.vendorName || (histOrder?.vendor as any)?.name || 'Campus Canteen'}
                           </p>
                         </div>
                         <span className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-lg border ${
@@ -753,7 +759,7 @@ export default function OrdersPage() {
                       <div className="p-2.5 rounded-2xl bg-white dark:bg-gray-900/80 border border-gray-100 dark:border-gray-800 space-y-1 text-xs">
                         <div className="flex items-center gap-1.5 text-gray-500">
                           <MapPin className="w-3.5 h-3.5 text-orange-500 shrink-0" />
-                          <span className="truncate font-semibold">{histOrder.deliveryAddress}</span>
+                          <span className="truncate font-semibold">{histOrder?.deliveryAddress || 'Campus Delivery · Main Gate & Campus Commons'}</span>
                         </div>
                         {histOrder.rider ? (
                           <div className="flex items-center justify-between pt-1 border-t border-gray-100 dark:border-gray-800 text-[11px]">
@@ -773,15 +779,15 @@ export default function OrdersPage() {
 
                       {/* Item Summary */}
                       <div className="space-y-1 text-xs">
-                        {histOrder.items.slice(0, 3).map((item) => (
+                        {(histOrder?.items || []).slice(0, 3).map((item) => (
                           <div key={item.id} className="flex justify-between text-gray-600 dark:text-gray-300">
-                            <span className="truncate font-medium">{item.quantity}x {item.foodItem.name}</span>
+                            <span className="truncate font-medium">{item?.quantity || 1}x {item?.foodItem?.name || 'Campus Food Item'}</span>
                             <span className="font-bold text-gray-900 dark:text-white shrink-0 ml-2">
-                              {formatCurrency(item.priceAtTime * item.quantity)}
+                              {formatCurrency((item?.priceAtTime || 0) * (item?.quantity || 1))}
                             </span>
                           </div>
                         ))}
-                        {histOrder.items.length > 3 && (
+                        {(histOrder?.items || []).length > 3 && (
                           <p className="text-[11px] text-gray-400 font-medium">
                             +{histOrder.items.length - 3} more items
                           </p>
@@ -794,7 +800,7 @@ export default function OrdersPage() {
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-medium text-gray-400">Total Paid</span>
                         <span className="text-base font-black text-orange-500">
-                          {formatCurrency(histOrder.totalAmount)}
+                          {formatCurrency(histOrder?.totalAmount || 0)}
                         </span>
                       </div>
 
@@ -823,7 +829,7 @@ export default function OrdersPage() {
                           <Download className="w-4 h-4" />
                         </a>
 
-                        {histOrder.status === 'Completed' && histOrder.items.length > 0 && (
+                        {histOrder.status === 'Completed' && (histOrder?.items || []).length > 0 && (
                           <button
                             onClick={() => setActiveReviewItem(histOrder.items[0])}
                             className="p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 transition-colors"
@@ -838,6 +844,18 @@ export default function OrdersPage() {
                 );
               })}
             </div>
+
+            {/* Load More Past Orders Button */}
+            {allOrders.length > visibleOrderLimit && (
+              <div className="text-center pt-4">
+                <button
+                  onClick={() => setVisibleOrderLimit(prev => prev + 12)}
+                  className="px-6 py-2.5 bg-orange-50 hover:bg-orange-100 text-[#E65100] font-black text-xs rounded-xl transition-all border border-orange-200/60 shadow-sm"
+                >
+                  Load More Past Orders ({allOrders.length - visibleOrderLimit} remaining) &darr;
+                </button>
+              </div>
+            )}
           </div>
         )}
 
@@ -856,7 +874,7 @@ export default function OrdersPage() {
 
             <div className="space-y-1">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white">Review Item</h3>
-              <p className="text-xs text-orange-500 font-bold">{activeReviewItem.foodItem.name}</p>
+              <p className="text-xs text-orange-500 font-bold">{activeReviewItem.foodItem?.name || 'Campus Food Item'}</p>
             </div>
 
             <form onSubmit={submitReview} className="space-y-6">

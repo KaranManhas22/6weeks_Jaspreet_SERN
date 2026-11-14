@@ -61,7 +61,8 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
 
   const formatCurrency = useCallback((amount: number, uniId?: string | null) => {
     const sym = getCurrencySymbol(uniId);
-    return `${sym}${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    const validAmount = typeof amount === 'number' && !isNaN(amount) ? amount : (Number(amount) || 0);
+    return `${sym}${validAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   }, [getCurrencySymbol]);
 
   return (

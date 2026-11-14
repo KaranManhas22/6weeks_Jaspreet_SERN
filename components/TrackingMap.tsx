@@ -15,8 +15,10 @@ export default function TrackingMap({ riderLat, riderLng, canteenName }: Trackin
   const mapRef = useRef<L.Map | null>(null);
   const markerRef = useRef<L.Marker | null>(null);
 
+  const isValidCoords = typeof riderLat === 'number' && typeof riderLng === 'number' && !isNaN(riderLat) && !isNaN(riderLng);
+
   useEffect(() => {
-    if (typeof window === 'undefined' || !mapContainerRef.current) return;
+    if (typeof window === 'undefined' || !mapContainerRef.current || !isValidCoords) return;
 
     // Fix default marker icon path issue in Leaflet with Next.js static asset loaders
     // @ts-expect-error - Leaflet internal property modification
@@ -27,33 +29,41 @@ export default function TrackingMap({ riderLat, riderLng, canteenName }: Trackin
       shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
     });
 
-    // Initialize map if it doesn't exist yet
-    if (!mapRef.current) {
-      const map = L.map(mapContainerRef.current, {
-        zoomControl: true,
-        scrollWheelZoom: false,
-      }).setView([riderLat, riderLng], 16);
+    try {
+      // Initialize map if it doesn't exist yet
+      if (!mapRef.current) {
+        const map = L.map(mapContainerRef.current, {
+          zoomControl: true,
+          scrollWheelZoom: false,
+        }).setView([riderLat, riderLng], 16);
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
-      }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors',
+        }).addTo(map);
 
-      mapRef.current = map;
+        mapRef.current = map;
 
-      // Add delivery rider marker
-      const marker = L.marker([riderLat, riderLng])
-        .addTo(map)
-        .bindPopup(`🚴 Rider from ${canteenName} is on the way!`)
-        .openPopup();
-      markerRef.current = marker;
-    } else {
-      // Dynamic update of coordinates when rider moves
-      mapRef.current.setView([riderLat, riderLng]);
-      if (markerRef.current) {
-        markerRef.current.setLatLng([riderLat, riderLng]);
+        // Add delivery rider marker
+        const marker = L.marker([riderLat, riderLng])
+          .addTo(map)
+          .bindPopup(`🚴 Rider from ${canteenName} is on the way!`)
+          .openPopup();
+        markerRef.current = marker;
+      } else {
+        // Dynamic update of coordinates when rider moves
+        mapRef.current.setView([riderLat, riderLng]);
+        if (markerRef.current) {
+          markerRef.current.setLatLng([riderLat, riderLng]);
+        }
       }
+    } catch (mapErr) {
+      console.warn("TrackingMap initialization warning:", mapErr);
     }
-  }, [riderLat, riderLng, canteenName]);
+  }, [riderLat, riderLng, canteenName, isValidCoords]);
+
+  if (!isValidCoords) {
+    return null;
+  }
 
   return (
     <div className="w-full h-64 sm:h-80 lg:h-96 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-inner relative z-0">
