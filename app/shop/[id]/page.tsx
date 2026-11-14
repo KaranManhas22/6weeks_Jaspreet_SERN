@@ -466,7 +466,7 @@ function CanteenStorefrontContent() {
       </aside>
 
       {/* ── 2. CENTER CONTENT (Middle Part Scrolls Independently) ───────── */}
-      <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto h-screen max-w-full scroll-smooth">
+      <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 overflow-y-auto h-screen scroll-smooth">
         
         {/* Top Header Navigation */}
         <div className="flex items-center justify-between gap-4 mb-6">
@@ -826,7 +826,7 @@ function CanteenStorefrontContent() {
       </main>
 
       {/* ── 3. RIGHT SIDEBAR (Unified GoMeal Order & Checkout Tray) ───────── */}
-      <aside className="w-full xl:w-84 bg-white border-l border-[#F0E6D8] shrink-0 p-5 flex flex-col justify-between sticky top-0 h-screen overflow-y-auto z-20">
+      <aside className="hidden xl:flex xl:w-[340px] 2xl:w-[360px] bg-white border-l border-[#F0E6D8] shrink-0 p-5 flex-col justify-between sticky top-0 h-screen overflow-y-auto z-20">
         <div>
           {/* User Profile Mini Bar */}
           <div className="flex items-center justify-between mb-5 pb-4 border-b border-gray-100">
@@ -953,6 +953,28 @@ function CanteenStorefrontContent() {
           </button>
         </div>
       </aside>
+
+      {/* Mobile / Tablet Floating Cart Bar (visible only when screen < xl and items > 0) */}
+      {(totalCartItems > 0 || squadParam) && (
+        <div className="fixed bottom-4 left-4 right-4 z-40 xl:hidden">
+          <button
+            onClick={() => setIsCartOpen(true)}
+            className={`w-full ${squadParam ? 'bg-green-600 hover:bg-green-700 shadow-green-500/20' : 'bg-[#E65100] hover:bg-[#D84315] shadow-orange-500/25'} text-white py-3.5 px-5 rounded-2xl flex items-center justify-between shadow-xl font-bold active:scale-98 transition-all`}
+          >
+            <div className="flex items-center gap-2">
+              <span className="bg-white text-[#E65100] px-2 py-0.5 rounded-full text-xs font-black">
+                {totalCartItems}
+              </span>
+              <span className="text-xs uppercase tracking-wider font-black">
+                {squadParam ? 'View Squad Tray' : 'View Meal Tray'}
+              </span>
+            </div>
+            <span className="text-sm font-black">
+              {formatCurrency(totalCartPrice > 0 ? totalCartPrice + 10 : 0)} &rarr;
+            </span>
+          </button>
+        </div>
+      )}
 
       {/* SlideOver Checkout Drawer */}
       <CartSlideOver
