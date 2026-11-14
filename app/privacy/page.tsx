@@ -9,7 +9,7 @@ export default function PrivacyPage() {
   const { brandName } = useBrand();
   
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white overflow-x-hidden font-sans transition-colors duration-300 relative">
+    <div className="min-h-screen bg-[#FFFDF9] dark:bg-[#0D1117] text-[#2C2723] dark:text-[#E6EDF3] overflow-x-hidden font-sans transition-colors duration-300 relative">
       <div className="absolute inset-0 bg-[url('/foodzie_bg_pattern.jpg')] bg-repeat opacity-[0.03] dark:opacity-[0.08] pointer-events-none z-0" />
       
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
@@ -24,7 +24,7 @@ export default function PrivacyPage() {
         <div className="flex items-center gap-4">
           <ThemeToggle />
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-[#E65100] rounded-xl flex items-center justify-center shadow-md shadow-orange-500/20">
               <UtensilsCrossed className="w-4 h-4 text-white" />
             </div>
             <span className="font-bold text-lg text-gray-900 dark:text-white">{brandName}</span>

@@ -9,6 +9,7 @@ import {
   Store, 
   ChevronDown, 
   UtensilsCrossed, 
+  ChefHat,
   Loader2, 
   Star, 
   Clock, 
@@ -375,11 +376,11 @@ export default function FoodzieShopPage() {
   // If not logged in, enforce authentication before displaying any canteen or menu
   if (isAuthenticated === false) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0A0E17] flex flex-col items-center justify-center p-6 text-center font-sans">
-        <div className="w-20 h-20 rounded-3xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 mb-6 shadow-xl shadow-amber-500/10">
+      <div className="min-h-screen bg-[#FFFDF9] dark:bg-[#0D1117] text-[#2C2723] dark:text-[#E6EDF3] flex flex-col items-center justify-center p-6 text-center font-sans">
+        <div className="w-20 h-20 rounded-3xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-[#E65100] mb-6 shadow-xl shadow-amber-500/10">
           <Store className="w-10 h-10" />
         </div>
-        <span className="inline-block px-4 py-1.5 rounded-full bg-amber-400/20 text-amber-700 dark:text-amber-400 font-black text-xs uppercase tracking-wider mb-4">
+        <span className="inline-block px-4 py-1.5 rounded-full bg-orange-500/10 text-[#E65100] dark:text-orange-400 font-black text-xs uppercase tracking-wider mb-4">
           Campus Canteens are Members Only
         </span>
         <h1 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white tracking-tight max-w-xl">
@@ -391,7 +392,7 @@ export default function FoodzieShopPage() {
         <div className="mt-8 flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm">
           <Link
             href="/login?redirect=/shop"
-            className="w-full sm:w-auto flex-1 py-3.5 px-6 rounded-2xl bg-amber-400 hover:bg-amber-500 text-gray-950 font-black text-sm shadow-lg shadow-amber-400/25 transition-all text-center"
+            className="w-full sm:w-auto flex-1 py-3.5 px-6 rounded-2xl bg-[#E65100] hover:bg-[#D84315] text-white font-black text-sm shadow-lg shadow-orange-500/25 transition-all text-center"
           >
             Sign In
           </Link>
@@ -402,7 +403,7 @@ export default function FoodzieShopPage() {
             Create Account
           </Link>
         </div>
-        <Link href="/" className="mt-6 text-xs font-bold text-gray-400 hover:text-amber-500 transition-colors">
+        <Link href="/" className="mt-6 text-xs font-bold text-gray-400 hover:text-[#E65100] transition-colors">
           ← Back to Home
         </Link>
       </div>
@@ -410,22 +411,22 @@ export default function FoodzieShopPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0A0E17] text-gray-900 dark:text-gray-100 flex flex-col xl:flex-row font-sans selection:bg-amber-400 selection:text-gray-900">
+    <div className="min-h-screen bg-[#FFFDF9] dark:bg-[#0D1117] text-[#2C2723] dark:text-[#E6EDF3] text-gray-900 dark:text-gray-100 flex flex-col xl:flex-row font-sans selection:bg-[#E65100] selection:text-white">
       
       {/* ── 1. LEFT SIDEBAR NAVIGATION ────────────────────── */}
-      <aside className="w-full xl:w-64 bg-white dark:bg-[#111622] border-r border-gray-200/80 dark:border-gray-800/80 shrink-0 p-5 flex flex-col justify-between z-20">
+      <aside className="w-full xl:w-64 bg-white dark:bg-[#161B22] border-r border-[#F0E6D8] dark:border-gray-800 shrink-0 p-5 flex flex-col justify-between z-20">
         <div>
           {/* Brand Logo */}
           <div className="flex items-center justify-between mb-8 px-2">
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-400 flex items-center justify-center shadow-lg shadow-amber-500/25 group-hover:scale-105 transition-transform">
-                <UtensilsCrossed className="w-5 h-5 text-gray-950 stroke-[2.5]" />
+              <div className="w-10 h-10 rounded-full bg-[#E65100] flex items-center justify-center text-white shadow-md shadow-orange-500/20 group-hover:scale-105 transition-transform">
+                <ChefHat className="w-5 h-5 stroke-[2.2]" />
               </div>
               <div>
-                <span className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">
-                  Food<span className="text-amber-500">zie</span><span className="text-amber-500">.</span>
+                <span className="text-2xl font-black font-serif tracking-tight text-[#1A1412] dark:text-white flex items-center">
+                  Foodzie<span className="text-[#E65100]">.</span>
                 </span>
-                <span className="block text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none">Campus Food Portal</span>
+                <span className="block text-[8px] font-black tracking-[0.2em] text-[#A66E38] dark:text-orange-400 uppercase leading-none mt-0.5">CAMPUS DINING</span>
               </div>
             </Link>
           </div>
@@ -448,7 +449,7 @@ export default function FoodzieShopPage() {
                   onClick={() => setActiveNav(item.id)}
                   className={`flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-bold transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-amber-400 text-gray-950 shadow-md shadow-amber-400/20'
+                      ? 'bg-[#E65100] text-white shadow-md shadow-orange-500/20'
                       : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/60 hover:text-gray-900 dark:hover:text-white'
                   }`}
                 >
@@ -478,7 +479,7 @@ export default function FoodzieShopPage() {
         </div>
 
         {/* Upgrade / Voucher Promo Box at Bottom of Sidebar */}
-        <div className="mt-8 relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-400 to-amber-500 p-5 text-gray-950 shadow-lg shadow-amber-500/15">
+        <div className="mt-8 relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#E65100] via-[#F97316] to-[#FB923C] p-5 text-white shadow-lg shadow-orange-500/20">
           <div className="relative z-10">
             <div className="w-8 h-8 rounded-xl bg-white/30 backdrop-blur-md flex items-center justify-center mb-3">
               <Sparkles className="w-4 h-4 text-gray-950 fill-current" />
@@ -517,7 +518,7 @@ export default function FoodzieShopPage() {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setShowDropdown(!showDropdown)}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white dark:bg-[#111622] border border-gray-200 dark:border-gray-800 text-xs font-bold text-gray-800 dark:text-gray-200 shadow-sm hover:border-amber-400 transition-colors"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white dark:bg-[#161B22] border border-gray-200 dark:border-gray-800 text-xs font-bold text-gray-800 dark:text-gray-200 shadow-sm hover:border-[#E65100] transition-colors"
               >
                 <MapPin className="w-3.5 h-3.5 text-amber-500" />
                 <span className="truncate max-w-[150px] sm:max-w-[200px]">
@@ -527,7 +528,7 @@ export default function FoodzieShopPage() {
               </button>
 
               {showDropdown && (
-                <div className="absolute top-full right-0 mt-2 w-72 bg-white dark:bg-[#111622] border border-gray-200 dark:border-gray-800 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95">
+                <div className="absolute top-full right-0 mt-2 w-72 bg-white dark:bg-[#161B22] border border-gray-200 dark:border-gray-800 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95">
                   <p className="text-[10px] font-black uppercase tracking-wider text-gray-400 px-3 py-1.5">Campuses</p>
                   <div className="max-h-56 overflow-y-auto space-y-1">
                     {filteredUnis.map((uni) => (
@@ -558,7 +559,7 @@ export default function FoodzieShopPage() {
             <ThemeToggle />
             <Link
               href="/shop/profile"
-              className="w-10 h-10 rounded-2xl bg-amber-400/20 text-amber-600 dark:text-amber-400 border border-amber-400/30 flex items-center justify-center font-black text-sm hover:scale-105 transition-transform"
+              className="w-10 h-10 rounded-2xl bg-orange-500/10 text-[#E65100] dark:text-orange-400 border border-orange-500/20 flex items-center justify-center font-black text-sm hover:scale-105 transition-transform"
               title="Profile"
             >
               {userName.charAt(0).toUpperCase()}
@@ -574,7 +575,7 @@ export default function FoodzieShopPage() {
             value={searchFoodQuery}
             onChange={(e) => setSearchFoodQuery(e.target.value)}
             placeholder="What do you want to eat today? Search burgers, wraps, shakes, biryani..."
-            className="w-full bg-white dark:bg-[#111622] border border-gray-200 dark:border-gray-800 rounded-2xl pl-11 pr-4 py-3.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400 transition-all shadow-xs"
+            className="w-full bg-white dark:bg-[#161B22] border border-gray-200 dark:border-gray-800 rounded-2xl pl-11 pr-4 py-3.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-[#E65100] transition-all shadow-xs"
           />
           {searchFoodQuery && (
             <button 
@@ -587,7 +588,7 @@ export default function FoodzieShopPage() {
         </div>
 
         {/* ── PROMOTIONAL VOUCHER BANNER (GoMeal Signature) ─────────────── */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 p-6 sm:p-8 mb-8 text-gray-950 shadow-xl shadow-amber-500/10 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#E65100] via-[#F97316] to-[#FB923C] p-6 sm:p-8 mb-8 text-white shadow-xl shadow-orange-500/15 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="max-w-xl z-10 text-center md:text-left">
             <span className="inline-block px-3 py-1 rounded-full bg-white/40 text-gray-950 font-black text-[10px] uppercase tracking-wider mb-3">
               Campus Specials Today
@@ -620,7 +621,7 @@ export default function FoodzieShopPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-black text-gray-900 dark:text-white tracking-tight">Category</h3>
-            <span className="text-xs font-bold text-amber-500 cursor-pointer hover:underline">View all &gt;</span>
+            <span className="text-xs font-bold text-[#E65100] cursor-pointer hover:underline">View all &gt;</span>
           </div>
 
           <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
@@ -635,11 +636,11 @@ export default function FoodzieShopPage() {
                   className={`flex flex-col items-center justify-center min-w-[88px] sm:min-w-[100px] h-24 rounded-2xl p-2 transition-all border ${
                     isSelected
                       ? 'bg-amber-400 text-gray-950 border-amber-400 shadow-md shadow-amber-400/20 -translate-y-1'
-                      : 'bg-white dark:bg-[#111622] text-gray-600 dark:text-gray-300 border-gray-200/80 dark:border-gray-800/80 hover:border-amber-400/50 hover:bg-amber-50/30 dark:hover:bg-amber-400/5'
+                      : 'bg-white dark:bg-[#161B22] text-gray-600 dark:text-gray-300 border-[#F0E6D8] dark:border-gray-800 hover:border-[#E65100]/50 hover:bg-amber-50/30 dark:hover:bg-amber-400/5'
                   }`}
                 >
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-2 ${
-                    isSelected ? 'bg-gray-950 text-white' : 'bg-gray-100 dark:bg-gray-800 text-amber-500'
+                    isSelected ? 'bg-white/20 text-white' : 'bg-[#FFF8EE] dark:bg-gray-800 text-[#E65100]'
                   }`}>
                     <Icon className="w-5 h-5 stroke-[2.2]" />
                   </div>
@@ -653,7 +654,7 @@ export default function FoodzieShopPage() {
         </div>
 
         {/* ── FILTER & SORT STRIP (Dietary, Price & Sorting) ─────────── */}
-        <div className="mb-6 bg-white dark:bg-[#111622] border border-gray-200/80 dark:border-gray-800/80 rounded-2xl p-3 sm:p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
+        <div className="mb-6 bg-white dark:bg-[#161B22] border border-[#F0E6D8] dark:border-gray-800 rounded-2xl p-3 sm:p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-[10px] font-black uppercase tracking-wider text-gray-400 mr-1 flex items-center gap-1">
               <SlidersHorizontal className="w-3 h-3 text-amber-500" /> Filters:
@@ -665,7 +666,7 @@ export default function FoodzieShopPage() {
                 onClick={() => setDietaryFilter(mode)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                   dietaryFilter === mode
-                    ? 'bg-amber-400 text-gray-950 shadow-xs'
+                    ? 'bg-[#E65100] text-white shadow-xs'
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200'
                 }`}
               >
@@ -682,7 +683,7 @@ export default function FoodzieShopPage() {
                 onClick={() => setPriceFilter(p)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                   priceFilter === p
-                    ? 'bg-amber-400 text-gray-950 shadow-xs'
+                    ? 'bg-[#E65100] text-white shadow-xs'
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200'
                 }`}
               >
@@ -697,7 +698,7 @@ export default function FoodzieShopPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="bg-gray-100 dark:bg-gray-800 border-none rounded-xl text-xs font-bold px-3 py-1.5 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-400/40 cursor-pointer"
+              className="bg-gray-100 dark:bg-gray-800 border-none rounded-xl text-xs font-bold px-3 py-1.5 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500/40 cursor-pointer"
             >
               <option value="recommended">Recommended</option>
               <option value="price-asc">Price: Low to High</option>
@@ -714,11 +715,11 @@ export default function FoodzieShopPage() {
               <h3 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">Popular Dishes</h3>
               <p className="text-xs text-gray-400 font-medium">Top student-rated campus meals ready for quick order</p>
             </div>
-            <span className="text-xs font-bold text-amber-500 cursor-pointer hover:underline">View all &gt;</span>
+            <span className="text-xs font-bold text-[#E65100] cursor-pointer hover:underline">View all &gt;</span>
           </div>
 
           {filteredDishes.length === 0 ? (
-            <div className="bg-white dark:bg-[#111622] border border-dashed border-gray-200 dark:border-gray-800 rounded-3xl p-10 text-center text-gray-400">
+            <div className="bg-white dark:bg-[#161B22] border border-dashed border-gray-200 dark:border-gray-800 rounded-3xl p-10 text-center text-gray-400">
               <UtensilsCrossed className="w-10 h-10 mx-auto mb-2 opacity-30 text-amber-500" />
               <p className="font-bold text-sm">No dishes match your filter</p>
               <p className="text-xs mt-1">Try clearing your search or switching categories.</p>
@@ -731,7 +732,7 @@ export default function FoodzieShopPage() {
                 return (
                   <div
                     key={dish.id}
-                    className="bg-white dark:bg-[#111622] border border-gray-200/80 dark:border-gray-800/80 rounded-3xl p-4.5 shadow-sm hover:shadow-xl hover:border-amber-400/40 transition-all duration-300 flex flex-col justify-between group"
+                    className="bg-white dark:bg-[#161B22] border border-[#F0E6D8] dark:border-gray-800 rounded-3xl p-4.5 shadow-sm hover:shadow-xl hover:border-[#E65100]/40 transition-all duration-300 flex flex-col justify-between group"
                   >
                     <div>
                       {/* Top Badges: Discount Pill + Heart */}
@@ -772,7 +773,7 @@ export default function FoodzieShopPage() {
                       </div>
 
                       {/* Dish Title */}
-                      <h4 className="font-extrabold text-base text-gray-900 dark:text-white line-clamp-1 group-hover:text-amber-500 transition-colors">
+                      <h4 className="font-extrabold text-base text-gray-900 dark:text-white line-clamp-1 group-hover:text-[#E65100] transition-colors">
                         {dish.name}
                       </h4>
                       <p className="text-xs text-gray-400 line-clamp-1 mt-0.5 font-medium">
@@ -791,7 +792,7 @@ export default function FoodzieShopPage() {
 
                       <button
                         onClick={(e) => handleQuickAdd(dish, e)}
-                        className="w-9 h-9 rounded-xl bg-amber-400 hover:bg-amber-500 text-gray-950 flex items-center justify-center font-bold shadow-md shadow-amber-400/20 active:scale-95 transition-all"
+                        className="w-9 h-9 rounded-xl bg-[#E65100] hover:bg-[#D84315] text-white flex items-center justify-center font-bold shadow-md shadow-orange-500/20 active:scale-95 transition-all"
                         title="Add to tray"
                       >
                         <Plus className="w-5 h-5 stroke-[2.5]" />
@@ -819,7 +820,7 @@ export default function FoodzieShopPage() {
               <span>Fetching campus canteens...</span>
             </div>
           ) : vendors.length === 0 ? (
-            <div className="bg-white dark:bg-[#111622] rounded-3xl p-8 border border-gray-200 dark:border-gray-800 text-center text-gray-400">
+            <div className="bg-white dark:bg-[#161B22] rounded-3xl p-8 border border-gray-200 dark:border-gray-800 text-center text-gray-400">
               <Store className="w-10 h-10 mx-auto mb-2 opacity-30 text-amber-500" />
               <p className="font-bold">No canteens listed yet for this campus</p>
             </div>
@@ -832,7 +833,7 @@ export default function FoodzieShopPage() {
                   <div
                     key={v.vendorId}
                     onClick={() => router.push(`/shop/${v.vendorId}`)}
-                    className="bg-white dark:bg-[#111622] border border-gray-200/80 dark:border-gray-800/80 rounded-3xl p-5 hover:border-amber-400/50 hover:shadow-xl transition-all cursor-pointer group flex flex-col justify-between"
+                    className="bg-white dark:bg-[#161B22] border border-[#F0E6D8] dark:border-gray-800 rounded-3xl p-5 hover:border-[#E65100]/50 hover:shadow-xl transition-all cursor-pointer group flex flex-col justify-between"
                   >
                     <div>
                       <div className="flex items-start gap-3.5 mb-4">
@@ -844,7 +845,7 @@ export default function FoodzieShopPage() {
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-black text-base text-gray-900 dark:text-white truncate group-hover:text-amber-500 transition-colors">
+                          <h4 className="font-black text-base text-gray-900 dark:text-white truncate group-hover:text-[#E65100] transition-colors">
                             {v.vendorName}
                           </h4>
                           <p className="text-[11px] font-bold text-gray-400 flex items-center gap-1 mt-0.5">
@@ -894,7 +895,7 @@ export default function FoodzieShopPage() {
         <div>
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">Recent Campus Favorites</h3>
-            <span className="text-xs font-bold text-amber-500 cursor-pointer hover:underline">View all &gt;</span>
+            <span className="text-xs font-bold text-[#E65100] cursor-pointer hover:underline">View all &gt;</span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -902,7 +903,7 @@ export default function FoodzieShopPage() {
               <div 
                 key={dish.id}
                 onClick={(e) => handleQuickAdd(dish, e)}
-                className="bg-white dark:bg-[#111622] border border-gray-200/80 dark:border-gray-800/80 rounded-2xl p-3 flex items-center gap-3 hover:border-amber-400 cursor-pointer transition-all shadow-xs"
+                className="bg-white dark:bg-[#161B22] border border-[#F0E6D8] dark:border-gray-800 rounded-2xl p-3 flex items-center gap-3 hover:border-[#E65100] cursor-pointer transition-all shadow-xs"
               >
                 <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 bg-gray-100 dark:bg-gray-800">
                   <img
@@ -915,7 +916,7 @@ export default function FoodzieShopPage() {
                   <h5 className="font-bold text-xs truncate text-gray-900 dark:text-white">{dish.name}</h5>
                   <p className="text-[11px] font-black text-amber-500">{formatCurrency(dish.price)}</p>
                 </div>
-                <div className="w-6 h-6 rounded-lg bg-amber-400 text-gray-950 flex items-center justify-center font-black text-xs shrink-0">
+                <div className="w-6 h-6 rounded-lg bg-[#E65100] text-white flex items-center justify-center font-black text-xs shrink-0">
                   +
                 </div>
               </div>
@@ -925,12 +926,12 @@ export default function FoodzieShopPage() {
       </main>
 
       {/* ── 3. RIGHT SIDEBAR (GoMeal Sticky Order & Checkout Panel) ───────── */}
-      <aside className="w-full xl:w-80 bg-white dark:bg-[#111622] border-l border-gray-200/80 dark:border-gray-800/80 shrink-0 p-5 flex flex-col justify-between z-20">
+      <aside className="w-full xl:w-80 bg-white dark:bg-[#161B22] border-l border-[#F0E6D8] dark:border-gray-800 shrink-0 p-5 flex flex-col justify-between z-20">
         <div>
           {/* User Profile Mini Bar */}
           <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100 dark:border-gray-800">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-amber-400 flex items-center justify-center text-gray-950 font-black text-sm">
+              <div className="w-10 h-10 rounded-2xl bg-[#E65100] flex items-center justify-center text-white font-black text-sm">
                 {userName.charAt(0).toUpperCase()}
               </div>
               <div>
@@ -938,14 +939,14 @@ export default function FoodzieShopPage() {
                 <span className="text-[10px] font-bold text-gray-400">Campus Foodie</span>
               </div>
             </div>
-            <Link href="/shop/orders" className="p-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-amber-500 transition-colors" title="Notifications">
+            <Link href="/shop/orders" className="p-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-[#E65100] transition-colors" title="Notifications">
               <Bell className="w-4 h-4" />
             </Link>
           </div>
 
           {/* Your Balance Card */}
-          <div className="rounded-2xl bg-gradient-to-br from-amber-400 to-amber-500 p-4 text-gray-950 shadow-md shadow-amber-500/15 mb-6">
-            <span className="text-[10px] font-black uppercase tracking-wider text-gray-950/70 block mb-1">Your Balance</span>
+          <div className="rounded-2xl bg-gradient-to-br from-[#E65100] via-[#F97316] to-[#FB923C] p-4 text-white shadow-md shadow-orange-500/20 mb-6">
+            <span className="text-[10px] font-black uppercase tracking-wider text-white/80 block mb-1">Your Balance</span>
             <div className="flex items-center justify-between">
               <h3 className="text-2xl font-black tracking-tight">{formatCurrency(userCredits)}</h3>
               <div className="flex items-center gap-2">
@@ -1033,7 +1034,7 @@ export default function FoodzieShopPage() {
                         </button>
                         <button
                           onClick={() => addItem(item, item.vendorId || cartVendorId || '')}
-                          className="w-5 h-5 rounded-md bg-amber-400 text-gray-950 flex items-center justify-center text-xs font-black"
+                          className="w-5 h-5 rounded-md bg-[#E65100] text-white flex items-center justify-center text-xs font-black"
                         >
                           +
                         </button>
@@ -1078,7 +1079,7 @@ export default function FoodzieShopPage() {
             disabled={totalCartItems === 0}
             className={`w-full py-4 rounded-2xl font-black text-sm tracking-wide transition-all shadow-lg ${
               totalCartItems > 0
-                ? 'bg-amber-400 hover:bg-amber-500 text-gray-950 shadow-amber-400/25 active:scale-98 cursor-pointer'
+                ? 'bg-[#E65100] hover:bg-[#D84315] text-white shadow-orange-500/25 active:scale-98 cursor-pointer'
                 : 'bg-gray-200 dark:bg-gray-800 text-gray-400 cursor-not-allowed'
             }`}
           >
@@ -1096,7 +1097,7 @@ export default function FoodzieShopPage() {
       {/* Review Modal if prompt active */}
       {showReviewModal && pendingReviewOrder && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#111622] rounded-3xl max-w-md w-full p-6 border border-gray-200 dark:border-gray-800 shadow-2xl">
+          <div className="bg-white dark:bg-[#161B22] rounded-3xl max-w-md w-full p-6 border border-gray-200 dark:border-gray-800 shadow-2xl">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-black text-lg text-gray-900 dark:text-white">Rate your Food Experience</h3>
               <button onClick={() => setShowReviewModal(false)} className="text-gray-400 hover:text-gray-600">
@@ -1126,7 +1127,7 @@ export default function FoodzieShopPage() {
               <button
                 type="submit"
                 disabled={submittingReview}
-                className="w-full bg-amber-400 text-gray-950 font-black py-3 rounded-2xl shadow-md hover:bg-amber-500"
+                className="w-full bg-[#E65100] text-white font-black py-3 rounded-2xl shadow-md hover:bg-[#D84315]"
               >
                 {submittingReview ? 'Submitting...' : 'Submit Rating'}
               </button>

@@ -316,7 +316,7 @@ export default function DeliveryDashboard() {
 
   if (isCheckingAuth) {
     return (
-      <div className="min-h-screen bg-gray-955 flex flex-col items-center justify-center text-gray-400">
+      <div className="min-h-screen bg-[#FFFDF9] dark:bg-[#0D1117] text-[#2C2723] dark:text-[#E6EDF3] flex flex-col items-center justify-center">
         <Loader2 className="w-10 h-10 animate-spin text-orange-500 mb-4" />
         <p className="text-xs font-bold uppercase tracking-widest font-mono">Verifying courier portal...</p>
       </div>
@@ -324,13 +324,13 @@ export default function DeliveryDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-300 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#FFFDF9] dark:bg-[#0D1117] text-[#2C2723] dark:text-[#E6EDF3] flex flex-col font-sans">
       
       {/* HEADER */}
       <header className="border-b border-gray-900 bg-gray-900/40 backdrop-blur-md sticky top-0 z-50 px-6 py-4 shrink-0">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-orange-500 rounded-xl flex items-center justify-center font-black text-white text-lg shadow-lg">
+            <div className="w-9 h-9 bg-[#E65100] rounded-xl flex items-center justify-center font-black text-white text-lg shadow-lg">
               R
             </div>
             <div>
@@ -353,7 +353,7 @@ export default function DeliveryDashboard() {
 
       {/* BLINKING SALARY WARNING (IF NO UPI SET UP) */}
       {!profile?.upi && (
-        <div className="bg-orange-500/10 border-b border-orange-500/20 px-6 py-3 animate-pulse shrink-0">
+        <div className="bg-[#E65100]/10 border-b border-orange-500/20 px-6 py-3 animate-pulse shrink-0">
           <div className="max-w-5xl mx-auto flex items-center justify-between text-xs text-orange-400 font-bold">
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-orange-500 shrink-0" />
@@ -361,7 +361,7 @@ export default function DeliveryDashboard() {
             </div>
             <button 
               onClick={() => setShowUpiModal(true)}
-              className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-3.5 py-1.5 rounded-lg text-[10px] uppercase shadow-md active:scale-95 transition-all"
+              className="bg-[#E65100] hover:bg-[#D84315] text-white font-bold px-3.5 py-1.5 rounded-lg text-[10px] uppercase shadow-md active:scale-95 transition-all"
             >
               Configure UPI
             </button>
@@ -429,7 +429,7 @@ export default function DeliveryDashboard() {
                     className={`flex-1 min-w-[120px] font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all active:scale-95 ${
                       profile?.workStatus === 'Break' 
                         ? 'bg-green-600 hover:bg-green-700 text-white' 
-                        : 'bg-orange-500/10 border border-orange-500/20 text-orange-400 hover:bg-orange-500/20'
+                        : 'bg-[#E65100]/10 border border-orange-500/20 text-orange-400 hover:bg-[#E65100]/20'
                     }`}
                   >
                     <Coffee className="w-4 h-4" /> {profile?.workStatus === 'Break' ? 'End Break' : 'Take a Break'}
@@ -472,7 +472,7 @@ export default function DeliveryDashboard() {
             onClick={() => setActiveTab('active')}
             className={`px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
               activeTab === 'active'
-                ? 'bg-orange-500 text-white shadow-md'
+                ? 'bg-[#E65100] text-white shadow-md'
                 : 'text-gray-500 hover:text-gray-300'
             }`}
           >
@@ -482,7 +482,7 @@ export default function DeliveryDashboard() {
             onClick={() => setActiveTab('history')}
             className={`px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
               activeTab === 'history'
-                ? 'bg-orange-500 text-white shadow-md'
+                ? 'bg-[#E65100] text-white shadow-md'
                 : 'text-gray-500 hover:text-gray-300'
             }`}
           >
@@ -584,7 +584,7 @@ export default function DeliveryDashboard() {
                       {order.status !== 'OutForDelivery' ? (
                         <button
                           onClick={() => handlePickOrder(order.id)}
-                          className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-1.5 shadow-lg shadow-orange-500/10 active:scale-98 transition-all uppercase text-xs"
+                          className="w-full bg-[#E65100] hover:bg-[#D84315] text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-1.5 shadow-lg shadow-orange-500/10 active:scale-98 transition-all uppercase text-xs"
                         >
                           <Check className="w-4 h-4" /> Mark as Picked Up / Start Delivery
                         </button>
@@ -651,7 +651,7 @@ export default function DeliveryDashboard() {
                         style={{ height: `${Math.max(4, heightPercent)}%` }}
                         className={`w-full rounded-t-lg transition-all duration-300 ${
                           day.deliveries > 0 
-                            ? 'bg-orange-500 group-hover:bg-orange-400 shadow-md shadow-orange-500/20' 
+                            ? 'bg-[#E65100] group-hover:bg-orange-400 shadow-md shadow-orange-500/20' 
                             : 'bg-gray-850'
                         }`}
                       />
@@ -812,7 +812,7 @@ export default function DeliveryDashboard() {
                 <button
                   type="submit"
                   disabled={updatingUpi}
-                  className="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl transition-all shadow-lg flex items-center justify-center gap-1.5 active:scale-95 disabled:opacity-50"
+                  className="flex-1 bg-[#E65100] hover:bg-[#D84315] text-white py-3 rounded-xl transition-all shadow-lg flex items-center justify-center gap-1.5 active:scale-95 disabled:opacity-50"
                 >
                   {updatingUpi && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                   Save UPI ID
@@ -863,7 +863,7 @@ export default function DeliveryDashboard() {
                 <button
                   type="submit"
                   disabled={submittingStatus}
-                  className="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl transition-all shadow-lg flex items-center justify-center gap-1.5 active:scale-95 disabled:opacity-50"
+                  className="flex-1 bg-[#E65100] hover:bg-[#D84315] text-white py-3 rounded-xl transition-all shadow-lg flex items-center justify-center gap-1.5 active:scale-95 disabled:opacity-50"
                 >
                   {submittingStatus && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                   Submit Leave
@@ -991,7 +991,7 @@ export default function DeliveryDashboard() {
                 <button
                   type="submit"
                   disabled={submittingDeposit}
-                  className="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl transition-all shadow-lg flex items-center justify-center gap-1.5 active:scale-95 disabled:opacity-50"
+                  className="flex-1 bg-[#E65100] hover:bg-[#D84315] text-white py-3 rounded-xl transition-all shadow-lg flex items-center justify-center gap-1.5 active:scale-95 disabled:opacity-50"
                 >
                   {submittingDeposit && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                   Submit Deposit

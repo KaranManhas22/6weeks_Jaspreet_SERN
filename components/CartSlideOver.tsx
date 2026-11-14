@@ -263,12 +263,12 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
 
       {/* Slide-over Panel */}
       <div 
-        className={`fixed inset-y-0 right-0 w-full max-w-md bg-white dark:bg-gray-950 shadow-2xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'} border-l border-gray-200 dark:border-gray-800`}
+        className={`fixed inset-y-0 right-0 w-full max-w-md bg-[#FFFDF9] dark:bg-[#161B22] shadow-2xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'} border-l border-[#F0E6D8] dark:border-gray-800`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#F0E6D8] dark:border-gray-800">
           <div className="flex items-center gap-2 text-gray-900 dark:text-white">
-            <ShoppingBag className="w-5 h-5 text-orange-500" />
+            <ShoppingBag className="w-5 h-5 text-[#E65100]" />
             <h2 className="text-xl font-bold">Your Cart</h2>
             {isSquadMode && (
               <span className="ml-2 flex items-center gap-1.5 px-2.5 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-black uppercase tracking-wider rounded-full border border-green-200 dark:border-green-800">
@@ -301,7 +301,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
               <p className="text-lg">Your cart is empty</p>
               <button 
                 onClick={onClose}
-                className="px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-xl transition-colors"
+                className="px-6 py-2 bg-[#E65100] hover:bg-[#D84315] text-white font-medium rounded-xl transition-colors"
               >
                 Start Browsing
               </button>
@@ -311,7 +311,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
               {displayItems.map((item) => {
                 const price = item.discount ? item.discount.effectivePrice : item.price;
                 return (
-                  <div key={item.id} className="flex gap-4 bg-gray-50 dark:bg-gray-900/50 p-3 rounded-2xl border border-gray-200 dark:border-gray-800">
+                  <div key={item.id} className="flex gap-4 bg-gray-50 dark:bg-gray-900/50 p-3 rounded-2xl border border-[#F0E6D8] dark:border-gray-800">
                     <div className="w-16 h-16 bg-gray-200 dark:bg-gray-800 rounded-xl overflow-hidden shrink-0 relative">
                       {item.imageUrl && (
                         <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
@@ -338,7 +338,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
                           <button 
                             onClick={() => handleAddItem(item, vendorId!)}
                             disabled={!item.isCooked && item.stock <= item.quantity}
-                            className="w-6 h-6 flex items-center justify-center text-orange-600 dark:text-orange-500 hover:bg-orange-50 dark:hover:bg-gray-700 rounded transition-colors disabled:opacity-50"
+                            className="w-6 h-6 flex items-center justify-center text-[#E65100] dark:text-[#E65100] hover:bg-orange-50 dark:hover:bg-gray-700 rounded transition-colors disabled:opacity-50"
                           >
                             <Plus className="w-3 h-3" />
                           </button>
@@ -349,35 +349,35 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
                 );
               })}
               
-              <div className="pt-4 border-t border-gray-200 dark:border-gray-800 space-y-3">
+              <div className="pt-4 border-t border-[#F0E6D8] dark:border-gray-800 space-y-3">
                 <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
                   <span>Subtotal</span>
                   <span className="text-gray-900 dark:text-white font-medium">${baseTotal.toFixed(2)}</span>
                 </div>
                 {campusCredits > 0 && (
-                  <div className="flex items-center justify-between p-3 bg-orange-50 dark:bg-orange-500/10 rounded-xl border border-orange-200 dark:border-orange-500/20">
+                  <div className="flex items-center justify-between p-3 bg-orange-50 dark:bg-[#E65100]/10 rounded-xl border border-orange-200 dark:border-orange-500/20">
                     <label className="flex items-center gap-3 cursor-pointer text-sm font-medium text-orange-700 dark:text-orange-400">
                       <input 
                         type="checkbox" 
                         checked={useCredits}
                         onChange={(e) => setUseCredits(e.target.checked)}
-                        className="w-4 h-4 rounded text-orange-500 focus:ring-orange-500 border-orange-300 bg-white"
+                        className="w-4 h-4 rounded text-[#E65100] focus:ring-orange-500 border-orange-300 bg-white"
                       />
                       Apply Wallet & Points
-                      <span className="text-xs bg-orange-100 dark:bg-orange-500/20 px-2 py-0.5 rounded-full text-orange-600 dark:text-orange-300">
+                      <span className="text-xs bg-orange-100 dark:bg-[#E65100]/20 px-2 py-0.5 rounded-full text-[#E65100] dark:text-orange-300">
                         Balance: ${campusCredits.toFixed(2)}
                       </span>
                     </label>
                     {useCredits && (
-                      <span className="text-sm font-bold text-orange-600 dark:text-orange-400">
+                      <span className="text-sm font-bold text-[#E65100] dark:text-orange-400">
                         -${discount.toFixed(2)}
                       </span>
                     )}
                   </div>
                 )}
-                <div className="flex justify-between text-lg font-bold text-gray-900 dark:text-white pt-2 border-t border-gray-200 dark:border-gray-800">
+                <div className="flex justify-between text-lg font-bold text-gray-900 dark:text-white pt-2 border-t border-[#F0E6D8] dark:border-gray-800">
                   <span>Total</span>
-                  <span className="text-orange-500">${total.toFixed(2)}</span>
+                  <span className="text-[#E65100]">${total.toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -385,11 +385,11 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
         </div>
 
         {displayItems.length > 0 && !orderSuccess && (
-          <div className="p-6 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
+          <div className="p-6 border-t border-[#F0E6D8] dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
             <button 
               onClick={handleCheckout}
               disabled={isProcessing}
-              className="w-full flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-500/70 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-colors shadow-lg shadow-orange-500/25"
+              className="w-full flex items-center justify-center gap-2 bg-[#E65100] hover:bg-[#D84315] disabled:bg-[#E65100]/70 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-colors shadow-lg shadow-orange-500/25"
             >
               {isProcessing ? (
                 <>
@@ -407,7 +407,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
       {/* Address Details Modal */}
       {showAddressModal && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-[99] flex items-center justify-center p-6 animate-in fade-in duration-300">
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-6 max-w-md w-full space-y-6 text-left shadow-2xl relative">
+          <div className="bg-white dark:bg-gray-900 border border-[#F0E6D8] dark:border-gray-800 rounded-3xl p-6 max-w-md w-full space-y-6 text-left shadow-2xl relative">
             <button 
               onClick={() => setShowAddressModal(false)}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
@@ -417,7 +417,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
 
             <div className="space-y-1">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-orange-500" /> Delivery Location
+                <MapPin className="w-5 h-5 text-[#E65100]" /> Delivery Location
               </h3>
               <p className="text-xs text-gray-500 dark:text-gray-400">Specify exactly where the food should be delivered</p>
             </div>
@@ -429,7 +429,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
                 onClick={() => setLocType('classroom')}
                 className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
                   locType === 'classroom' 
-                    ? 'bg-white dark:bg-gray-800 text-orange-500 dark:text-orange-400 shadow-sm'
+                    ? 'bg-white dark:bg-gray-800 text-[#E65100] dark:text-orange-400 shadow-sm'
                     : 'text-gray-500 hover:text-gray-800'
                 }`}
               >
@@ -440,7 +440,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
                 onClick={() => setLocType('park_ground')}
                 className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
                   locType === 'park_ground' 
-                    ? 'bg-white dark:bg-gray-800 text-orange-500 dark:text-orange-400 shadow-sm'
+                    ? 'bg-white dark:bg-gray-800 text-[#E65100] dark:text-orange-400 shadow-sm'
                     : 'text-gray-500 hover:text-gray-800'
                 }`}
               >
@@ -452,14 +452,14 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
               {/* Pre-filled University Name */}
               <div className="space-y-1">
                 <label className="text-xs font-black text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <BookOpen className="w-3.5 h-3.5 text-orange-500" /> University / College Name *
+                  <BookOpen className="w-3.5 h-3.5 text-[#E65100]" /> University / College Name *
                 </label>
                 <input
                   type="text"
                   value={uniName}
                   onChange={(e) => setUniName(e.target.value)}
                   placeholder="E.g., Greenfield University"
-                  className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-500 transition-all text-sm font-medium"
+                  className="w-full bg-gray-50 dark:bg-gray-950 border border-[#F0E6D8] dark:border-gray-800 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-500 transition-all text-sm font-medium"
                   required
                 />
               </div>
@@ -474,7 +474,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
                         value={blockName}
                         onChange={(e) => setBlockName(e.target.value)}
                         placeholder="E.g., Block C"
-                        className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-500 transition-all text-sm"
+                        className="w-full bg-gray-50 dark:bg-gray-950 border border-[#F0E6D8] dark:border-gray-800 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-500 transition-all text-sm"
                         required={locType === 'classroom'}
                       />
                     </div>
@@ -485,7 +485,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
                         value={floorNum}
                         onChange={(e) => setFloorNum(e.target.value)}
                         placeholder="E.g., 2nd Floor"
-                        className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-500 transition-all text-sm"
+                        className="w-full bg-gray-50 dark:bg-gray-950 border border-[#F0E6D8] dark:border-gray-800 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-500 transition-all text-sm"
                         required={locType === 'classroom'}
                       />
                     </div>
@@ -498,7 +498,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
                       value={roomNum}
                       onChange={(e) => setRoomNum(e.target.value)}
                       placeholder="E.g., Room 304 or Lab 1"
-                      className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-500 transition-all text-sm"
+                      className="w-full bg-gray-50 dark:bg-gray-950 border border-[#F0E6D8] dark:border-gray-800 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-500 transition-all text-sm"
                       required={locType === 'classroom'}
                     />
                   </div>
@@ -512,7 +512,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
                       value={parkName}
                       onChange={(e) => setParkName(e.target.value)}
                       placeholder="E.g., Central Lawn or Sports Ground"
-                      className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-500 transition-all text-sm"
+                      className="w-full bg-gray-50 dark:bg-gray-950 border border-[#F0E6D8] dark:border-gray-800 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-500 transition-all text-sm"
                       required={locType === 'park_ground'}
                     />
                   </div>
@@ -523,7 +523,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
                       value={parkDesc}
                       onChange={(e) => setParkDesc(e.target.value)}
                       placeholder="E.g., East Side under the large banyan tree, near the brick benches"
-                      className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-500 transition-all text-sm min-h-[80px]"
+                      className="w-full bg-gray-50 dark:bg-gray-950 border border-[#F0E6D8] dark:border-gray-800 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-500 transition-all text-sm min-h-[80px]"
                       required={locType === 'park_ground'}
                     />
                   </div>
@@ -556,11 +556,11 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
                     onClick={() => setDeliveryTimePref('asap')}
                     className={`flex flex-col items-center justify-center p-3 rounded-2xl border text-center transition-all ${
                       deliveryTimePref === 'asap'
-                        ? 'border-orange-500 bg-orange-50/50 dark:bg-orange-950/20 text-orange-600 dark:text-orange-400 font-bold shadow-sm'
-                        : 'border-gray-200 dark:border-gray-800 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
+                        ? 'border-orange-500 bg-orange-50/50 dark:bg-orange-950/20 text-[#E65100] dark:text-orange-400 font-bold shadow-sm'
+                        : 'border-[#F0E6D8] dark:border-gray-800 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
                     } ${!canteenStatus.isOpen ? 'opacity-40 cursor-not-allowed' : ''}`}
                   >
-                    <Clock className="w-5 h-5 mb-1 text-orange-500" />
+                    <Clock className="w-5 h-5 mb-1 text-[#E65100]" />
                     <span className="text-xs font-bold">ASAP {canteenStatus.isOpen ? '' : '(Unavailable)'}</span>
                   </button>
                   <button
@@ -568,11 +568,11 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
                     onClick={() => setDeliveryTimePref('scheduled')}
                     className={`flex flex-col items-center justify-center p-3 rounded-2xl border text-center transition-all ${
                       deliveryTimePref === 'scheduled'
-                        ? 'border-orange-500 bg-orange-50/50 dark:bg-orange-950/20 text-orange-600 dark:text-orange-400 font-bold shadow-sm'
-                        : 'border-gray-200 dark:border-gray-800 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
+                        ? 'border-orange-500 bg-orange-50/50 dark:bg-orange-950/20 text-[#E65100] dark:text-orange-400 font-bold shadow-sm'
+                        : 'border-[#F0E6D8] dark:border-gray-800 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
                     }`}
                   >
-                    <Clock className="w-5 h-5 mb-1 text-orange-500" />
+                    <Clock className="w-5 h-5 mb-1 text-[#E65100]" />
                     <span className="text-xs font-bold">Pre-Schedule</span>
                   </button>
                 </div>
@@ -583,7 +583,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
                       type="time"
                       value={scheduledTimeInput}
                       onChange={(e) => setScheduledTimeInput(e.target.value)}
-                      className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-500 transition-all text-sm font-medium"
+                      className="w-full bg-gray-50 dark:bg-gray-950 border border-[#F0E6D8] dark:border-gray-800 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-500 transition-all text-sm font-medium"
                       required={deliveryTimePref === 'scheduled'}
                     />
                     <p className="text-[10px] text-gray-400">
@@ -596,7 +596,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
               {/* Payment Method Selector */}
               <div className="space-y-2 pt-2 border-t border-gray-100 dark:border-gray-800">
                 <div className="p-3.5 rounded-2xl bg-orange-50/60 dark:bg-orange-950/20 border border-orange-200/60 dark:border-orange-900/40 flex items-center gap-3">
-                  <div className="p-2 bg-orange-500 rounded-xl text-white">
+                  <div className="p-2 bg-[#E65100] rounded-xl text-white">
                     <QrCode className="w-4 h-4" />
                   </div>
                   <div className="flex-1 text-left">
@@ -608,7 +608,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
 
               <button
                 type="submit"
-                className="w-full mt-4 flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg shadow-orange-500/20"
+                className="w-full mt-4 flex items-center justify-center bg-[#E65100] hover:bg-[#D84315] text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg shadow-orange-500/20"
               >
                 Proceed to UPI Payment
               </button>
@@ -620,7 +620,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
       {/* UPI Payment Modal */}
       {showUpiModal && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-[99] flex items-center justify-center p-6 animate-in fade-in duration-300">
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-6 max-w-sm w-full space-y-6 text-center shadow-2xl relative">
+          <div className="bg-white dark:bg-gray-900 border border-[#F0E6D8] dark:border-gray-800 rounded-3xl p-6 max-w-sm w-full space-y-6 text-center shadow-2xl relative">
             <button 
               onClick={() => setShowUpiModal(false)}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
@@ -636,8 +636,8 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
             {/* UPI Details */}
             <div className="space-y-4">
               <div className="bg-orange-50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-900/50 p-4 rounded-2xl flex flex-col items-center">
-                <span className="text-xs text-orange-600 dark:text-orange-400 font-semibold uppercase tracking-wider">Amount to Pay</span>
-                <span className="text-3xl font-black text-orange-500">{formatCurrency(total)}</span>
+                <span className="text-xs text-[#E65100] dark:text-orange-400 font-semibold uppercase tracking-wider">Amount to Pay</span>
+                <span className="text-3xl font-black text-[#E65100]">{formatCurrency(total)}</span>
               </div>
 
               {/* QR Code */}
@@ -661,7 +661,7 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
             <div className="space-y-2 pt-2">
               <a 
                 href={`upi://pay?pa=${vendorUpi || 'vendor@upi'}&pn=Foodzie&am=${total.toFixed(2)}&cu=INR`}
-                className="w-full flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg shadow-orange-500/20 md:hidden"
+                className="w-full flex items-center justify-center bg-[#E65100] hover:bg-[#D84315] text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg shadow-orange-500/20 md:hidden"
               >
                 Pay via Mobile App
               </a>

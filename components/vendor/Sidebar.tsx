@@ -59,15 +59,15 @@ export default function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, o
         />
       )}
 
-      <aside className={`fixed inset-y-0 left-0 bg-gray-950 border-r border-gray-800/60 flex flex-col z-30 transition-all duration-300 ${
+      <aside className={`fixed inset-y-0 left-0 bg-white dark:bg-[#161B22] border-r border-[#F0E6D8] dark:border-gray-800 flex flex-col z-30 transition-all duration-300 ${
         isCollapsed ? 'lg:w-16' : 'lg:w-60'
       } ${
         isMobileOpen ? 'translate-x-0 w-60' : 'max-lg:-translate-x-full lg:translate-x-0'
       } w-60`}>
         {/* Brand & Toggles */}
-        <div className="flex items-center justify-between px-4 py-5 border-b border-gray-800/60 shrink-0 h-[65px]">
+        <div className="flex items-center justify-between px-4 py-5 border-b border-[#F0E6D8] dark:border-gray-800 shrink-0 h-[65px]">
           <div className={`flex items-center gap-3 ${isCollapsed ? 'lg:hidden' : 'flex'}`}>
-            <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center shadow-md shadow-orange-500/30 shrink-0">
+            <div className="w-8 h-8 bg-[#E65100] rounded-lg flex items-center justify-center shadow-md shadow-orange-500/20 shrink-0">
               <UtensilsCrossed className="w-4 h-4 text-white" size={16} />
             </div>
             <div>
@@ -129,7 +129,7 @@ export default function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, o
                   isCollapsed ? 'lg:justify-center border-transparent' : 'border-transparent'
                 } ${
                   isActive
-                    ? 'bg-orange-500/15 text-orange-400 border border-orange-500/25'
+                    ? 'bg-[#E65100] text-white shadow-md shadow-orange-500/20'
                     : 'text-gray-400 hover:bg-gray-800/60 hover:text-gray-200 border-transparent'
                 }`}
                 title={isCollapsed ? label : undefined}
@@ -143,7 +143,7 @@ export default function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, o
         </nav>
 
         {/* Bottom — Appearance & Logout */}
-        <div className="px-3 py-4 border-t border-gray-800/60 shrink-0 space-y-3">
+        <div className="px-3 py-4 border-t border-[#F0E6D8] dark:border-gray-800 shrink-0 space-y-3">
           <div className={`flex items-center ${isCollapsed ? 'lg:justify-center' : 'justify-between px-3'}`}>
             {!isCollapsed && <span className="text-xs text-gray-500 font-semibold select-none">Appearance</span>}
             <ThemeToggle />

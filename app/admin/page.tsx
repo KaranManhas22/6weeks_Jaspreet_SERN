@@ -85,18 +85,18 @@ export default function AdminPage() {
 
   if (isLoadingAuth) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0F172A] text-white">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-indigo-500" />
+      <div className="min-h-screen flex items-center justify-center bg-[#161B22] text-white">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-[#E65100]" />
       </div>
     );
   }
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#090D16] flex items-center justify-center p-4">
-        <div className="bg-[#111827] border border-gray-800 p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-md">
+      <div className="min-h-screen bg-[#0D1117] flex items-center justify-center p-4">
+        <div className="bg-[#161B22] border border-gray-800 p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-md">
           <div className="text-center mb-8">
-            <div className="w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center text-white mx-auto mb-4 shadow-lg shadow-indigo-600/30">
+            <div className="w-14 h-14 rounded-2xl bg-[#E65100] flex items-center justify-center text-white mx-auto mb-4 shadow-lg shadow-orange-500/25">
               <Crown className="w-7 h-7" />
             </div>
             <h1 className="text-2xl font-black text-white tracking-tight">Admin Panel</h1>
@@ -109,7 +109,7 @@ export default function AdminPage() {
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                className="w-full bg-[#1E293B] border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full bg-[#21262D] border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 placeholder="admin@foodzie.com"
                 required
               />
@@ -120,7 +120,7 @@ export default function AdminPage() {
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="w-full bg-[#1E293B] border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full bg-[#21262D] border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 placeholder="••••••••"
                 required
               />
@@ -128,7 +128,7 @@ export default function AdminPage() {
             {error && <p className="text-rose-400 text-xs font-semibold">{error}</p>}
             <button
               type="submit"
-              className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-indigo-600/30 mt-4 cursor-pointer"
+              className="w-full bg-[#E65100] hover:bg-[#E65100] text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-orange-500/25 mt-4 cursor-pointer"
             >
               Sign In to Admin Panel
             </button>
@@ -383,13 +383,13 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
   const canteenFulfillmentStats = useMemo(() => {
     if (vendorUsers.length === 0) {
       return [
-        { name: 'SBBSU Main Canteen', count: 98, pct: 78, color: 'bg-indigo-500' },
+        { name: 'SBBSU Main Canteen', count: 98, pct: 78, color: 'bg-[#E65100]' },
         { name: "Tania'z Cafe", count: 64, pct: 62, color: 'bg-blue-500' },
         { name: "Narinder's Cafe", count: 48, pct: 45, color: 'bg-emerald-500' },
         { name: 'Student Adda & Kiosk', count: 34, pct: 90, color: 'bg-amber-500' },
       ];
     }
-    const colors = ['bg-indigo-500', 'bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-purple-500'];
+    const colors = ['bg-[#E65100]', 'bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-purple-500'];
     const totalOrderCount = orders.length || 150;
     return vendorUsers.slice(0, 4).map((v, idx) => {
       const cOrders = orders.filter(o => o.vendorId === v.id || o.vendor?.name === v.name).length;
@@ -422,17 +422,17 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
   }, [orders]);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B0F17] flex font-sans text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-[#FFFDF9] dark:bg-[#0D1117] text-[#2C2723] dark:text-[#E6EDF3] flex font-sans text-gray-900 dark:text-gray-100">
       
       {/* ── 1. DARK NAVY/INDIGO SIDEBAR (Image 6 Admin Panel Style) ─────── */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#0F172A] text-white flex flex-col justify-between transition-transform duration-300 ${
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#161B22] text-white flex flex-col justify-between transition-transform duration-300 ${
         isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       }`}>
         <div>
           {/* Brand Crown Logo */}
           <div className="flex items-center justify-between h-20 px-6 border-b border-gray-800">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-600/30">
+              <div className="w-9 h-9 rounded-xl bg-[#E65100] flex items-center justify-center text-white shadow-md shadow-orange-500/25">
                 <Crown className="w-5 h-5" />
               </div>
               <div>
@@ -463,7 +463,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                   onClick={() => setActiveTab(item.id as any)}
                   className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
                     isActive
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/25'
+                      ? 'bg-[#E65100] text-white shadow-md shadow-orange-500/20'
                       : 'text-gray-400 hover:bg-gray-800/60 hover:text-white'
                   }`}
                 >
@@ -500,7 +500,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
       <div className={`flex-1 flex flex-col ${isSidebarOpen ? 'lg:pl-64' : ''} transition-all duration-300 min-w-0`}>
         
         {/* Top Header */}
-        <header className="h-20 bg-white dark:bg-[#111622] border-b border-gray-200/80 dark:border-gray-800 sticky top-0 z-40 px-4 sm:px-8 flex items-center justify-between shadow-xs">
+        <header className="h-20 bg-white dark:bg-white dark:bg-[#161B22] border-b border-[#F0E6D8] dark:border-gray-800 sticky top-0 z-40 px-4 sm:px-8 flex items-center justify-between shadow-xs">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsSidebarOpen(true)}
@@ -527,7 +527,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
             )}
 
             <div className="flex items-center gap-3 pl-3 border-l border-gray-200 dark:border-gray-800">
-              <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white font-black text-sm shadow-md shadow-indigo-600/20">
+              <div className="w-10 h-10 rounded-2xl bg-[#E65100] flex items-center justify-center text-white font-black text-sm shadow-md shadow-orange-500/20">
                 {adminProfile.name.toLowerCase().includes('jaspreet') ? 'JB' : 'AD'}
               </div>
               <div className="hidden sm:block">
@@ -553,8 +553,8 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white dark:bg-[#111622] border border-gray-200/80 dark:border-gray-800 text-xs font-bold text-gray-600 dark:text-gray-300 shadow-xs">
-                <Calendar className="w-4 h-4 text-indigo-500" />
+              <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white dark:bg-white dark:bg-[#161B22] border border-[#F0E6D8] dark:border-gray-800 text-xs font-bold text-gray-600 dark:text-gray-300 shadow-xs">
+                <Calendar className="w-4 h-4 text-[#E65100]" />
                 <span>Today · {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
               </div>
             </div>
@@ -582,9 +582,9 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                   title: 'Active Canteens', 
                   value: (vendorUsers.length > 0 ? vendorUsers.length : 12).toString(), 
                   change: '↑ 12.0%', 
-                  changeColor: 'text-indigo-500', 
+                  changeColor: 'text-[#E65100]', 
                   icon: Store, 
-                  bg: 'bg-indigo-500/10 text-indigo-500' 
+                  bg: 'bg-[#E65100]/10 text-[#E65100]' 
                 },
                 { 
                   title: 'Campus Foodies & Riders', 
@@ -595,7 +595,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                   bg: 'bg-amber-500/10 text-amber-500' 
                 },
               ].map((c, i) => (
-                <div key={i} className="bg-white dark:bg-[#111622] rounded-3xl p-5 border border-gray-200/80 dark:border-gray-800 shadow-xs flex items-center justify-between">
+                <div key={i} className="bg-white dark:bg-white dark:bg-[#161B22] rounded-3xl p-5 border border-[#F0E6D8] dark:border-gray-800 shadow-xs flex items-center justify-between">
                   <div>
                     <div className="w-10 h-10 rounded-2xl flex items-center justify-center mb-3 text-lg font-black" style={{ backgroundColor: c.bg.split(' ')[0].replace('bg-', '') }}>
                       <c.icon className="w-5 h-5" />
@@ -614,12 +614,12 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               
               {/* Canteen Order Share */}
-              <div className="bg-white dark:bg-[#111622] rounded-3xl p-6 border border-gray-200/80 dark:border-gray-800 shadow-xs">
+              <div className="bg-white dark:bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-[#F0E6D8] dark:border-gray-800 shadow-xs">
                 <div className="flex items-center justify-between mb-5">
                   <h3 className="text-base font-black text-gray-900 dark:text-white">Canteen Fulfillment</h3>
                   <button 
                     onClick={() => setActiveTab('Canteens')}
-                    className="text-xs font-bold text-indigo-500 hover:underline cursor-pointer"
+                    className="text-xs font-bold text-[#E65100] hover:underline cursor-pointer"
                   >
                     View All &gt;
                   </button>
@@ -640,7 +640,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
               </div>
 
               {/* Order Status Breakdown Donut */}
-              <div className="bg-white dark:bg-[#111622] rounded-3xl p-6 border border-gray-200/80 dark:border-gray-800 shadow-xs flex flex-col justify-between">
+              <div className="bg-white dark:bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-[#F0E6D8] dark:border-gray-800 shadow-xs flex flex-col justify-between">
                 <div>
                   <h3 className="text-base font-black text-gray-900 dark:text-white mb-4">Order Status Breakdown</h3>
                   <div className="h-40 relative flex items-center justify-center">
@@ -684,16 +684,16 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
               </div>
 
               {/* Peak Campus Dining Hours Schedule */}
-              <div className="bg-white dark:bg-[#111622] rounded-3xl p-6 border border-gray-200/80 dark:border-gray-800 shadow-xs flex flex-col justify-between">
+              <div className="bg-white dark:bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-[#F0E6D8] dark:border-gray-800 shadow-xs flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-base font-black text-gray-900 dark:text-white">Peak Dining Hours</h3>
-                    <span className="text-xs font-bold text-indigo-500">Campus Schedule</span>
+                    <span className="text-xs font-bold text-[#E65100]">Campus Schedule</span>
                   </div>
 
                   <div className="grid grid-cols-7 gap-1 text-center mb-5 text-[10px] font-bold">
                     {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d, i) => (
-                      <div key={d} className={`p-1.5 rounded-xl ${i === 2 ? 'bg-indigo-600 text-white' : 'text-gray-400'}`}>
+                      <div key={d} className={`p-1.5 rounded-xl ${i === 2 ? 'bg-[#E65100] text-white' : 'text-gray-400'}`}>
                         <span>{d}</span>
                         <span className="block text-xs font-black mt-0.5">{12 + i}</span>
                       </div>
@@ -705,8 +705,8 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                       <span className="text-[10px] font-black uppercase text-amber-500 block">12:30 PM – 2:30 PM</span>
                       <p className="font-bold text-gray-900 dark:text-white mt-0.5">Peak Lunch Rush &amp; Hostel Delivery</p>
                     </div>
-                    <div className="p-2.5 rounded-2xl bg-indigo-500/10 border-l-4 border-l-indigo-500">
-                      <span className="text-[10px] font-black uppercase text-indigo-500 block">4:30 PM – 6:30 PM</span>
+                    <div className="p-2.5 rounded-2xl bg-[#E65100]/10 border-l-4 border-l-[#E65100]">
+                      <span className="text-[10px] font-black uppercase text-[#E65100] block">4:30 PM – 6:30 PM</span>
                       <p className="font-bold text-gray-900 dark:text-white mt-0.5">Evening Snacks &amp; Counter Pickups</p>
                     </div>
                   </div>
@@ -719,7 +719,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               
               {/* Campus Delivery Riders */}
-              <div className="bg-white dark:bg-[#111622] rounded-3xl p-6 border border-gray-200/80 dark:border-gray-800 shadow-xs">
+              <div className="bg-white dark:bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-[#F0E6D8] dark:border-gray-800 shadow-xs">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-base font-black text-gray-900 dark:text-white">Active Campus Riders</h3>
                   <button
@@ -727,7 +727,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                       setActiveTab('User Management');
                       setRoleFilter('Delivery');
                     }}
-                    className="text-xs font-bold text-indigo-500 hover:underline cursor-pointer"
+                    className="text-xs font-bold text-[#E65100] hover:underline cursor-pointer"
                   >
                     View All &gt;
                   </button>
@@ -746,7 +746,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                     return displayRiders.map((m: any) => (
                       <div key={m.id || m.name} className="flex items-center justify-between text-xs font-bold">
                         <div className="flex items-center gap-3 min-w-0">
-                          <div className="w-8 h-8 rounded-full bg-indigo-500/10 text-indigo-600 flex items-center justify-center font-black shrink-0">
+                          <div className="w-8 h-8 rounded-full bg-[#E65100]/10 text-[#E65100] flex items-center justify-center font-black shrink-0">
                             {m.name.charAt(0)}
                           </div>
                           <div className="min-w-0">
@@ -767,7 +767,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
               </div>
 
               {/* Weekly Orders Activity Stacked Bar Chart */}
-              <div className="md:col-span-2 bg-white dark:bg-[#111622] rounded-3xl p-6 border border-gray-200/80 dark:border-gray-800 shadow-xs">
+              <div className="md:col-span-2 bg-white dark:bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-[#F0E6D8] dark:border-gray-800 shadow-xs">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="text-base font-black text-gray-900 dark:text-white">Campus Order Activity</h3>
@@ -803,18 +803,18 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
             </div>
 
             {/* Live Campus Orders Dispatch Stream (Image 5 4-Column Card Grid Layout) */}
-            <div className="bg-white dark:bg-[#111622] rounded-3xl p-6 border border-gray-200/80 dark:border-gray-800 shadow-xs">
+            <div className="bg-white dark:bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-[#F0E6D8] dark:border-gray-800 shadow-xs">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h3 className="text-lg font-black text-gray-900 dark:text-white flex items-center gap-2">
-                    <ShoppingBag className="w-5 h-5 text-indigo-500" />
+                    <ShoppingBag className="w-5 h-5 text-[#E65100]" />
                     Live Campus Orders Dispatch Stream
                   </h3>
                   <p className="text-xs text-gray-400 mt-0.5">Real-time orders moving through campus canteens and delivery riders</p>
                 </div>
                 <button
                   onClick={() => setActiveTab('Orders')}
-                  className="text-xs font-bold text-indigo-500 hover:underline cursor-pointer"
+                  className="text-xs font-bold text-[#E65100] hover:underline cursor-pointer"
                 >
                   View All Orders ({orders.length}) &gt;
                 </button>
@@ -851,7 +851,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                     {
                       title: 'Out for Delivery',
                       count: deliveryOrders.length > 0 ? deliveryOrders.length : 2,
-                      tagColor: 'bg-indigo-500/10 text-indigo-600',
+                      tagColor: 'bg-[#E65100]/10 text-[#E65100]',
                       ordersList: deliveryOrders.length > 0 ? deliveryOrders.slice(0, 3) : [
                         { id: 'ord-805', customer: { name: 'Rohan Mehra' }, vendor: { name: "Narinder's Cafe" }, totalAmount: 240, itemsSummary: '1x Butter Chicken Rice Bowl', address: 'Hostel 4, Room 108' },
                         { id: 'ord-806', customer: { name: 'Taranjeet Singh' }, vendor: { name: 'Student Adda' }, totalAmount: 130, itemsSummary: '2x Masala Maggi, 1x Lemon Soda', address: 'Sports Complex' },
@@ -881,7 +881,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                           const canteenName = o.vendor?.name || 'Campus Canteen';
                           const itemsText = o.itemsSummary || (o.items && o.items.length > 0 ? o.items.map((it: any) => `${it.quantity}x ${it.foodItem?.name || 'Dish'}`).join(', ') : 'Campus Meal Order');
                           return (
-                            <div key={o.id || i} className="bg-white dark:bg-gray-900 p-3.5 rounded-xl border border-gray-200/80 dark:border-gray-800 shadow-xs space-y-1.5">
+                            <div key={o.id || i} className="bg-white dark:bg-gray-900 p-3.5 rounded-xl border border-[#F0E6D8] dark:border-gray-800 shadow-xs space-y-1.5">
                               <div className="flex items-center justify-between">
                                 <span className="font-black text-xs text-gray-900 dark:text-white truncate max-w-[130px]">{customerName}</span>
                                 <span className="font-extrabold text-[11px] text-emerald-600 dark:text-emerald-400">₹{o.totalAmount}</span>
@@ -921,7 +921,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
 
               <button
                 onClick={() => setShowAddUserModal(true)}
-                className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-black shadow-lg shadow-indigo-600/25 transition-all active:scale-95 self-start sm:self-auto cursor-pointer"
+                className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#E65100] hover:bg-[#E65100] text-white text-xs font-black shadow-lg shadow-orange-500/20 transition-all active:scale-95 self-start sm:self-auto cursor-pointer"
               >
                 <Plus className="w-4 h-4 stroke-[3]" />
                 <span>+ Add New User</span>
@@ -932,7 +932,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               
               {/* Total Users */}
-              <div className="bg-white dark:bg-[#111622] rounded-3xl p-5 border border-gray-200/80 dark:border-gray-800 shadow-xs flex items-center gap-4">
+              <div className="bg-white dark:bg-white dark:bg-[#161B22] rounded-3xl p-5 border border-[#F0E6D8] dark:border-gray-800 shadow-xs flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
                   <Users className="w-6 h-6" />
                 </div>
@@ -948,7 +948,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
               </div>
 
               {/* Active Users */}
-              <div className="bg-white dark:bg-[#111622] rounded-3xl p-5 border border-gray-200/80 dark:border-gray-800 shadow-xs flex items-center gap-4">
+              <div className="bg-white dark:bg-white dark:bg-[#161B22] rounded-3xl p-5 border border-[#F0E6D8] dark:border-gray-800 shadow-xs flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0">
                   <UserCheck className="w-6 h-6" />
                 </div>
@@ -964,7 +964,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
               </div>
 
               {/* Inactive Users */}
-              <div className="bg-white dark:bg-[#111622] rounded-3xl p-5 border border-gray-200/80 dark:border-gray-800 shadow-xs flex items-center gap-4">
+              <div className="bg-white dark:bg-white dark:bg-[#161B22] rounded-3xl p-5 border border-[#F0E6D8] dark:border-gray-800 shadow-xs flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-gray-500/10 text-gray-500 flex items-center justify-center shrink-0">
                   <UserX className="w-6 h-6" />
                 </div>
@@ -980,8 +980,8 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
               </div>
 
               {/* Administrators */}
-              <div className="bg-white dark:bg-[#111622] rounded-3xl p-5 border border-gray-200/80 dark:border-gray-800 shadow-xs flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center shrink-0">
+              <div className="bg-white dark:bg-white dark:bg-[#161B22] rounded-3xl p-5 border border-[#F0E6D8] dark:border-gray-800 shadow-xs flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-[#E65100]/10 text-[#E65100] flex items-center justify-center shrink-0">
                   <Shield className="w-6 h-6" />
                 </div>
                 <div>
@@ -998,7 +998,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
             </div>
 
             {/* Filter Toolbar (Image 6) */}
-            <div className="bg-white dark:bg-[#111622] p-4 rounded-3xl border border-gray-200/80 dark:border-gray-800 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+            <div className="bg-white dark:bg-white dark:bg-[#161B22] p-4 rounded-3xl border border-[#F0E6D8] dark:border-gray-800 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
               {/* Search */}
               <div className="relative flex-1 max-w-md">
                 <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -1007,7 +1007,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                   value={searchUserQuery}
                   onChange={(e) => setSearchUserQuery(e.target.value)}
                   placeholder="Search users by name, email..."
-                  className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700/80 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700/80 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </div>
 
@@ -1059,7 +1059,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
             </div>
 
             {/* Checkbox Data Table (Image 6) */}
-            <div className="bg-white dark:bg-[#111622] rounded-3xl border border-gray-200/80 dark:border-gray-800 shadow-xs overflow-hidden">
+            <div className="bg-white dark:bg-white dark:bg-[#161B22] rounded-3xl border border-[#F0E6D8] dark:border-gray-800 shadow-xs overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
@@ -1069,7 +1069,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                           type="checkbox"
                           onChange={handleSelectAll}
                           checked={paginatedUsers.length > 0 && selectedUserIds.length === paginatedUsers.length}
-                          className="rounded-md border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                          className="rounded-md border-gray-300 text-[#E65100] focus:ring-orange-500 cursor-pointer"
                         />
                       </th>
                       <th className="py-4 px-4 font-black">User</th>
@@ -1095,7 +1095,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                         // Pill Role Badges (Image 6)
                         let roleBadge = { text: 'Foodie', color: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300' };
                         if (user.role === 'Admin' || user.role === 'Super Admin') {
-                          roleBadge = { text: 'Super Admin', color: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-400' };
+                          roleBadge = { text: 'Super Admin', color: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-950/40 dark:text-orange-400' };
                         } else if (user.role === 'Vendor' || user.role === 'Canteen Vendor') {
                           roleBadge = { text: 'Vendor', color: 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300' };
                         } else if (user.role === 'Delivery') {
@@ -1114,12 +1114,12 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                                 type="checkbox"
                                 checked={isSelected}
                                 onChange={() => handleToggleSelectUser(user.id)}
-                                className="rounded-md border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                                className="rounded-md border-gray-300 text-[#E65100] focus:ring-orange-500 cursor-pointer"
                               />
                             </td>
                             <td className="py-4 px-4">
                               <div className="flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-black flex items-center justify-center shrink-0">
+                                <div className="w-9 h-9 rounded-full bg-[#E65100]/10 text-[#E65100] dark:text-orange-400 font-black flex items-center justify-center shrink-0">
                                   {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
                                 </div>
                                 <span className="font-extrabold text-gray-900 dark:text-white">
@@ -1150,7 +1150,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                               <div className="flex items-center justify-end gap-1.5">
                                 <button
                                   onClick={() => setSelectedUserForEdit(user)}
-                                  className="p-1.5 rounded-lg text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition-colors"
+                                  className="p-1.5 rounded-lg text-gray-400 hover:text-[#E65100] hover:bg-orange-50 dark:hover:bg-indigo-950/30 transition-colors"
                                   title="Edit User"
                                 >
                                   <Edit2 className="w-4 h-4" />
@@ -1194,7 +1194,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                       onClick={() => setCurrentPage(pg)}
                       className={`w-8 h-8 rounded-xl font-black ${
                         currentPage === pg
-                          ? 'bg-indigo-600 text-white'
+                          ? 'bg-[#E65100] text-white'
                           : 'border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
                       }`}
                     >
@@ -1230,7 +1230,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
             </div>
 
             {/* Filter Toolbar for Canteens */}
-            <div className="bg-white dark:bg-[#111622] p-4 rounded-3xl border border-gray-200/80 dark:border-gray-800 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+            <div className="bg-white dark:bg-white dark:bg-[#161B22] p-4 rounded-3xl border border-[#F0E6D8] dark:border-gray-800 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
               <div className="relative flex-1 max-w-md">
                 <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
@@ -1266,19 +1266,19 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {filteredCanteens.length === 0 ? (
-                <div className="col-span-3 text-center py-12 text-gray-400 font-bold text-xs bg-white dark:bg-[#111622] rounded-3xl border border-dashed border-gray-200 dark:border-gray-800">
+                <div className="col-span-3 text-center py-12 text-gray-400 font-bold text-xs bg-white dark:bg-white dark:bg-[#161B22] rounded-3xl border border-dashed border-gray-200 dark:border-gray-800">
                   No canteens match the selected filter.
                 </div>
               ) : (
                 filteredCanteens.map(v => (
-                  <div key={v.id} className="bg-white dark:bg-[#111622] rounded-3xl p-6 border border-gray-200/80 dark:border-gray-800 shadow-xs flex flex-col justify-between">
+                  <div key={v.id} className="bg-white dark:bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-[#F0E6D8] dark:border-gray-800 shadow-xs flex flex-col justify-between">
                     <div>
                       <div className="w-12 h-12 rounded-2xl bg-orange-500/10 text-orange-500 flex items-center justify-center font-black text-lg mb-3">
                         {v.name.charAt(0)}
                       </div>
                       <h3 className="font-black text-base text-gray-900 dark:text-white">{v.name}</h3>
                       <p className="text-xs text-gray-400 mt-0.5">{v.email}</p>
-                      <p className="text-xs text-indigo-500 font-bold mt-2">Campus: {v.university?.name || 'General Campus'}</p>
+                      <p className="text-xs text-[#E65100] font-bold mt-2">Campus: {v.university?.name || 'General Campus'}</p>
                       {v.vendorDescription && (
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 line-clamp-2">{v.vendorDescription}</p>
                       )}
@@ -1304,13 +1304,13 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                 <h1 className="text-2xl font-black text-gray-900 dark:text-white">Orders &amp; Deliveries Stream</h1>
                 <p className="text-xs text-gray-400 mt-0.5">Live monitoring of customer orders, campus canteens, and riders</p>
               </div>
-              <span className="px-3 py-1.5 rounded-xl bg-indigo-500/10 text-indigo-500 text-xs font-black border border-indigo-500/20 self-start sm:self-auto">
+              <span className="px-3 py-1.5 rounded-xl bg-[#E65100]/10 text-[#E65100] text-xs font-black border border-[#E65100]/20 self-start sm:self-auto">
                 {filteredOrders.length} Matching Orders
               </span>
             </div>
 
             {/* Filter Toolbar for Orders */}
-            <div className="bg-white dark:bg-[#111622] p-4 rounded-3xl border border-gray-200/80 dark:border-gray-800 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+            <div className="bg-white dark:bg-white dark:bg-[#161B22] p-4 rounded-3xl border border-[#F0E6D8] dark:border-gray-800 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
               <div className="relative flex-1 max-w-md">
                 <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
@@ -1318,7 +1318,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                   value={orderSearchQuery}
                   onChange={(e) => setOrderSearchQuery(e.target.value)}
                   placeholder="Search by order ID, student name, rider..."
-                  className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700/80 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700/80 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </div>
 
@@ -1358,7 +1358,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
               </div>
             </div>
 
-            <div className="bg-white dark:bg-[#111622] rounded-3xl border border-gray-200/80 dark:border-gray-800 p-6 shadow-xs divide-y divide-gray-100 dark:divide-gray-800/60">
+            <div className="bg-white dark:bg-white dark:bg-[#161B22] rounded-3xl border border-[#F0E6D8] dark:border-gray-800 p-6 shadow-xs divide-y divide-gray-100 dark:divide-gray-800/60">
               {filteredOrders.length === 0 ? (
                 <p className="text-center py-12 text-gray-400 text-xs font-bold">No orders match your filter criteria</p>
               ) : (
@@ -1368,7 +1368,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                     <div key={o.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs hover:bg-gray-50/50 dark:hover:bg-gray-800/30 px-3 -mx-3 rounded-2xl transition-colors">
                       <div className="space-y-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono font-black text-indigo-500">#{o.id.slice(-6).toUpperCase()}</span>
+                          <span className="font-mono font-black text-[#E65100]">#{o.id.slice(-6).toUpperCase()}</span>
                           <span className="font-extrabold text-gray-900 dark:text-white">{o.customer?.name || 'Student'}</span>
                           <span className="text-[10px] text-gray-400">· {o.customer?.email}</span>
                         </div>
@@ -1433,7 +1433,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
       {/* ── MODAL: + ADD NEW USER ────────────────────────────────────────── */}
       {showAddUserModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#111622] border border-gray-200 dark:border-gray-800 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl animate-in fade-in zoom-in-95">
+          <div className="bg-white dark:bg-white dark:bg-[#161B22] border border-gray-200 dark:border-gray-800 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl animate-in fade-in zoom-in-95">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-black text-gray-900 dark:text-white">Add New User</h3>
               <button onClick={() => setShowAddUserModal(false)} className="text-gray-400 hover:text-white">
@@ -1449,7 +1449,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                   value={newUserForm.name}
                   onChange={e => setNewUserForm({ ...newUserForm, name: e.target.value })}
                   placeholder="e.g. John Doe"
-                  className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </div>
               <div>
@@ -1460,7 +1460,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                   value={newUserForm.email}
                   onChange={e => setNewUserForm({ ...newUserForm, email: e.target.value })}
                   placeholder="e.g. john@campus.edu"
-                  className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </div>
               <div>
@@ -1470,7 +1470,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                   value={newUserForm.phone}
                   onChange={e => setNewUserForm({ ...newUserForm, phone: e.target.value })}
                   placeholder="e.g. +91 9876543210"
-                  className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </div>
               <div>
@@ -1478,7 +1478,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                 <select
                   value={newUserForm.role}
                   onChange={e => setNewUserForm({ ...newUserForm, role: e.target.value })}
-                  className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                 >
                   <option value="Foodie">Foodie (Student)</option>
                   <option value="Vendor">Vendor (Canteen Manager)</option>
@@ -1493,13 +1493,13 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                   required
                   value={newUserForm.password}
                   onChange={e => setNewUserForm({ ...newUserForm, password: e.target.value })}
-                  className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-xs font-mono text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-xs font-mono text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </div>
               <button
                 type="submit"
                 disabled={isCreatingUser}
-                className="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs shadow-lg shadow-indigo-600/30 transition-all cursor-pointer mt-2"
+                className="w-full py-3.5 rounded-2xl bg-[#E65100] hover:bg-[#E65100] text-white font-black text-xs shadow-lg shadow-orange-500/25 transition-all cursor-pointer mt-2"
               >
                 {isCreatingUser ? 'Creating...' : 'Create Account'}
               </button>
@@ -1512,11 +1512,11 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
       {selectedUserForEdit && editForm && (
         <div className="fixed inset-0 z-50 flex justify-end">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-xs" onClick={() => setSelectedUserForEdit(null)} />
-          <div className="relative w-full max-w-lg bg-white dark:bg-[#111622] h-full shadow-2xl p-6 sm:p-8 flex flex-col justify-between overflow-y-auto animate-in slide-in-from-right">
+          <div className="relative w-full max-w-lg bg-white dark:bg-white dark:bg-[#161B22] h-full shadow-2xl p-6 sm:p-8 flex flex-col justify-between overflow-y-auto animate-in slide-in-from-right">
             <div>
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <span className="text-xs font-black uppercase tracking-wider text-indigo-500">Edit User Profile</span>
+                  <span className="text-xs font-black uppercase tracking-wider text-[#E65100]">Edit User Profile</span>
                   <h3 className="text-xl font-black text-gray-900 dark:text-white leading-tight mt-0.5">
                     {editForm.name || 'User'}
                   </h3>
@@ -1552,7 +1552,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                     type="text"
                     value={editForm.name}
                     onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -1563,7 +1563,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                       type="email"
                       value={editForm.email}
                       onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
                   <div>
@@ -1573,7 +1573,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                       value={editForm.phone}
                       onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
                       placeholder="+91 9876543210"
-                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
                 </div>
@@ -1584,7 +1584,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                     <select
                       value={editForm.role}
                       onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
-                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                     >
                       <option value="Foodie">Foodie (Student/Customer)</option>
                       <option value="Vendor">Vendor (Canteen Owner)</option>
@@ -1598,7 +1598,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                     <select
                       value={editForm.workStatus}
                       onChange={(e) => setEditForm({ ...editForm, workStatus: e.target.value })}
-                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                     >
                       <option value="Active">Active</option>
                       <option value="OnLeave">On Leave</option>
@@ -1613,7 +1613,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                   <select
                     value={editForm.universityId}
                     onChange={(e) => setEditForm({ ...editForm, universityId: e.target.value })}
-                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                   >
                     <option value="">None / Worldwide Campus</option>
                     {universities.map(u => (
@@ -1629,7 +1629,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                     value={editForm.upi}
                     onChange={(e) => setEditForm({ ...editForm, upi: e.target.value })}
                     placeholder="e.g. canteen@upi or user@okaxis"
-                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -1641,7 +1641,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                       value={editForm.vendorDescription}
                       onChange={(e) => setEditForm({ ...editForm, vendorDescription: e.target.value })}
                       placeholder="Specialty meals, canteen timings, dining spot info..."
-                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
                 )}
@@ -1653,7 +1653,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                       type="number"
                       value={editForm.earnedCredits}
                       onChange={(e) => setEditForm({ ...editForm, earnedCredits: Number(e.target.value) || 0 })}
-                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
                   <div>
@@ -1662,7 +1662,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                       type="number"
                       value={editForm.refundedCredits}
                       onChange={(e) => setEditForm({ ...editForm, refundedCredits: Number(e.target.value) || 0 })}
-                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
                 </div>
@@ -1676,7 +1676,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                     value={editForm.newPassword || ''}
                     onChange={(e) => setEditForm({ ...editForm, newPassword: e.target.value })}
                     placeholder="Enter new password to reset"
-                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
               </div>
@@ -1722,7 +1722,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                     setIsSavingUser(false);
                   }
                 }}
-                className="flex-1 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-black shadow-lg shadow-indigo-600/25 transition-all disabled:opacity-50"
+                className="flex-1 py-3.5 rounded-2xl bg-[#E65100] hover:bg-[#E65100] text-white text-xs font-black shadow-lg shadow-orange-500/20 transition-all disabled:opacity-50"
               >
                 {isSavingUser ? 'Saving...' : 'Save Changes'}
               </button>

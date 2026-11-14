@@ -174,7 +174,7 @@ export default function FoodAnalyticsVendorDashboard() {
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-full font-sans bg-[#F8FAFC] dark:bg-[#0A0E17] text-gray-900 dark:text-gray-100 min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-full font-sans bg-[#FFFDF9] dark:bg-[#0D1117] text-[#2C2723] dark:text-[#E6EDF3] text-gray-900 dark:text-gray-100 min-h-screen">
       
       {/* ── FOODANALYTICS TOP HEADER ────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -189,7 +189,7 @@ export default function FoodAnalyticsVendorDashboard() {
 
         <div className="flex flex-wrap items-center gap-3">
           {/* Date Picker Button */}
-          <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white dark:bg-[#111622] border border-gray-200/80 dark:border-gray-800 text-xs font-bold text-gray-700 dark:text-gray-300 shadow-xs">
+          <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white dark:bg-[#161B22] border border-[#F0E6D8] dark:border-gray-800 text-xs font-bold text-gray-700 dark:text-gray-300 shadow-xs">
             <Calendar className="w-4 h-4 text-orange-500" />
             <span>{new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
           </div>
@@ -197,7 +197,7 @@ export default function FoodAnalyticsVendorDashboard() {
           {/* Download Report Button */}
           <button
             onClick={handleDownloadReport}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20 text-xs font-bold hover:bg-orange-500/20 transition-colors"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-[#E65100]/10 text-orange-600 dark:text-orange-400 border border-orange-500/20 text-xs font-bold hover:bg-[#E65100]/20 transition-colors"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Download Report</span>
@@ -206,7 +206,7 @@ export default function FoodAnalyticsVendorDashboard() {
           {/* Add Item Button */}
           <Link
             href="/vendor/inventory"
-            className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-black shadow-md shadow-orange-500/20 transition-all active:scale-95"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-[#E65100] hover:bg-[#D84315] text-white text-xs font-black shadow-md shadow-orange-500/20 transition-all active:scale-95"
           >
             <Plus className="w-4 h-4 stroke-[2.5]" />
             <span>+ Add Item</span>
@@ -218,11 +218,11 @@ export default function FoodAnalyticsVendorDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         
         {/* Card 1: Total Revenue */}
-        <div className="bg-white dark:bg-[#111622] rounded-3xl p-5 border border-gray-200/80 dark:border-gray-800/80 shadow-xs flex flex-col justify-between relative overflow-hidden group">
+        <div className="bg-white dark:bg-[#161B22] rounded-3xl p-5 border border-[#F0E6D8] dark:border-gray-800/80 shadow-xs flex flex-col justify-between relative overflow-hidden group">
           <div>
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-gray-500 dark:text-gray-400">Total Revenue</span>
-              <div className="w-8 h-8 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500">
+              <div className="w-8 h-8 rounded-xl bg-[#E65100]/10 flex items-center justify-center text-orange-500">
                 <DollarSign className="w-4 h-4" />
               </div>
             </div>
@@ -245,11 +245,11 @@ export default function FoodAnalyticsVendorDashboard() {
         </div>
 
         {/* Card 2: Total Orders */}
-        <div className="bg-white dark:bg-[#111622] rounded-3xl p-5 border border-gray-200/80 dark:border-gray-800/80 shadow-xs flex flex-col justify-between relative overflow-hidden group">
+        <div className="bg-white dark:bg-[#161B22] rounded-3xl p-5 border border-[#F0E6D8] dark:border-gray-800/80 shadow-xs flex flex-col justify-between relative overflow-hidden group">
           <div>
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-gray-500 dark:text-gray-400">Total Orders</span>
-              <div className="w-8 h-8 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500">
+              <div className="w-8 h-8 rounded-xl bg-[#E65100]/10 flex items-center justify-center text-orange-500">
                 <ShoppingBag className="w-4 h-4" />
               </div>
             </div>
@@ -271,7 +271,7 @@ export default function FoodAnalyticsVendorDashboard() {
         </div>
 
         {/* Card 3: New Customers */}
-        <div className="bg-white dark:bg-[#111622] rounded-3xl p-5 border border-gray-200/80 dark:border-gray-800/80 shadow-xs flex flex-col justify-between relative overflow-hidden group">
+        <div className="bg-white dark:bg-[#161B22] rounded-3xl p-5 border border-[#F0E6D8] dark:border-gray-800/80 shadow-xs flex flex-col justify-between relative overflow-hidden group">
           <div>
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-gray-500 dark:text-gray-400">New Campus Foodies</span>
@@ -297,7 +297,7 @@ export default function FoodAnalyticsVendorDashboard() {
         </div>
 
         {/* Card 4: Average Order Value */}
-        <div className="bg-white dark:bg-[#111622] rounded-3xl p-5 border border-gray-200/80 dark:border-gray-800/80 shadow-xs flex flex-col justify-between relative overflow-hidden group">
+        <div className="bg-white dark:bg-[#161B22] rounded-3xl p-5 border border-[#F0E6D8] dark:border-gray-800/80 shadow-xs flex flex-col justify-between relative overflow-hidden group">
           <div>
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-gray-500 dark:text-gray-400">Average Order Value</span>
@@ -328,7 +328,7 @@ export default function FoodAnalyticsVendorDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Left 2 Cols: Revenue & Orders Trend Spline Chart */}
-        <div className="lg:col-span-2 bg-white dark:bg-[#111622] rounded-3xl p-6 border border-gray-200/80 dark:border-gray-800/80 shadow-xs flex flex-col justify-between">
+        <div className="lg:col-span-2 bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-[#F0E6D8] dark:border-gray-800/80 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
               <div>
@@ -344,7 +344,7 @@ export default function FoodAnalyticsVendorDashboard() {
                     onClick={() => setTimeFilter(t)}
                     className={`px-3 py-1.5 rounded-xl text-xs font-bold capitalize transition-all ${
                       timeFilter === t
-                        ? 'bg-orange-500 text-white shadow-xs'
+                        ? 'bg-[#E65100] text-white shadow-xs'
                         : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'
                     }`}
                   >
@@ -421,7 +421,7 @@ export default function FoodAnalyticsVendorDashboard() {
         </div>
 
         {/* Right 1 Col: Orders by Category Donut Chart */}
-        <div className="bg-white dark:bg-[#111622] rounded-3xl p-6 border border-gray-200/80 dark:border-gray-800/80 shadow-xs flex flex-col justify-between">
+        <div className="bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-[#F0E6D8] dark:border-gray-800/80 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-black text-gray-900 dark:text-white tracking-tight">Orders by Category</h3>
@@ -469,7 +469,7 @@ export default function FoodAnalyticsVendorDashboard() {
           </div>
 
           {/* Top category insight card */}
-          <div className="mt-5 p-3 rounded-2xl bg-orange-500/10 border border-orange-500/20 text-xs font-bold text-orange-600 dark:text-orange-400 flex items-center gap-2">
+          <div className="mt-5 p-3 rounded-2xl bg-[#E65100]/10 border border-orange-500/20 text-xs font-bold text-orange-600 dark:text-orange-400 flex items-center gap-2">
             <span className="text-base">👑</span>
             <span>Main Course is your most ordered category this week.</span>
           </div>
@@ -481,7 +481,7 @@ export default function FoodAnalyticsVendorDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         
         {/* Card 1: Top Selling Dishes */}
-        <div className="bg-white dark:bg-[#111622] rounded-3xl p-6 border border-gray-200/80 dark:border-gray-800/80 shadow-xs flex flex-col justify-between">
+        <div className="bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-[#F0E6D8] dark:border-gray-800/80 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-black text-gray-900 dark:text-white tracking-tight">Top Selling Dishes</h3>
@@ -492,7 +492,7 @@ export default function FoodAnalyticsVendorDashboard() {
               {topDishes.map((dish, i) => (
                 <div key={dish.name} className="flex items-center justify-between gap-3 p-2 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors">
                   <div className="flex items-center gap-2.5">
-                    <span className="w-6 h-6 rounded-lg bg-orange-500/10 text-orange-500 font-black text-xs flex items-center justify-center shrink-0">
+                    <span className="w-6 h-6 rounded-lg bg-[#E65100]/10 text-orange-500 font-black text-xs flex items-center justify-center shrink-0">
                       {i + 1}
                     </span>
                     <div className="w-10 h-10 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 shrink-0">
@@ -517,7 +517,7 @@ export default function FoodAnalyticsVendorDashboard() {
         </div>
 
         {/* Card 2: Order Status Gauge */}
-        <div className="bg-white dark:bg-[#111622] rounded-3xl p-6 border border-gray-200/80 dark:border-gray-800/80 shadow-xs flex flex-col justify-between">
+        <div className="bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-[#F0E6D8] dark:border-gray-800/80 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-black text-gray-900 dark:text-white tracking-tight">Order Status</h3>
@@ -544,7 +544,7 @@ export default function FoodAnalyticsVendorDashboard() {
                 <span className="text-sm font-black text-gray-900 dark:text-white">37</span>
                 <span className="text-[9px] text-gray-400 block font-semibold">Prep</span>
               </div>
-              <div className="p-2 rounded-xl bg-orange-500/10">
+              <div className="p-2 rounded-xl bg-[#E65100]/10">
                 <span className="text-[10px] font-black uppercase text-orange-600 block">10%</span>
                 <span className="text-sm font-black text-gray-900 dark:text-white">17</span>
                 <span className="text-[9px] text-gray-400 block font-semibold">Pending</span>
@@ -559,7 +559,7 @@ export default function FoodAnalyticsVendorDashboard() {
         </div>
 
         {/* Card 3: Business Insights */}
-        <div className="bg-white dark:bg-[#111622] rounded-3xl p-6 border border-gray-200/80 dark:border-gray-800/80 shadow-xs flex flex-col justify-between">
+        <div className="bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-[#F0E6D8] dark:border-gray-800/80 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-2 mb-4">
               <span className="text-lg">💡</span>

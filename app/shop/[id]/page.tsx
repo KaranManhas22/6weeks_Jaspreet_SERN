@@ -241,7 +241,7 @@ export default function VendorMenuPage() {
 
   if (isAuthenticated === false) {
     return (
-      <div className="min-h-screen bg-white dark:bg-[#0B0F17] flex flex-col items-center justify-center p-6 text-center font-sans">
+      <div className="min-h-screen bg-[#FFFDF9] dark:bg-[#0D1117] text-[#2C2723] dark:text-[#E6EDF3] flex flex-col items-center justify-center p-6 text-center font-sans">
         <div className="w-20 h-20 rounded-3xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 mb-6 shadow-xl shadow-amber-500/10">
           <Store className="w-10 h-10" />
         </div>
@@ -277,7 +277,7 @@ export default function VendorMenuPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
+      <div className="min-h-screen bg-[#FFFDF9] dark:bg-[#0D1117] text-[#2C2723] dark:text-[#E6EDF3] flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
         <Loader2 className="w-8 h-8 animate-spin text-orange-500 mb-4" />
         <p>Loading menu...</p>
       </div>
@@ -286,7 +286,7 @@ export default function VendorMenuPage() {
 
   if (error || !vendor) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col items-center justify-center p-6">
+      <div className="min-h-screen bg-[#FFFDF9] dark:bg-[#0D1117] text-[#2C2723] dark:text-[#E6EDF3] flex flex-col items-center justify-center p-6">
         <div className="bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 rounded-2xl p-6 text-center max-w-md w-full">
           <p className="mb-4">{error || 'Vendor not found'}</p>
           <button 
@@ -301,9 +301,9 @@ export default function VendorMenuPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-50 pb-24">
+    <div className="min-h-screen bg-[#FFFDF9] dark:bg-[#0D1117] text-[#2C2723] dark:text-[#E6EDF3] pb-24">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 md:px-6 py-4 sticky top-0 z-20 flex items-center justify-between shadow-sm">
+      <header className="bg-white dark:bg-gray-900 border-b border-[#F0E6D8] dark:border-gray-800 px-4 md:px-6 py-4 sticky top-0 z-20 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-4">
           <button 
             onClick={() => router.push('/shop')}
@@ -340,7 +340,7 @@ export default function VendorMenuPage() {
         {vendor && (() => {
           const canteenStatus = getCanteenScheduleStatus(vendor.canteenSchedule);
           return (
-            <div className="mb-8 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-5 sm:p-6 shadow-sm space-y-3">
+            <div className="mb-8 bg-white dark:bg-gray-900 border border-[#F0E6D8] dark:border-gray-800 rounded-3xl p-5 sm:p-6 shadow-sm space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-3.5">
                   <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-sm ${
@@ -375,7 +375,7 @@ export default function VendorMenuPage() {
                 <button
                   type="button"
                   onClick={() => setShowScheduleModal(true)}
-                  className="text-xs font-bold text-orange-600 dark:text-orange-400 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/20 px-4 py-2.5 rounded-xl transition-all flex items-center gap-1.5 self-start sm:self-auto shrink-0"
+                  className="text-xs font-bold text-orange-600 dark:text-orange-400 bg-[#E65100]/10 hover:bg-[#E65100]/20 border border-orange-500/20 px-4 py-2.5 rounded-xl transition-all flex items-center gap-1.5 self-start sm:self-auto shrink-0"
                 >
                   <CalendarClock className="w-4 h-4" /> View Full Timings & Holidays
                 </button>
@@ -452,7 +452,7 @@ export default function VendorMenuPage() {
                 }
               }}
               disabled={creatingSquad}
-              className="flex items-center gap-2 px-5 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm rounded-xl shadow-md transition-all disabled:opacity-70"
+              className="flex items-center gap-2 px-5 py-2.5 bg-[#E65100] hover:bg-[#D84315] text-white font-bold text-sm rounded-xl shadow-md transition-all disabled:opacity-70"
             >
               {creatingSquad ? <Loader2 className="w-4 h-4 animate-spin" /> : <Users className="w-4 h-4" />}
               Start a Squad Order
@@ -504,7 +504,7 @@ export default function VendorMenuPage() {
                 className={`whitespace-nowrap px-6 py-2.5 rounded-full text-xs font-extrabold tracking-wide uppercase transition-all duration-300 ${
                   activeCategory === catName
                     ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/30 transform scale-105'
-                    : 'bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-500 hover:text-orange-500 dark:hover:text-orange-400 hover:border-orange-500/30 hover:bg-orange-50/50 dark:hover:bg-orange-500/10'
+                    : 'bg-white dark:bg-gray-900 border border-[#F0E6D8] dark:border-gray-800 text-gray-500 hover:text-orange-500 dark:hover:text-orange-400 hover:border-orange-500/30 hover:bg-orange-50/50 dark:hover:bg-[#E65100]/10'
                 }`}
               >
                 {catName}
@@ -534,7 +534,7 @@ export default function VendorMenuPage() {
               
               return (
                 <div key={category.categoryId}>
-                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-800 pb-2">
+                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white border-b border-[#F0E6D8] dark:border-gray-800 pb-2">
                     {category.categoryName}
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -579,7 +579,7 @@ export default function VendorMenuPage() {
                                           </div>
                                           <button 
                                             onClick={() => setSelectedReviewItem(item)}
-                                            className="text-[10px] uppercase font-bold text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-500/20 px-2 py-1 rounded-md hover:bg-orange-200 dark:hover:bg-orange-500/30 transition-colors"
+                                            className="text-[10px] uppercase font-bold text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-[#E65100]/20 px-2 py-1 rounded-md hover:bg-orange-200 dark:hover:bg-[#E65100]/30 transition-colors"
                                           >
                                             {item.reviewCount} Reviews
                                           </button>
@@ -588,7 +588,7 @@ export default function VendorMenuPage() {
                                         <div className="flex items-center gap-2 mt-1 flex-wrap">
                                           <button 
                                             onClick={() => setSelectedReviewItem(item)}
-                                            className="text-[10px] uppercase font-bold text-white bg-orange-500 hover:bg-orange-600 dark:bg-orange-500 dark:hover:bg-orange-600 px-2 py-1 rounded-md transition-colors"
+                                            className="text-[10px] uppercase font-bold text-white bg-[#E65100] hover:bg-[#D84315] dark:bg-[#E65100] dark:hover:bg-orange-600 px-2 py-1 rounded-md transition-colors"
                                           >
                                             Add Review
                                           </button>
@@ -602,7 +602,7 @@ export default function VendorMenuPage() {
 
                                   {/* VERIFIED REVIEWS */}
                                   {item.reviews && item.reviews.length > 0 && (
-                                    <div className="mt-2.5 flex items-center gap-1.5 bg-gray-50 dark:bg-gray-800/30 p-1.5 rounded-lg border border-gray-100 dark:border-gray-800/50">
+                                    <div className="mt-2.5 flex items-center gap-1.5 bg-gray-50 dark:bg-gray-800/30 p-1.5 rounded-lg border border-[#F0E6D8] dark:border-gray-800/50">
                                       <div className="flex items-center text-amber-400">
                                         <Star className="w-3 h-3 fill-current" />
                                         <span className="text-[10px] font-bold text-gray-700 dark:text-gray-300 ml-1">
@@ -641,7 +641,7 @@ export default function VendorMenuPage() {
                                   
                                   {/* Add to Cart Actions */}
                                   {cartItem ? (
-                                    <div className="flex items-center gap-2 bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/20 rounded-xl p-1 shadow-sm">
+                                    <div className="flex items-center gap-2 bg-orange-50 dark:bg-[#E65100]/10 border border-orange-200 dark:border-orange-500/20 rounded-xl p-1 shadow-sm">
                                       <button 
                                         onClick={() => removeItem(item.id)}
                                         className="w-8 h-8 flex items-center justify-center bg-white dark:bg-gray-800 text-orange-600 dark:text-orange-500 rounded-lg shadow-sm hover:bg-orange-100 dark:hover:bg-gray-700 transition-colors"
@@ -661,7 +661,7 @@ export default function VendorMenuPage() {
                                     <button 
                                       onClick={() => handleAddToCart(item)}
                                       disabled={!item.isCooked && item.stock <= 0}
-                                      className="flex items-center justify-center w-10 h-10 bg-gray-50 dark:bg-gray-800 hover:bg-orange-500 border border-gray-200 dark:border-gray-700 hover:border-orange-500 text-gray-700 dark:text-gray-300 hover:text-white rounded-xl transition-all duration-300 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed group-hover:shadow-md"
+                                      className="flex items-center justify-center w-10 h-10 bg-gray-50 dark:bg-gray-800 hover:bg-[#E65100] border border-gray-200 dark:border-gray-700 hover:border-orange-500 text-gray-700 dark:text-gray-300 hover:text-white rounded-xl transition-all duration-300 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed group-hover:shadow-md"
                                     >
                                       <Plus className="w-5 h-5" />
                                     </button>
@@ -685,7 +685,7 @@ export default function VendorMenuPage() {
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-md w-full px-4">
           <button 
             onClick={() => setIsCartOpen(true)}
-            className={`w-full ${squadParam ? 'bg-green-600 hover:bg-green-700 shadow-green-500/20' : 'bg-orange-500 hover:bg-orange-600 shadow-orange-500/20'} text-white font-bold py-4 px-6 rounded-2xl flex items-center justify-between shadow-2xl transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150`}
+            className={`w-full ${squadParam ? 'bg-green-600 hover:bg-green-700 shadow-green-500/20' : 'bg-[#E65100] hover:bg-[#D84315] shadow-orange-500/20'} text-white font-bold py-4 px-6 rounded-2xl flex items-center justify-between shadow-2xl transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150`}
           >
             <div className="flex items-center gap-3">
               {squadParam ? (
@@ -713,7 +713,7 @@ export default function VendorMenuPage() {
       {/* Cart Conflict Modal */}
       {pendingItem && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-[99] flex items-center justify-center p-6 animate-in fade-in duration-300">
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-6 max-w-sm w-full space-y-6 text-center shadow-2xl">
+          <div className="bg-white dark:bg-gray-900 border border-[#F0E6D8] dark:border-gray-800 rounded-3xl p-6 max-w-sm w-full space-y-6 text-center shadow-2xl">
             <h3 className="text-xl font-bold text-gray-900 dark:text-white">Replace Cart Items?</h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
               Your cart contains items from another canteen. Clear your cart and start a new order at this canteen?
@@ -731,7 +731,7 @@ export default function VendorMenuPage() {
                   addItem(pendingItem, vendorId);
                   setPendingItem(null);
                 }}
-                className="flex-1 py-3 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl transition-colors shadow-lg shadow-orange-500/20"
+                className="flex-1 py-3 bg-[#E65100] hover:bg-[#D84315] text-white font-bold rounded-xl transition-colors shadow-lg shadow-orange-500/20"
               >
                 Replace
               </button>
@@ -743,7 +743,7 @@ export default function VendorMenuPage() {
       {/* Reviews Modal */}
       {selectedReviewItem && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-[99] flex items-center justify-center p-6 animate-in fade-in duration-300">
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-6 max-w-md w-full space-y-6 text-left shadow-2xl relative max-h-[80vh] flex flex-col">
+          <div className="bg-white dark:bg-gray-900 border border-[#F0E6D8] dark:border-gray-800 rounded-3xl p-6 max-w-md w-full space-y-6 text-left shadow-2xl relative max-h-[80vh] flex flex-col">
             <button 
               onClick={() => setSelectedReviewItem(null)}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
@@ -763,7 +763,7 @@ export default function VendorMenuPage() {
             <div className="flex-1 overflow-y-auto pr-2 space-y-4">
               {selectedReviewItem.reviews && selectedReviewItem.reviews.length > 0 ? (
                 selectedReviewItem.reviews.map((rev, idx) => (
-                  <div key={idx} className="bg-gray-50 dark:bg-gray-800/40 p-4 rounded-2xl border border-gray-100 dark:border-gray-800 space-y-2">
+                  <div key={idx} className="bg-gray-50 dark:bg-gray-800/40 p-4 rounded-2xl border border-[#F0E6D8] dark:border-gray-800 space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="font-bold text-xs text-gray-900 dark:text-white">{rev.customerName}</span>
                       <div className="flex text-amber-400">
@@ -783,7 +783,7 @@ export default function VendorMenuPage() {
               )}
             </div>
 
-            <div className="border-t border-gray-200 dark:border-gray-800 pt-4 mt-2">
+            <div className="border-t border-[#F0E6D8] dark:border-gray-800 pt-4 mt-2">
               <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-3">Write a Review</h4>
               <form onSubmit={handleSubmitReview} className="space-y-3 font-bold text-xs text-gray-700 dark:text-gray-300">
                 <div className="space-y-1.5">
@@ -812,7 +812,7 @@ export default function VendorMenuPage() {
                 <button
                   type="submit"
                   disabled={submittingReview}
-                  className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5 active:scale-95 disabled:opacity-50 text-[11px] uppercase"
+                  className="w-full bg-[#E65100] hover:bg-[#D84315] text-white py-2.5 rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5 active:scale-95 disabled:opacity-50 text-[11px] uppercase"
                 >
                   {submittingReview && <Loader2 className="w-3 h-3 animate-spin" />}
                   Submit Review
@@ -826,7 +826,7 @@ export default function VendorMenuPage() {
       {/* Job Application Modal */}
       {showApplyModal && selectedVacancy && studentProfile && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-[99] flex items-center justify-center p-6 animate-in fade-in duration-300">
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-6 max-w-md w-full space-y-5 text-left shadow-2xl relative max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-gray-900 border border-[#F0E6D8] dark:border-gray-800 rounded-3xl p-6 max-w-md w-full space-y-5 text-left shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button 
               onClick={() => setShowApplyModal(false)}
               className="absolute top-4 right-4 text-gray-405 hover:text-gray-600 dark:hover:text-white transition-colors"
@@ -834,7 +834,7 @@ export default function VendorMenuPage() {
               <X className="w-5 h-5" />
             </button>
 
-            <div className="border-b border-gray-200 dark:border-gray-800 pb-3">
+            <div className="border-b border-[#F0E6D8] dark:border-gray-800 pb-3">
               <h3 className="text-lg font-bold text-gray-950 dark:text-white">Apply for Job Opening</h3>
               <p className="text-xs text-gray-500 mt-1">Submit your rider application for <strong>{selectedVacancy.title}</strong> at {vendor.vendorName}.</p>
             </div>
@@ -943,7 +943,7 @@ export default function VendorMenuPage() {
 
         return (
           <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-[99] flex items-center justify-center p-6 animate-in fade-in duration-300">
-            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-6 max-w-lg w-full space-y-6 text-left shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <div className="bg-white dark:bg-gray-900 border border-[#F0E6D8] dark:border-gray-800 rounded-3xl p-6 max-w-lg w-full space-y-6 text-left shadow-2xl relative max-h-[90vh] overflow-y-auto">
               <button 
                 onClick={() => setShowScheduleModal(false)}
                 className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
@@ -951,7 +951,7 @@ export default function VendorMenuPage() {
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="border-b border-gray-100 dark:border-gray-800 pb-3">
+              <div className="border-b border-[#F0E6D8] dark:border-gray-800 pb-3">
                 <div className="flex items-center gap-2">
                   <CalendarClock className="w-5 h-5 text-orange-500" />
                   <h3 className="text-lg font-black text-gray-900 dark:text-white">
@@ -984,7 +984,7 @@ export default function VendorMenuPage() {
 
               {/* Advance Holidays */}
               {specialDates.length > 0 && (
-                <div className="space-y-2 pt-2 border-t border-gray-100 dark:border-gray-800">
+                <div className="space-y-2 pt-2 border-t border-[#F0E6D8] dark:border-gray-800">
                   <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider block">Upcoming Holiday & Event Off-Days</span>
                   <div className="space-y-2">
                     {specialDates.map((sd: any) => (
@@ -1009,7 +1009,7 @@ export default function VendorMenuPage() {
               <button
                 type="button"
                 onClick={() => setShowScheduleModal(false)}
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-2xl shadow-md transition-all text-xs uppercase"
+                className="w-full bg-[#E65100] hover:bg-[#D84315] text-white font-bold py-3 rounded-2xl shadow-md transition-all text-xs uppercase"
               >
                 Close Timings
               </button>

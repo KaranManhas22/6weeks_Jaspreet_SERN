@@ -8,7 +8,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 export default function AboutPage() {
   const { brandName } = useBrand();
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white overflow-x-hidden font-sans transition-colors duration-300 relative">
+    <div className="min-h-screen bg-[#FFFDF9] dark:bg-[#0D1117] text-[#2C2723] dark:text-[#E6EDF3] overflow-x-hidden font-sans transition-colors duration-300 relative">
       
       {/* Branded Background Pattern Overlay */}
       <div className="absolute inset-0 bg-[url('/foodzie_bg_pattern.jpg')] bg-repeat opacity-[0.03] dark:opacity-[0.08] pointer-events-none z-0" />
@@ -27,7 +27,7 @@ export default function AboutPage() {
         <div className="flex items-center gap-4">
           <ThemeToggle />
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-[#E65100] rounded-xl flex items-center justify-center shadow-md shadow-orange-500/20">
               <UtensilsCrossed className="w-4 h-4 text-white" />
             </div>
             <span className="font-bold text-lg text-gray-900 dark:text-white">{brandName}</span>
@@ -59,7 +59,7 @@ export default function AboutPage() {
             { metric: '5,000+', label: 'Happy Foodies Served', icon: Users, color: 'text-green-600 dark:text-green-400' },
             { metric: '99.2%', label: 'Delivery Success SLA', icon: Zap, color: 'text-amber-600 dark:text-amber-400' },
           ].map(({ metric, label, icon: Icon, color }) => (
-            <div key={label} className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-3xl p-6 shadow-sm flex flex-col items-center text-center hover:scale-[1.02] transition-transform duration-300">
+            <div key={label} className="bg-white dark:bg-[#161B22]/60 border border-gray-200 dark:border-gray-800 rounded-3xl p-6 shadow-sm flex flex-col items-center text-center hover:scale-[1.02] transition-transform duration-300">
               <div className="w-10 h-10 bg-gray-100 dark:bg-gray-800/80 rounded-xl flex items-center justify-center mb-3">
                 <Icon className={`w-5 h-5 ${color}`} />
               </div>
@@ -72,7 +72,7 @@ export default function AboutPage() {
         {/* Core Sections split */}
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
           {/* Mission Card */}
-          <div className="bg-white dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800 rounded-3xl p-8 space-y-4 shadow-sm hover:border-orange-500/10 transition-colors">
+          <div className="bg-white dark:bg-[#161B22]/40 border border-gray-200 dark:border-gray-800 rounded-3xl p-8 space-y-4 shadow-sm hover:border-orange-500/10 transition-colors">
             <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2.5">
               <Heart className="w-5 h-5 text-orange-500" />
               Our Core Vision
@@ -83,7 +83,7 @@ export default function AboutPage() {
           </div>
 
           {/* Model Card */}
-          <div className="bg-white dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800 rounded-3xl p-8 space-y-4 shadow-sm hover:border-orange-500/10 transition-colors">
+          <div className="bg-white dark:bg-[#161B22]/40 border border-gray-200 dark:border-gray-800 rounded-3xl p-8 space-y-4 shadow-sm hover:border-orange-500/10 transition-colors">
             <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2.5">
               <ShieldCheck className="w-5 h-5 text-green-500" />
               Direct Payments Architecture
@@ -95,7 +95,7 @@ export default function AboutPage() {
         </section>
 
         {/* Operational Values Section */}
-        <section className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-3xl p-8 lg:p-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
+        <section className="bg-white dark:bg-[#161B22]/60 border border-gray-200 dark:border-gray-800 rounded-3xl p-8 lg:p-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
           <div className="max-w-3xl space-y-6 text-left">
             <span className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
               Foodie Gig Network

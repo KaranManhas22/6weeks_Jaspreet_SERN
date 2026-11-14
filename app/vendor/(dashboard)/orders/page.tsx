@@ -73,14 +73,14 @@ const NOTIFICATION_SOUND = 'https://assets.mixkit.co/active_storage/sfx/2869/286
 function getOrderBadge(order: Order, index: number) {
   const isTakeaway = !order.deliveryAddress || order.deliveryAddress.toLowerCase().includes('counter') || order.deliveryAddress.toLowerCase().includes('takeaway');
   if (isTakeaway) {
-    return { code: `TA${index % 10 || 1}`, color: 'bg-amber-400 text-gray-950 font-black' };
+    return { code: `TA${index % 10 || 1}`, color: 'bg-[#E65100] text-white font-black' };
   }
   const prefixes = ['A', 'B', 'C', 'D'];
   const colors = [
-    'bg-[#104F55] text-white',
-    'bg-[#19647E] text-white',
-    'bg-[#28536B] text-white',
-    'bg-[#1D2D44] text-white',
+    'bg-[#E65100] text-white',
+    'bg-[#C2410C] text-white',
+    'bg-[#D84315] text-white',
+    'bg-[#9A3412] text-white',
   ];
   const char = prefixes[index % prefixes.length];
   const num = (index % 9) + 1;
@@ -217,14 +217,14 @@ export default function BitepointVendorOrdersPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          <span className="text-xs font-bold text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-900 px-4 py-2 rounded-2xl border border-gray-200/80 dark:border-gray-800 shadow-xs">
+          <span className="text-xs font-bold text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-900 px-4 py-2 rounded-2xl border border-[#F0E6D8] dark:border-gray-800 shadow-xs">
             {formattedDate}
           </span>
         </div>
       </div>
 
       {/* ── BITEPOINT TABS & SEARCH ROW ─────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white dark:bg-gray-900 p-2.5 rounded-3xl border border-gray-200/80 dark:border-gray-800 shadow-xs">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white dark:bg-gray-900 p-2.5 rounded-3xl border border-[#F0E6D8] dark:border-gray-800 shadow-xs">
         
         {/* Bitepoint Filter Pills */}
         <div className="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-800/60 p-1.5 rounded-2xl">
@@ -232,7 +232,7 @@ export default function BitepointVendorOrdersPage() {
             onClick={() => setActiveTab('all')}
             className={`px-5 py-2 rounded-xl text-xs font-black transition-all ${
               activeTab === 'all'
-                ? 'bg-[#104F55] text-white shadow-md'
+                ? 'bg-[#E65100] text-white shadow-md'
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
             }`}
           >
@@ -242,7 +242,7 @@ export default function BitepointVendorOrdersPage() {
             onClick={() => setActiveTab('on_process')}
             className={`px-5 py-2 rounded-xl text-xs font-black transition-all ${
               activeTab === 'on_process'
-                ? 'bg-[#104F55] text-white shadow-md'
+                ? 'bg-[#E65100] text-white shadow-md'
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
             }`}
           >
@@ -252,7 +252,7 @@ export default function BitepointVendorOrdersPage() {
             onClick={() => setActiveTab('completed')}
             className={`px-5 py-2 rounded-xl text-xs font-black transition-all ${
               activeTab === 'completed'
-                ? 'bg-[#104F55] text-white shadow-md'
+                ? 'bg-[#E65100] text-white shadow-md'
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
             }`}
           >
@@ -312,7 +312,7 @@ export default function BitepointVendorOrdersPage() {
             return (
               <div
                 key={order.id}
-                className="bg-white dark:bg-gray-900 rounded-3xl p-5 border border-gray-200/80 dark:border-gray-800/80 shadow-sm hover:shadow-xl hover:border-amber-400/40 transition-all duration-300 flex flex-col justify-between"
+                className="bg-white dark:bg-gray-900 rounded-3xl p-5 border border-[#F0E6D8] dark:border-gray-800/80 shadow-sm hover:shadow-xl hover:border-amber-400/40 transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   {/* Card Header (Bitepoint Style) */}

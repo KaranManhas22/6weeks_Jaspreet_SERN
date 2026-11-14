@@ -155,7 +155,7 @@ function SignupForm() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-50 to-orange-100/40 dark:from-gray-955 dark:via-gray-900 dark:to-orange-950 flex items-center justify-center p-4 transition-colors duration-300 relative">
+    <div className="min-h-screen bg-gradient-to-b from-[#FFFDF9] via-[#FFF8EE] to-[#FFFDF9] dark:from-[#0D1117] dark:via-[#161B22] dark:to-[#0D1117] flex items-center justify-center p-4 transition-colors duration-300 relative">
       
       {/* Branded Background Pattern Overlay */}
       <div className="absolute inset-0 bg-[url('/foodzie_bg_pattern.jpg')] bg-repeat opacity-[0.03] dark:opacity-[0.08] pointer-events-none z-0" />
@@ -178,9 +178,9 @@ function SignupForm() {
           Back to {brandName}
         </Link>
 
-        <div className="bg-white/90 dark:bg-gray-900/80 backdrop-blur-xl border border-gray-200 dark:border-gray-700/50 rounded-3xl shadow-2xl p-8">
+        <div className="bg-white/95 dark:bg-[#161B22]/95 backdrop-blur-xl border border-[#F0E6D8] dark:border-gray-800 rounded-3xl shadow-2xl p-8">
           <div className="flex flex-col items-center mb-6">
-            <div className="w-14 h-14 bg-orange-500 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-orange-500/30">
+            <div className="w-14 h-14 bg-[#E65100] rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-orange-500/25">
               <UtensilsCrossed className="w-7 h-7 text-white" />
             </div>
             <h1 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Join {brandName}</h1>

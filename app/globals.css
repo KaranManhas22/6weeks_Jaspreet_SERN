@@ -3,23 +3,27 @@
 @tailwind utilities;
 
 :root {
-  --background: #f8fafc; /* Crisp Slate-50 off-white canvas */
-  --foreground: #0f172a; /* Slate-900 primary high-contrast text */
-  --card: #ffffff;
-  --card-foreground: #0f172a;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --border: #e2e8f0;
+  --background: #FFFDF9; /* Warm ivory/cream canvas — exact Home Page palette */
+  --foreground: #2C2723; /* Deep espresso text — exact Home Page palette */
+  --card: #FFFFFF;
+  --card-foreground: #1A1412;
+  --muted: #FFF8EE;      /* Warm subtle surface tint */
+  --muted-foreground: #78716C; /* Stone-500 readable muted label */
+  --border: #F0E6D8;     /* Warm linen/cream border */
+  --primary: #E65100;    /* Foodzie signature deep vibrant orange */
+  --primary-hover: #D84315;
 }
 
 .dark {
-  --background: #030712; /* Gray-950 ultra-dark canvas */
-  --foreground: #f9fafb; /* Gray-50 clean text */
-  --card: #111827;
-  --card-foreground: #f9fafb;
-  --muted: #1f2937;
-  --muted-foreground: #9ca3af;
-  --border: #1f2937;
+  --background: #0D1117; /* GitHub-style rich dark canvas — exact Home Page dark palette */
+  --foreground: #E6EDF3; /* Crisp soft warm white */
+  --card: #161B22;       /* Elevated dark card surface */
+  --card-foreground: #E6EDF3;
+  --muted: #21262D;      /* Secondary dark surface */
+  --muted-foreground: #8B949E;
+  --border: #30363D;     /* Subtle dark border */
+  --primary: #E65100;
+  --primary-hover: #D84315;
 }
 
 body {
@@ -27,6 +31,11 @@ body {
   background: var(--background);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+::selection {
+  background-color: #E65100 !important;
+  color: #FFFFFF !important;
 }
 
 input, textarea, select {
@@ -61,103 +70,112 @@ input, textarea, select {
   animation-play-state: paused;
 }
 
-/* ── Light Mode Color Palette & Visual Hierarchy ─────────────────────────── */
+/* ── Light Mode Color Palette & Visual Hierarchy (Home Page Warm System) ─── */
 html:not(.dark) body {
-  background-color: #f8fafc !important;
-  color: #0f172a !important;
+  background-color: #FFFDF9 !important;
+  color: #2C2723 !important;
 }
 
 /* Surfaces */
-html:not(.dark) .bg-gray-950 {
-  background-color: #f8fafc !important;
+html:not(.dark) .bg-gray-950,
+html:not(.dark) .bg-gray-50,
+html:not(.dark) .bg-slate-50,
+html:not(.dark) .bg-neutral-50,
+html:not(.dark) .bg-zinc-50 {
+  background-color: #FFFDF9 !important;
 }
 
-html:not(.dark) .bg-gray-900 {
-  background-color: #ffffff !important;
+html:not(.dark) .bg-gray-900,
+html:not(.dark) .bg-white {
+  background-color: #FFFFFF !important;
 }
 
-html:not(.dark) .bg-gray-955 {
-  background-color: #f1f5f9 !important;
+html:not(.dark) .bg-gray-955,
+html:not(.dark) .bg-gray-100,
+html:not(.dark) .bg-slate-100 {
+  background-color: #FFF8EE !important;
 }
 
 html:not(.dark) .bg-gray-955\/50 {
-  background-color: rgba(241, 245, 249, 0.7) !important;
+  background-color: rgba(255, 248, 238, 0.7) !important;
 }
 
 html:not(.dark) .bg-gray-900\/40,
 html:not(.dark) .bg-gray-900\/60,
-html:not(.dark) .bg-gray-900\/70 {
-  background-color: rgba(255, 255, 255, 0.85) !important;
+html:not(.dark) .bg-gray-900\/70,
+html:not(.dark) .bg-white\/90,
+html:not(.dark) .bg-white\/80 {
+  background-color: rgba(255, 255, 255, 0.92) !important;
 }
 
-html:not(.dark) .bg-gray-950\/85 {
-  background-color: rgba(255, 255, 255, 0.9) !important;
-}
-
-html:not(.dark) .bg-gray-950\/50 {
-  background-color: rgba(255, 255, 255, 0.6) !important;
-}
-
+html:not(.dark) .bg-gray-950\/85,
+html:not(.dark) .bg-gray-950\/50,
 html:not(.dark) .bg-gray-950\/35 {
-  background-color: rgba(241, 245, 249, 0.5) !important;
+  background-color: rgba(255, 253, 249, 0.85) !important;
 }
 
 html:not(.dark) .bg-gray-950\/10 {
-  background-color: rgba(15, 23, 42, 0.04) !important;
+  background-color: rgba(230, 81, 0, 0.05) !important;
 }
 
-html:not(.dark) .bg-gray-800 {
-  background-color: #f1f5f9 !important;
+html:not(.dark) .bg-gray-800,
+html:not(.dark) .bg-gray-200 {
+  background-color: #F5EBE1 !important;
 }
 
 html:not(.dark) .hover\:bg-gray-700:hover,
 html:not(.dark) .hover\:bg-gray-800:hover,
-html:not(.dark) .hover\:bg-gray-850:hover {
-  background-color: #e2e8f0 !important;
+html:not(.dark) .hover\:bg-gray-850:hover,
+html:not(.dark) .hover\:bg-gray-100:hover {
+  background-color: #F5EBE1 !important;
 }
 
 html:not(.dark) .hover\:bg-gray-955\/50:hover {
-  background-color: rgba(226, 232, 240, 0.8) !important;
+  background-color: rgba(245, 235, 225, 0.8) !important;
 }
 
-/* Light Theme Borders */
+/* Light Theme Borders: Warm Linen / Cream */
+html:not(.dark) .border-gray-100,
+html:not(.dark) .border-gray-200,
+html:not(.dark) .border-gray-700,
 html:not(.dark) .border-gray-800,
 html:not(.dark) .border-gray-850,
-html:not(.dark) .border-gray-900 {
-  border-color: #e2e8f0 !important;
+html:not(.dark) .border-gray-900,
+html:not(.dark) .border-slate-200 {
+  border-color: #F0E6D8 !important;
 }
 
 html:not(.dark) .border-gray-855 {
-  border-color: #cbd5e1 !important;
+  border-color: #E2D5C3 !important;
 }
 
-/* Light Theme Typography: Preserving Hierarchy */
+/* Light Theme Typography: Warm Espresso Hierarchy */
 html:not(.dark) .text-gray-900 {
-  color: #0f172a !important; /* Deep slate title text */
+  color: #1A1412 !important; /* Deep warm espresso title text */
 }
 
 html:not(.dark) .text-gray-800 {
-  color: #1e293b !important; /* Rich body slate */
+  color: #2C2723 !important; /* Rich body espresso */
 }
 
 html:not(.dark) .text-gray-700 {
-  color: #334155 !important; /* Standard reading slate */
+  color: #443E3A !important; /* Standard reading espresso */
 }
 
 html:not(.dark) .text-gray-600 {
-  color: #475569 !important; /* Subdued description text */
+  color: #57534E !important; /* Subdued description text */
 }
 
 html:not(.dark) .text-gray-500,
 html:not(.dark) .text-gray-550,
 html:not(.dark) .text-gray-555,
 html:not(.dark) .text-gray-650 {
-  color: #64748b !important; /* Slate-500: readable muted labels/subtitles */
+  color: #78716C !important; /* Warm stone muted labels */
 }
 
 html:not(.dark) .text-gray-400,
 html:not(.dark) .text-gray-300 {
-  color: #94a3b8 !important; /* Slate-400: tertiary & placeholder text */
+  color: #A8A29E !important; /* Tertiary & placeholder text */
 }
 
 /* Inverted text-white for dark containers converted to light */
@@ -165,14 +183,27 @@ html:not(.dark) .bg-gray-900 > .text-white,
 html:not(.dark) .bg-gray-950 > .text-white,
 html:not(.dark) .bg-gray-955 > .text-white,
 html:not(.dark) .bg-white .text-white:not([class*="bg-"]):not([class*="btn"]) {
-  color: #0f172a !important;
+  color: #1A1412 !important;
 }
 
-/* Filled Action Buttons & Badges: Always Crisp White in BOTH Themes */
+/* ── Filled Action Buttons & Badges: Foodzie Signature Deep Orange ───────── */
 .bg-orange-500,
+.bg-orange-600 {
+  background-color: #E65100 !important;
+  color: #FFFFFF !important;
+}
+
 .bg-orange-500 *,
-.bg-orange-600,
-.bg-orange-600 *,
+.bg-orange-600 * {
+  color: #FFFFFF !important;
+}
+
+.hover\:bg-orange-500:hover,
+.hover\:bg-orange-600:hover {
+  background-color: #D84315 !important;
+  color: #FFFFFF !important;
+}
+
 .bg-green-500,
 .bg-green-500 *,
 .bg-green-600,
@@ -182,24 +213,15 @@ html:not(.dark) .bg-white .text-white:not([class*="bg-"]):not([class*="btn"]) {
 .bg-red-500,
 .bg-red-500 *,
 .bg-red-600,
-.bg-red-600 *,
-.bg-blue-600,
-.bg-blue-600 *,
-.bg-indigo-600,
-.bg-indigo-600 * {
-  color: #ffffff !important;
-}
-
-/* Hovering buttons with hover:text-white must stay white */
-html:not(.dark) .hover\:bg-orange-500:hover,
-html:not(.dark) .hover\:bg-orange-600:hover {
-  color: #ffffff !important;
+.bg-red-600 * {
+  color: #FFFFFF !important;
 }
 
 /* Semantic Badges & Links in Light Mode */
 html:not(.dark) .text-orange-500,
-html:not(.dark) .text-orange-600 {
-  color: #ea580c !important;
+html:not(.dark) .text-orange-600,
+html:not(.dark) .text-amber-500 {
+  color: #E65100 !important;
 }
 
 html:not(.dark) .text-green-500,
@@ -207,49 +229,56 @@ html:not(.dark) .text-green-600 {
   color: #059669 !important;
 }
 
-html:not(.dark) .text-blue-500,
-html:not(.dark) .text-blue-600 {
-  color: #2563eb !important;
-}
-
 html:not(.dark) .text-red-500,
 html:not(.dark) .text-red-600 {
-  color: #dc2626 !important;
+  color: #DC2626 !important;
 }
 
-/* ── Dark Mode Typography Rules ─────────────────────────────────────────── */
-.dark .text-gray-300 {
-  color: #f3f4f6 !important;
+/* ── Dark Mode Typography & Container Rules (Home Page GitHub-Dark System) ─ */
+.dark body {
+  background-color: #0D1117 !important;
+  color: #E6EDF3 !important;
 }
 
+.dark .bg-gray-950,
+.dark .bg-gray-900,
+.dark .bg-black {
+  background-color: #161B22;
+}
+
+.dark .bg-gray-800 {
+  background-color: #21262D !important;
+}
+
+.dark .border-gray-800,
+.dark .border-gray-700 {
+  border-color: #30363D !important;
+}
+
+.dark .text-gray-300,
 .dark .text-gray-400 {
-  color: #e5e7eb !important;
+  color: #8B949E !important;
 }
 
 .dark .text-gray-555,
 .dark .text-gray-500,
 .dark .text-gray-550 {
-  color: #d1d5db !important;
+  color: #6E7681 !important;
 }
 
 .dark .text-gray-650 {
-  color: #9ca3af !important;
+  color: #484F58 !important;
 }
 
 .dark .text-gray-700,
 .dark .text-gray-800,
 .dark .text-gray-900 {
-  color: #f9fafb !important;
-}
-
-.dark .bg-gray-900,
-.dark .bg-gray-900 * {
-  color: #ffffff;
+  color: #E6EDF3 !important;
 }
 
 .dark .text-orange-500,
 .dark .text-orange-500 *,
 .dark .text-orange-600,
 .dark .text-orange-600 * {
-  color: #f97316 !important;
+  color: #F97316 !important;
 }

@@ -61,9 +61,9 @@ export default function VendorLayout({ children }: { children: React.ReactNode }
 
   // ── Authorized: render sidebar + page content ─────────────────────────────
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 flex flex-col">
+    <div className="min-h-screen bg-[#FFFDF9] dark:bg-[#0D1117] text-[#2C2723] dark:text-[#E6EDF3] flex flex-col">
       {/* Mobile Top Bar */}
-      <header className="lg:hidden flex items-center justify-between px-4 py-3 bg-gray-950 text-white shrink-0 border-b border-gray-800">
+      <header className="lg:hidden flex items-center justify-between px-4 py-3 bg-white dark:bg-[#161B22] text-[#2C2723] dark:text-[#E6EDF3] shrink-0 border-b border-[#F0E6D8] dark:border-gray-800">
         <div className="flex items-center gap-2">
           <button 
             onClick={() => setIsMobileOpen(true)} 
