@@ -162,9 +162,9 @@ export default function FoodzieShopPage() {
   // Dynamic time-of-day greeting (morning / afternoon / evening)
   const timeGreeting = useMemo(() => {
     const hour = new Date().getHours();
-    if (hour >= 4 && hour < 12) return { text: 'Good morning', meal: 'breakfast', icon: '☀️' };
-    if (hour >= 12 && hour < 17) return { text: 'Good afternoon', meal: 'lunch', icon: '🌤️' };
-    return { text: 'Good evening', meal: 'dinner', icon: '🌆' };
+    if (hour >= 4 && hour < 12) return { text: 'Good morning', meal: 'breakfast' };
+    if (hour >= 12 && hour < 17) return { text: 'Good afternoon', meal: 'lunch' };
+    return { text: 'Good evening', meal: 'dinner' };
   }, []);
 
   // 1. Initial Load: User auth, campus location, reviews
@@ -546,8 +546,8 @@ export default function FoodzieShopPage() {
         {/* Top Header Bar */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight flex items-center gap-2">
-              {timeGreeting.text}, {userName} <span className="animate-bounce">👋</span>
+            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+              {timeGreeting.text}, {userName}!
             </h1>
             <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-medium mt-0.5">
               Ready to grab {timeGreeting.meal}? Choose your favorite canteen or order ahead.
