@@ -227,17 +227,25 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
         scheduledTimeISO = now.toISOString();
       }
 
+      const finalAddress = (addressToUse && addressToUse.trim())
+        ? addressToUse.trim()
+        : (deliveryAddress && deliveryAddress.trim())
+          ? deliveryAddress.trim()
+          : "Campus Delivery · Main Gate & Campus Commons";
+
+      const effectiveVendorId = vendorId || displayItems[0]?.vendorId;
+
       const res = await api.post<{ success: boolean; foodzieOrderId: string }>('/api/orders', {
-        vendorId,
+        vendorId: effectiveVendorId,
         items: itemsPayload,
         totalAmount: total,
-        deliveryAddress: addressToUse,
+        deliveryAddress: finalAddress,
         isCOD: false,
         appliedCredits: useCredits ? discount : 0,
         scheduledTime: scheduledTimeISO
       });
 
-      console.log('✅ Order placed successfully!', res);
+      console.log('✅ Demo Order placed successfully!', res);
       setOrderSuccess(true);
       clearCart();
       setShowUpiModal(false);
@@ -246,10 +254,11 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
         setOrderSuccess(false);
         onClose();
         router.push('/shop/orders');
-      }, 2000);
-    } catch (err) {
+      }, 1500);
+    } catch (err: any) {
       console.error('Failed to place order:', err);
-      alert('Failed to place order. Please try again.');
+      const errMsg = err.response?.data?.message || err.message || 'Payment could not be verified. Please try again.';
+      alert(`Notice: ${errMsg}`);
     } finally {
       setIsProcessing(false);
     }
