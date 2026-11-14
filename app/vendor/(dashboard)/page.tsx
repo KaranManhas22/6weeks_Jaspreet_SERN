@@ -102,9 +102,9 @@ export default function FoodAnalyticsVendorDashboard() {
   // Time-of-day greeting
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Good Morning';
-    if (hour < 17) return 'Good Afternoon';
-    return 'Good Evening';
+    if (hour >= 4 && hour < 12) return { text: 'Good Morning', icon: '☀️' };
+    if (hour >= 12 && hour < 17) return { text: 'Good Afternoon', icon: '🌤️' };
+    return { text: 'Good Evening', icon: '🌆' };
   }, []);
 
   // Sparkline data points for top KPI cards
@@ -256,7 +256,7 @@ export default function FoodAnalyticsVendorDashboard() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight flex items-center gap-2">
-            {greeting}, {vendorName}! <span className="animate-spin duration-1000">☀️</span>
+            {greeting.text}, {vendorName}! <span className="animate-spin duration-1000">{greeting.icon}</span>
           </h1>
           <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-medium mt-0.5">
             Here&apos;s what&apos;s happening with your campus food business today.

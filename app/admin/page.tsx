@@ -164,6 +164,14 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
     return () => clearInterval(interval);
   }, []);
 
+  // Dynamic time-of-day greeting (morning / afternoon / evening)
+  const timeGreeting = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour >= 4 && hour < 12) return { text: 'Good morning', icon: '☀️' };
+    if (hour >= 12 && hour < 17) return { text: 'Good afternoon', icon: '🌤️' };
+    return { text: 'Good evening', icon: '🌆' };
+  }, [currentTime]);
+
   // Data states
   const [users, setUsers] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
@@ -860,7 +868,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight flex items-center gap-2">
-                  Good morning, {adminProfile.name}! <span className="animate-spin duration-1000">☀️</span>
+                  {timeGreeting.text}, {adminProfile.name}! <span className="animate-spin duration-1000">{timeGreeting.icon}</span>
                 </h1>
                 <p className="text-xs sm:text-sm text-gray-400 font-medium mt-0.5">
                   Here&apos;s what&apos;s happening with your campus canteens today.
