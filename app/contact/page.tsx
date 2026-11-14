@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { UtensilsCrossed, ArrowLeft, Mail, MapPin, Lightbulb } from 'lucide-react';
+import { UtensilsCrossed, ArrowLeft, Mail, MapPin, Lightbulb, Phone } from 'lucide-react';
 import { useBrand } from '@/context/BrandContext';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
@@ -38,7 +38,21 @@ export default function ContactPage() {
           Have an issue with an order or want to bring your campus canteen to Foodzie? Reach out to us below.
         </p>
 
-        <div className="grid sm:grid-cols-2 gap-6 mb-12">
+        <div className="grid sm:grid-cols-3 gap-6 mb-12">
+          {/* Phone Helpline */}
+          <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-3xl p-8 shadow-sm">
+            <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-2xl flex items-center justify-center mb-6">
+              <Phone className="w-6 h-6 text-orange-600 dark:text-orange-500" />
+            </div>
+            <h3 className="text-xl font-bold mb-2">Phone Helpline</h3>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+              Direct campus customer &amp; canteen support.
+            </p>
+            <a href="tel:+917717670668" className="text-orange-600 dark:text-orange-500 font-bold hover:underline">
+              +91 7717670668
+            </a>
+          </div>
+
           {/* Email Support */}
           <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-3xl p-8 shadow-sm">
             <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-2xl flex items-center justify-center mb-6">
@@ -46,7 +60,7 @@ export default function ContactPage() {
             </div>
             <h3 className="text-xl font-bold mb-2">Email Support</h3>
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
-              We aim to respond to all inquiries within 24-48 hours.
+              We aim to respond to inquiries within 24-48 hours.
             </p>
             <a href="mailto:support@foodzie.store" className="text-orange-600 dark:text-orange-500 font-bold hover:underline">
               support@foodzie.store
@@ -78,6 +92,10 @@ export default function ContactPage() {
             You can reach our dedicated campus teams directly at:
           </p>
           <ul className="space-y-3 text-sm text-gray-300">
+            <li className="flex items-center gap-3">
+              <span className="w-2 h-2 rounded-full bg-orange-500" />
+              <strong className="text-white">+91 7717670668</strong> — Direct campus helpline &amp; urgent order assistance.
+            </li>
             <li className="flex items-center gap-3">
               <span className="w-2 h-2 rounded-full bg-orange-500" />
               <strong className="text-white">support@foodzie.store</strong> — For general foodie and order issues.

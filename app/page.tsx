@@ -819,7 +819,9 @@ export default function FoodzieLandingPage() {
               </p>
               <p className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-orange-400 shrink-0" />
-                <span>+91 181 271 1111</span>
+                <a href="tel:+917717670668" className="hover:text-white transition-colors">
+                  +91 7717670668
+                </a>
               </p>
               <p className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-orange-400 shrink-0" />
