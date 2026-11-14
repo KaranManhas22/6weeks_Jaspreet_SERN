@@ -95,7 +95,7 @@ export default function BitepointVendorOrdersPage() {
   const [error, setError] = useState<string | null>(null);
   const [riderCoords, setRiderCoords] = useState<Record<string, { lat: number; lng: number }>>({});
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<'all' | 'on_process' | 'completed'>('on_process');
+  const [activeTab, setActiveTab] = useState<'all' | 'queue' | 'preparing' | 'assigned' | 'history'>('all');
   const [expandedOrders, setExpandedOrders] = useState<Record<string, boolean>>({});
 
   const socketRef = useRef<Socket | null>(null);
@@ -167,9 +167,13 @@ export default function BitepointVendorOrdersPage() {
   const filteredOrders = useMemo(() => {
     return orders.filter(order => {
       // Tab filter
-      if (activeTab === 'on_process') {
-        if (!['Pending', 'Confirmed', 'Preparing', 'Ready', 'OutForDelivery'].includes(order.status)) return false;
-      } else if (activeTab === 'completed') {
+      if (activeTab === 'queue') {
+        if (!['Pending', 'Confirmed'].includes(order.status)) return false;
+      } else if (activeTab === 'preparing') {
+        if (order.status !== 'Preparing') return false;
+      } else if (activeTab === 'assigned') {
+        if (!['Ready', 'OutForDelivery'].includes(order.status)) return false;
+      } else if (activeTab === 'history') {
         if (order.status !== 'Completed' && order.status !== 'Cancelled') return false;
       }
 
@@ -226,37 +230,57 @@ export default function BitepointVendorOrdersPage() {
       {/* ── BITEPOINT TABS & SEARCH ROW ─────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white dark:bg-gray-900 p-2.5 rounded-3xl border border-[#F0E6D8] dark:border-gray-800 shadow-xs">
         
-        {/* Bitepoint Filter Pills */}
-        <div className="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-800/60 p-1.5 rounded-2xl">
+        {/* Bitepoint Kitchen Division Filter Pills */}
+        <div className="flex flex-wrap items-center gap-1.5 bg-gray-100 dark:bg-gray-800/60 p-1.5 rounded-2xl">
           <button
             onClick={() => setActiveTab('all')}
-            className={`px-5 py-2 rounded-xl text-xs font-black transition-all ${
+            className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${
               activeTab === 'all'
                 ? 'bg-[#E65100] text-white shadow-md'
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
             }`}
           >
-            All ({orders.length})
+            All Kitchen ({orders.length})
           </button>
           <button
-            onClick={() => setActiveTab('on_process')}
-            className={`px-5 py-2 rounded-xl text-xs font-black transition-all ${
-              activeTab === 'on_process'
+            onClick={() => setActiveTab('queue')}
+            className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${
+              activeTab === 'queue'
+                ? 'bg-amber-500 text-white shadow-md'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+          >
+            1. Orders in Queue ({orders.filter(o => ['Pending', 'Confirmed'].includes(o.status)).length})
+          </button>
+          <button
+            onClick={() => setActiveTab('preparing')}
+            className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${
+              activeTab === 'preparing'
                 ? 'bg-[#E65100] text-white shadow-md'
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
             }`}
           >
-            On Process ({orders.filter(o => ['Pending', 'Confirmed', 'Preparing', 'Ready', 'OutForDelivery'].includes(o.status)).length})
+            2. Orders Start Preparing ({orders.filter(o => o.status === 'Preparing').length})
           </button>
           <button
-            onClick={() => setActiveTab('completed')}
-            className={`px-5 py-2 rounded-xl text-xs font-black transition-all ${
-              activeTab === 'completed'
-                ? 'bg-[#E65100] text-white shadow-md'
+            onClick={() => setActiveTab('assigned')}
+            className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${
+              activeTab === 'assigned'
+                ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
             }`}
           >
-            Completed ({orders.filter(o => o.status === 'Completed').length})
+            3. Assigned to Riders ({orders.filter(o => ['Ready', 'OutForDelivery'].includes(o.status)).length})
+          </button>
+          <button
+            onClick={() => setActiveTab('history')}
+            className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${
+              activeTab === 'history'
+                ? 'bg-emerald-600 text-white shadow-md'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+          >
+            Success History ({orders.filter(o => o.status === 'Completed').length})
           </button>
         </div>
 

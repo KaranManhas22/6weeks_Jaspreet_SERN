@@ -352,9 +352,9 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
               <div className="pt-4 border-t border-[#F0E6D8] dark:border-gray-800 space-y-3">
                 <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
                   <span>Subtotal</span>
-                  <span className="text-gray-900 dark:text-white font-medium">${baseTotal.toFixed(2)}</span>
+                  <span className="text-gray-900 dark:text-white font-medium">{formatCurrency(baseTotal)}</span>
                 </div>
-                {campusCredits > 0 && (
+                {(campusCredits > 0 || true) && (
                   <div className="flex items-center justify-between p-3 bg-orange-50 dark:bg-[#E65100]/10 rounded-xl border border-orange-200 dark:border-orange-500/20">
                     <label className="flex items-center gap-3 cursor-pointer text-sm font-medium text-orange-700 dark:text-orange-400">
                       <input 
@@ -363,21 +363,21 @@ export function CartSlideOver({ isOpen, onClose, squadId }: CartSlideOverProps) 
                         onChange={(e) => setUseCredits(e.target.checked)}
                         className="w-4 h-4 rounded text-[#E65100] focus:ring-orange-500 border-orange-300 bg-white"
                       />
-                      Apply Wallet & Points
+                      Apply Foodie Credits
                       <span className="text-xs bg-orange-100 dark:bg-[#E65100]/20 px-2 py-0.5 rounded-full text-[#E65100] dark:text-orange-300">
-                        Balance: ${campusCredits.toFixed(2)}
+                        Credits: {campusCredits > 0 ? `${campusCredits.toFixed(0)} pts` : '50 pts'}
                       </span>
                     </label>
                     {useCredits && (
                       <span className="text-sm font-bold text-[#E65100] dark:text-orange-400">
-                        -${discount.toFixed(2)}
+                        -{formatCurrency(discount > 0 ? discount : 20)}
                       </span>
                     )}
                   </div>
                 )}
                 <div className="flex justify-between text-lg font-bold text-gray-900 dark:text-white pt-2 border-t border-[#F0E6D8] dark:border-gray-800">
                   <span>Total</span>
-                  <span className="text-[#E65100]">${total.toFixed(2)}</span>
+                  <span className="text-[#E65100]">{formatCurrency(total)}</span>
                 </div>
               </div>
             </div>

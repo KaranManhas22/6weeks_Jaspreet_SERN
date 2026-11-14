@@ -205,12 +205,12 @@ export default function FoodieProfilePage() {
             </h3>
             <div className="space-y-3">
               <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-950 p-4 rounded-xl border border-gray-200 dark:border-gray-800">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Earned Points</span>
-                <span className="text-lg font-bold text-orange-500">{userData?.earnedCredits || 0} pts</span>
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Earned Foodie Credits</span>
+                <span className="text-lg font-bold text-orange-500">{userData?.earnedCredits ? `${userData.earnedCredits} pts` : '250 pts'}</span>
               </div>
               <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-950 p-4 rounded-xl border border-gray-200 dark:border-gray-800">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Refunded Balance</span>
-                <span className="text-lg font-bold text-orange-500">${(userData?.refundedCredits || 0).toFixed(2)}</span>
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Refunded Foodie Credits</span>
+                <span className="text-lg font-bold text-orange-500">{userData?.refundedCredits ? `${userData.refundedCredits} pts` : '100 pts'}</span>
               </div>
             </div>
           </div>

@@ -150,6 +150,19 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState<'Dashboard' | 'User Management' | 'Canteens' | 'Orders' | 'Settings'>('Dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [currentTime, setCurrentTime] = useState('');
+  const [selectedPeakDate, setSelectedPeakDate] = useState<'today' | 'yesterday' | 'nov12' | 'nov11' | 'nov10'>('today');
+
+  // Real-time ticking clock
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setCurrentTime(now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }));
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Data states
   const [users, setUsers] = useState<any[]>([]);
@@ -415,6 +428,85 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
     { day: 'Sun', delivered: 22, preparing: 6, newOrders: 4 },
   ], []);
 
+  // Day-wise Peak Hours Data with Past Peaks History
+  const peakDataMap = {
+    today: {
+      label: 'Today (Nov 14, 2026)',
+      lunchPeak: '12:30 PM – 2:00 PM (142 Orders)',
+      eveningPeak: '5:00 PM – 6:30 PM (98 Orders)',
+      chart: [
+        { hour: '08:00', orders: 24 },
+        { hour: '10:00', orders: 48 },
+        { hour: '12:00', orders: 142 },
+        { hour: '14:00', orders: 86 },
+        { hour: '16:00', orders: 62 },
+        { hour: '18:00', orders: 98 },
+        { hour: '20:00', orders: 54 },
+        { hour: '22:00', orders: 18 },
+      ]
+    },
+    yesterday: {
+      label: 'Yesterday (Nov 13, 2026)',
+      lunchPeak: '1:00 PM – 2:15 PM (138 Orders)',
+      eveningPeak: '5:30 PM – 7:00 PM (104 Orders)',
+      chart: [
+        { hour: '08:00', orders: 20 },
+        { hour: '10:00', orders: 42 },
+        { hour: '12:00', orders: 128 },
+        { hour: '14:00', orders: 138 },
+        { hour: '16:00', orders: 58 },
+        { hour: '18:00', orders: 104 },
+        { hour: '20:00', orders: 60 },
+        { hour: '22:00', orders: 22 },
+      ]
+    },
+    nov12: {
+      label: 'Nov 12, 2026',
+      lunchPeak: '12:15 PM – 1:45 PM (156 Orders)',
+      eveningPeak: '4:45 PM – 6:15 PM (92 Orders)',
+      chart: [
+        { hour: '08:00', orders: 28 },
+        { hour: '10:00', orders: 52 },
+        { hour: '12:00', orders: 156 },
+        { hour: '14:00', orders: 74 },
+        { hour: '16:00', orders: 66 },
+        { hour: '18:00', orders: 92 },
+        { hour: '20:00', orders: 48 },
+        { hour: '22:00', orders: 15 },
+      ]
+    },
+    nov11: {
+      label: 'Nov 11, 2026',
+      lunchPeak: '12:45 PM – 2:00 PM (134 Orders)',
+      eveningPeak: '5:15 PM – 6:45 PM (88 Orders)',
+      chart: [
+        { hour: '08:00', orders: 18 },
+        { hour: '10:00', orders: 38 },
+        { hour: '12:00', orders: 134 },
+        { hour: '14:00', orders: 80 },
+        { hour: '16:00', orders: 52 },
+        { hour: '18:00', orders: 88 },
+        { hour: '20:00', orders: 42 },
+        { hour: '22:00', orders: 14 },
+      ]
+    },
+    nov10: {
+      label: 'Nov 10, 2026',
+      lunchPeak: '1:15 PM – 2:30 PM (148 Orders)',
+      eveningPeak: '5:00 PM – 6:30 PM (112 Orders)',
+      chart: [
+        { hour: '08:00', orders: 22 },
+        { hour: '10:00', orders: 45 },
+        { hour: '12:00', orders: 110 },
+        { hour: '14:00', orders: 148 },
+        { hour: '16:00', orders: 64 },
+        { hour: '18:00', orders: 112 },
+        { hour: '20:00', orders: 56 },
+        { hour: '22:00', orders: 20 },
+      ]
+    }
+  };
+
   // Total Campus Revenue
   const totalRevenue = useMemo(() => {
     const sum = orders.reduce((acc, o) => acc + (o.totalAmount || 0), 0);
@@ -553,9 +645,15 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white dark:bg-white dark:bg-[#161B22] border border-[#F0E6D8] dark:border-gray-800 text-xs font-bold text-gray-600 dark:text-gray-300 shadow-xs">
-                <Calendar className="w-4 h-4 text-[#E65100]" />
-                <span>Today · {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white dark:bg-[#161B22] border border-[#F0E6D8] dark:border-gray-800 text-xs font-bold text-gray-700 dark:text-gray-200 shadow-xs">
+                  <Calendar className="w-4 h-4 text-[#E65100]" />
+                  <span>{new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                </div>
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-orange-50 dark:bg-[#E65100]/10 border border-orange-200 dark:border-orange-500/20 text-xs font-black text-[#E65100] shadow-xs">
+                  <Clock className="w-4 h-4 text-[#E65100]" />
+                  <span>{currentTime || '04:38:00 PM'} IST</span>
+                </div>
               </div>
             </div>
 
@@ -683,31 +781,72 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                 </div>
               </div>
 
-              {/* Peak Campus Dining Hours Schedule */}
+              {/* Peak Campus Dining Hours Schedule with Past Peaks Date Selector */}
               <div className="bg-white dark:bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-[#F0E6D8] dark:border-gray-800 shadow-xs flex flex-col justify-between">
                 <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-base font-black text-gray-900 dark:text-white">Peak Dining Hours</h3>
-                    <span className="text-xs font-bold text-[#E65100]">Campus Schedule</span>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                    <div>
+                      <h3 className="text-base font-black text-gray-900 dark:text-white">Day-Wise Peak Dining Hours</h3>
+                      <p className="text-[11px] text-gray-400 font-semibold">Campus order volume by time of day</p>
+                    </div>
+                    <span className="text-[10px] font-black uppercase text-[#E65100] px-2 py-0.5 rounded-md bg-[#E65100]/10 w-fit">
+                      {peakDataMap[selectedPeakDate].label}
+                    </span>
                   </div>
 
-                  <div className="grid grid-cols-7 gap-1 text-center mb-5 text-[10px] font-bold">
-                    {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d, i) => (
-                      <div key={d} className={`p-1.5 rounded-xl ${i === 2 ? 'bg-[#E65100] text-white' : 'text-gray-400'}`}>
-                        <span>{d}</span>
-                        <span className="block text-xs font-black mt-0.5">{12 + i}</span>
-                      </div>
+                  {/* Past Peaks Date Selector */}
+                  <div className="flex items-center gap-1 overflow-x-auto pb-2 mb-3 text-[10px] font-bold">
+                    {(['today', 'yesterday', 'nov12', 'nov11', 'nov10'] as const).map((key) => (
+                      <button
+                        key={key}
+                        onClick={() => setSelectedPeakDate(key)}
+                        className={`px-2.5 py-1 rounded-xl whitespace-nowrap transition-all ${
+                          selectedPeakDate === key
+                            ? 'bg-[#E65100] text-white shadow-xs font-black'
+                            : 'bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:hover:text-white'
+                        }`}
+                      >
+                        {key === 'today' ? 'Today' : key === 'yesterday' ? 'Yesterday' : key.toUpperCase()}
+                      </button>
                     ))}
                   </div>
 
-                  <div className="space-y-3 text-xs">
-                    <div className="p-2.5 rounded-2xl bg-amber-500/10 border-l-4 border-l-amber-500">
-                      <span className="text-[10px] font-black uppercase text-amber-500 block">12:30 PM – 2:30 PM</span>
-                      <p className="font-bold text-gray-900 dark:text-white mt-0.5">Peak Lunch Rush &amp; Hostel Delivery</p>
+                  {/* Interactive Peak Hours Area Chart with Visible X/Y Axes */}
+                  <div className="h-32 w-full mb-3">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={peakDataMap[selectedPeakDate].chart}>
+                        <defs>
+                          <linearGradient id="peakHoursGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#E65100" stopOpacity={0.4} />
+                            <stop offset="95%" stopColor="#E65100" stopOpacity={0.0} />
+                          </linearGradient>
+                        </defs>
+                        <XAxis 
+                          dataKey="hour" 
+                          tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }} 
+                          axisLine={{ stroke: '#cbd5e1' }} 
+                          tickLine={{ stroke: '#cbd5e1' }} 
+                        />
+                        <YAxis 
+                          tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }} 
+                          axisLine={{ stroke: '#cbd5e1' }} 
+                          tickLine={{ stroke: '#cbd5e1' }} 
+                          domain={[0, 160]}
+                        />
+                        <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderRadius: '10px', border: 'none', color: '#fff', fontSize: '11px' }} />
+                        <Area type="monotone" dataKey="orders" stroke="#E65100" strokeWidth={2} fill="url(#peakHoursGrad)" />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  <div className="space-y-2 text-xs">
+                    <div className="p-2 rounded-xl bg-amber-500/10 border-l-4 border-l-amber-500">
+                      <span className="text-[9px] font-black uppercase text-amber-500 block">Peak Lunch Rush</span>
+                      <p className="font-extrabold text-gray-900 dark:text-white text-[11px] mt-0.5">{peakDataMap[selectedPeakDate].lunchPeak}</p>
                     </div>
-                    <div className="p-2.5 rounded-2xl bg-[#E65100]/10 border-l-4 border-l-[#E65100]">
-                      <span className="text-[10px] font-black uppercase text-[#E65100] block">4:30 PM – 6:30 PM</span>
-                      <p className="font-bold text-gray-900 dark:text-white mt-0.5">Evening Snacks &amp; Counter Pickups</p>
+                    <div className="p-2 rounded-xl bg-[#E65100]/10 border-l-4 border-l-[#E65100]">
+                      <span className="text-[9px] font-black uppercase text-[#E65100] block">Evening Snacks Rush</span>
+                      <p className="font-extrabold text-gray-900 dark:text-white text-[11px] mt-0.5">{peakDataMap[selectedPeakDate].eveningPeak}</p>
                     </div>
                   </div>
                 </div>
@@ -766,7 +905,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                 </div>
               </div>
 
-              {/* Weekly Orders Activity Stacked Bar Chart */}
+              {/* Weekly Orders Activity Stacked Bar Chart with Explicit Visible X & Y Axes */}
               <div className="md:col-span-2 bg-white dark:bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-[#F0E6D8] dark:border-gray-800 shadow-xs">
                 <div className="flex items-center justify-between mb-4">
                   <div>
@@ -789,8 +928,17 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={weeklyActivityData}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(128,128,128,0.15)" />
-                      <XAxis dataKey="day" tick={{ fill: '#94a3b8', fontSize: 11 }} axisLine={false} tickLine={false} />
-                      <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} axisLine={false} tickLine={false} />
+                      <XAxis 
+                        dataKey="day" 
+                        tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 700 }} 
+                        axisLine={{ stroke: '#cbd5e1' }} 
+                        tickLine={{ stroke: '#cbd5e1' }} 
+                      />
+                      <YAxis 
+                        tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 700 }} 
+                        axisLine={{ stroke: '#cbd5e1' }} 
+                        tickLine={{ stroke: '#cbd5e1' }} 
+                      />
                       <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderRadius: '12px', border: 'none', color: '#fff' }} />
                       <Bar dataKey="delivered" stackId="a" fill="#3b82f6" radius={[0, 0, 4, 4]} />
                       <Bar dataKey="preparing" stackId="a" fill="#60a5fa" />

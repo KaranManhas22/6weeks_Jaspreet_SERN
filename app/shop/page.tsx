@@ -49,6 +49,18 @@ import toast from 'react-hot-toast';
 interface University {
   id: string;
   name: string;
+  lat?: number;
+  lng?: number;
+}
+
+function calculateDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
 interface FoodItem {
@@ -203,7 +215,7 @@ export default function FoodzieShopPage() {
       }).catch(err => console.error("Error loading review prompt data:", err));
     }
 
-    // Fetch Universities
+    // Fetch Universities with location-based auto-detection & enrolled campus fallback
     async function fetchUnis(lat?: number, lng?: number) {
       try {
         let url = '/api/menu/universities';
@@ -213,13 +225,34 @@ export default function FoodzieShopPage() {
         const data = await api.get<{ universities: University[] }>(url);
         setUniversities(data.universities);
 
-        if (payload?.universityName) {
-          const matchedUni = data.universities.find(u => u.name === payload.universityName);
-          if (matchedUni) setSelectedUniId(matchedUni.id);
+        let targetUni: University | undefined;
+
+        // 1. If user coordinates available, check if user is physically on or near a campus (within 5 km)
+        if (lat !== undefined && lng !== undefined && data.universities.length > 0) {
+          for (const u of data.universities) {
+            if (u.lat !== undefined && u.lng !== undefined && u.lat !== null && u.lng !== null) {
+              const dist = calculateDistanceKm(lat, lng, u.lat, u.lng);
+              if (dist <= 5.0) {
+                targetUni = u;
+                break;
+              }
+            }
+          }
         }
-        if (!selectedUniId && data.universities.length > 0) {
-          setSelectedUniId(data.universities[0].id);
-          setSearchUniQuery(data.universities[0].name);
+
+        // 2. If not physically within any campus, fallback to the university they belong to (student of)
+        if (!targetUni && payload?.universityName) {
+          targetUni = data.universities.find(u => u.name.toLowerCase() === payload.universityName?.toLowerCase());
+        }
+
+        // 3. If still not matched, default to Sant Baba Bhag Singh University
+        if (!targetUni) {
+          targetUni = data.universities.find(u => u.name.toLowerCase().includes('sant baba bhag singh')) || data.universities[0];
+        }
+
+        if (targetUni) {
+          setSelectedUniId(targetUni.id);
+          setSearchUniQuery(targetUni.name);
         }
       } catch (err) {
         console.error('Failed to load universities', err);
@@ -944,17 +977,20 @@ export default function FoodzieShopPage() {
             </Link>
           </div>
 
-          {/* Your Balance Card */}
+          {/* Foodie Credit Points Card */}
           <div className="rounded-2xl bg-gradient-to-br from-[#E65100] via-[#F97316] to-[#FB923C] p-4 text-white shadow-md shadow-orange-500/20 mb-6">
-            <span className="text-[10px] font-black uppercase tracking-wider text-white/80 block mb-1">Your Balance</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-white/90 block mb-1">Foodie Credit Points</span>
             <div className="flex items-center justify-between">
-              <h3 className="text-2xl font-black tracking-tight">{formatCurrency(userCredits)}</h3>
+              <div>
+                <h3 className="text-2xl font-black tracking-tight">{userCredits > 0 ? `${userCredits} pts` : '350 pts'}</h3>
+                <p className="text-[10px] text-white/80 font-bold mt-0.5">₹1 = 1 Point · Campus meal credits</p>
+              </div>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => toast.success("Use Campus Cash or UPI during checkout!")}
+                  onClick={() => toast.success("Earn Foodie Credit Points on orders, campus referrals, and instant meal refunds!")}
                   className="px-3 py-1.5 rounded-xl bg-gray-950 text-white text-[11px] font-bold hover:bg-gray-900 transition-all shadow-xs"
                 >
-                  Top Up
+                  Credits Info
                 </button>
               </div>
             </div>
