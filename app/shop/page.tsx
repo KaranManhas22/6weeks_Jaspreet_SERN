@@ -214,8 +214,9 @@ export default function FoodzieShopPage() {
   useEffect(() => {
     if (isAuthenticated === false) return;
 
-    api.get<University[]>('/api/universities')
-      .then((data) => {
+    api.get<any>('/api/universities')
+      .then((res) => {
+        const data: University[] = Array.isArray(res) ? res : (res?.universities || []);
         setUniversities(data);
         if (data.length > 0) {
           const matched = data.find(u => 
@@ -284,13 +285,14 @@ export default function FoodzieShopPage() {
     setIsLoadingVendors(true);
     setError(null);
 
-    api.get<Vendor[]>(`/api/menu/university/${selectedUniId}`)
+    api.get<any>(`/api/menu/${selectedUniId}`)
       .then((data) => {
-        setVendors(data);
+        const vendorList: Vendor[] = Array.isArray(data) ? data : (data?.vendors || []);
+        setVendors(vendorList);
         
         // Flatten dishes across all canteens
         const dishes: FoodItem[] = [];
-        data.forEach((v) => {
+        vendorList.forEach((v) => {
           v.categories?.forEach((cat) => {
             cat.items?.forEach((item) => {
               dishes.push({
