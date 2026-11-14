@@ -86,17 +86,19 @@ export default function OrdersPage() {
   const [comment, setComment] = useState<string>('');
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
   const [reviewedItemIds, setReviewedItemIds] = useState<string[]>([]);
+  const [isCancelling, setIsCancelling] = useState(false);
 
   const fetchLatestOrder = useCallback(async () => {
     try {
-      const orders = await api.get<Order[]>('/api/orders/customer');
+      let targetId = null;
+      if (typeof window !== 'undefined') {
+        targetId = new URLSearchParams(window.location.search).get('orderId');
+      }
+      const queryParam = targetId ? `?orderId=${encodeURIComponent(targetId)}` : '';
+      const orders = await api.get<Order[]>(`/api/orders/customer${queryParam}`);
       if (Array.isArray(orders)) {
         setAllOrders(orders);
         if (orders.length > 0) {
-          let targetId = null;
-          if (typeof window !== 'undefined') {
-            targetId = new URLSearchParams(window.location.search).get('orderId');
-          }
           if (targetId) {
             const found = orders.find(o => o.id === targetId);
             setOrder(found || orders[0]);
@@ -235,10 +237,8 @@ export default function OrdersPage() {
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
   const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL || 'http://localhost:3000';
   
-  const receiptUrl = `${API_URL}/api/orders/${order.id}/receipt`;
-  const verificationCode = `F-${order.id.slice(-6).toUpperCase()}`;
-
-  const [isCancelling, setIsCancelling] = useState(false);
+  const receiptUrl = order?.id ? `${API_URL}/api/orders/${order.id}/receipt` : '#';
+  const verificationCode = order?.id ? `F-${order.id.slice(-6).toUpperCase()}` : 'F-000000';
 
   const handleCancelOrder = async () => {
     if (!order) return;
