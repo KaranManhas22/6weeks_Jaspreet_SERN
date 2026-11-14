@@ -12,7 +12,8 @@ import {
   ChevronRight, Eye, GripVertical, Check, Key, Mail, Phone, MapPin,
   Shield, UserCheck, UserX, Clock, Calendar, CheckCircle2,
   TrendingUp, TrendingDown, MoreVertical, SlidersHorizontal, ArrowUpRight,
-  LogOut, Crown, Coffee, AlertCircle, Play, Layers, Star, DollarSign, Award, ArrowUpDown, ChevronDown
+  LogOut, Crown, Coffee, AlertCircle, Play, Layers, Star, DollarSign, Award, ArrowUpDown, ChevronDown,
+  User, Lock
 } from 'lucide-react';
 import { api, setToken, getToken, removeToken } from '@/lib/api';
 import toast from 'react-hot-toast';
@@ -23,9 +24,10 @@ export default function AdminPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
-  const [adminProfile, setAdminProfile] = useState<{ name: string; email: string; role: string }>({
+  const [adminProfile, setAdminProfile] = useState<{ id?: string; name: string; email: string; phone?: string; role: string }>({
     name: 'Admin',
     email: '',
+    phone: '',
     role: 'Super Admin'
   });
 
@@ -42,8 +44,10 @@ export default function AdminPage() {
           setIsAuthenticated(true);
           const isJaspreet = me.email?.toLowerCase().includes('bhatiajaspreet161@gmail.com') || me.name?.toLowerCase().includes('jaspreet');
           setAdminProfile({
-            name: isJaspreet ? 'Jaspreet Bhatia' : (me.name === 'Super Admin' ? 'Admin' : (me.name || 'Admin')),
+            id: me.id,
+            name: me.name || (isJaspreet ? 'Jaspreet Bhatia' : 'Admin'),
             email: me.email || '',
+            phone: me.phone || '',
             role: me.role || 'Super Admin'
           });
         } else {
@@ -73,8 +77,10 @@ export default function AdminPage() {
         setIsAuthenticated(true);
         const isJaspreet = res.user?.email?.toLowerCase().includes('bhatiajaspreet161@gmail.com') || res.user?.name?.toLowerCase().includes('jaspreet');
         setAdminProfile({
-          name: isJaspreet ? 'Jaspreet Bhatia' : (res.user?.name === 'Super Admin' ? 'Admin' : (res.user?.name || 'Admin')),
+          id: res.user?.id,
+          name: res.user?.name || (isJaspreet ? 'Jaspreet Bhatia' : 'Admin'),
           email: res.user?.email || '',
+          phone: res.user?.phone || '',
           role: res.user?.role || 'Super Admin'
         });
       }
@@ -145,13 +151,123 @@ export default function AdminPage() {
 // MAIN ADMIN PANEL WITH FLOWTASK DASHBOARD & USER MANAGEMENT
 // ─────────────────────────────────────────────────────────────────────────────
 
-function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: string; email: string; role: string }; onLogout: () => void }) {
+function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { id?: string; name: string; email: string; phone?: string; role: string }; onLogout: () => void }) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState<'Dashboard' | 'User Management' | 'Canteens' | 'Orders' | 'Settings'>('Dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [currentTime, setCurrentTime] = useState('');
   const [selectedPeakDate, setSelectedPeakDate] = useState<'today' | 'yesterday' | 'nov12' | 'nov11' | 'nov10'>('today');
+
+  // Administrator Profile state (synced with settings form)
+  const [profile, setProfile] = useState<{ id?: string; name: string; email: string; phone?: string; role: string }>(adminProfile);
+
+  useEffect(() => {
+    setProfile(adminProfile);
+  }, [adminProfile]);
+
+  // Settings / Profile Form States
+  const [editName, setEditName] = useState(adminProfile.name || '');
+  const [editEmail, setEditEmail] = useState(adminProfile.email || '');
+  const [editPhone, setEditPhone] = useState(adminProfile.phone || '');
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [profileSuccessMsg, setProfileSuccessMsg] = useState('');
+  const [profileErrorMsg, setProfileErrorMsg] = useState('');
+
+  // Synchronize form values whenever profile state updates
+  useEffect(() => {
+    setEditName(profile.name || '');
+    setEditEmail(profile.email || '');
+    setEditPhone(profile.phone || '');
+  }, [profile]);
+
+  // Password Change States
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+  const [passwordSuccessMsg, setPasswordSuccessMsg] = useState('');
+  const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
+
+  // Handle Profile Update
+  const handleSaveProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setProfileSuccessMsg('');
+    setProfileErrorMsg('');
+    if (!editName.trim()) {
+      setProfileErrorMsg('Full Name cannot be empty');
+      return;
+    }
+    if (!editEmail.trim()) {
+      setProfileErrorMsg('Email cannot be empty');
+      return;
+    }
+    setIsSavingProfile(true);
+    try {
+      const res = await api.patch<any>('/api/auth/me', {
+        name: editName.trim(),
+        email: editEmail.trim(),
+        phone: editPhone.trim()
+      });
+      const updated = {
+        id: res.id || profile.id,
+        name: res.name || editName.trim(),
+        email: res.email || editEmail.trim(),
+        phone: res.phone || editPhone.trim(),
+        role: profile.role
+      };
+      setProfile(updated);
+      setProfileSuccessMsg('Profile updated successfully!');
+      toast.success('Admin profile updated!');
+      setTimeout(() => setProfileSuccessMsg(''), 4000);
+    } catch (err: any) {
+      setProfileErrorMsg(err?.message || 'Failed to update profile');
+      toast.error(err?.message || 'Failed to update profile');
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
+
+  // Handle Password Update
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordSuccessMsg('');
+    setPasswordErrorMsg('');
+    if (!currentPassword) {
+      setPasswordErrorMsg('Current password is required');
+      return;
+    }
+    if (!newPassword) {
+      setPasswordErrorMsg('New password is required');
+      return;
+    }
+    if (newPassword.length < 6) {
+      setPasswordErrorMsg('New password must be at least 6 characters');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordErrorMsg('New passwords do not match');
+      return;
+    }
+    setIsUpdatingPassword(true);
+    try {
+      await api.post<any>('/api/auth/change-password', {
+        currentPassword,
+        newPassword
+      });
+      setPasswordSuccessMsg('Password changed successfully!');
+      toast.success('Password changed successfully!');
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setTimeout(() => setPasswordSuccessMsg(''), 4000);
+    } catch (err: any) {
+      setPasswordErrorMsg(err?.message || 'Failed to change password. Please verify current password.');
+      toast.error(err?.message || 'Failed to change password');
+    } finally {
+      setIsUpdatingPassword(false);
+    }
+  };
 
   // Real-time ticking clock
   useEffect(() => {
@@ -848,15 +964,19 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
               </button>
             )}
 
-            <div className="flex items-center gap-3 pl-3 border-l border-gray-200 dark:border-gray-800">
+            <button
+              onClick={() => setActiveTab('Settings')}
+              className="flex items-center gap-3 pl-3 border-l border-gray-200 dark:border-gray-800 text-left hover:opacity-85 transition-opacity cursor-pointer"
+              title="Open Admin Settings"
+            >
               <div className="w-10 h-10 rounded-2xl bg-[#E65100] flex items-center justify-center text-white font-black text-sm shadow-md shadow-orange-500/20">
-                {adminProfile.name.toLowerCase().includes('jaspreet') ? 'JB' : 'AD'}
+                {profile.name?.toLowerCase().includes('jaspreet') ? 'JB' : (profile.name?.substring(0, 2).toUpperCase() || 'AD')}
               </div>
               <div className="hidden sm:block">
-                <span className="block text-xs font-black text-gray-900 dark:text-white leading-none">{adminProfile.name}</span>
-                <span className="text-[10px] text-gray-400 font-semibold leading-none">{adminProfile.role}</span>
+                <span className="block text-xs font-black text-gray-900 dark:text-white leading-none">{profile.name}</span>
+                <span className="text-[10px] text-gray-400 font-semibold leading-none">{profile.role}</span>
               </div>
-            </div>
+            </button>
           </div>
         </header>
 
@@ -868,7 +988,7 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
-                  {timeGreeting}, {adminProfile.name}!
+                  {timeGreeting}, {profile.name}!
                 </h1>
                 <p className="text-xs sm:text-sm text-gray-400 font-medium mt-0.5">
                   Here&apos;s what&apos;s happening with your campus canteens today.
@@ -2315,6 +2435,330 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { name: stri
                   );
                 })
               )}
+            </div>
+          </main>
+        )}
+
+        {/* ── TAB 5: ADMIN SETTINGS & PROFILE ─────────────────────────────── */}
+        {activeTab === 'Settings' && (
+          <main className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full animate-in fade-in duration-300">
+            {/* Page Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight flex items-center gap-2.5">
+                  <Settings className="w-7 h-7 text-[#E65100]" />
+                  <span>Admin Settings &amp; Profile</span>
+                </h1>
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-medium mt-0.5">
+                  Manage your administrator credentials, system preferences, and cloud security policies.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-orange-500/10 text-[#E65100] text-xs font-black border border-orange-500/20">
+                  <Shield className="w-3.5 h-3.5" /> Super Admin Authorized
+                </span>
+              </div>
+            </div>
+
+            {/* Profile Overview Hero Banner */}
+            <div className="bg-gradient-to-r from-orange-600 to-[#E65100] rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+              <div className="absolute right-0 top-0 translate-x-10 -translate-y-10 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+              <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex items-center gap-5">
+                  <div className="w-20 h-20 rounded-3xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-3xl font-black shadow-inner">
+                    {profile.name?.charAt(0) || 'A'}
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h2 className="text-2xl sm:text-3xl font-black">{profile.name}</h2>
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/20 text-white text-[11px] font-black tracking-wide border border-white/20">
+                        <Crown className="w-3 h-3 text-amber-300 fill-amber-300" />
+                        {profile.role || 'Super Admin'}
+                      </span>
+                    </div>
+                    <p className="text-white/80 text-xs sm:text-sm flex items-center gap-2 font-mono">
+                      <Mail className="w-3.5 h-3.5" />
+                      {profile.email || 'admin@foodzie.com'}
+                    </p>
+                    <p className="text-white/70 text-xs flex items-center gap-2">
+                      <MapPin className="w-3.5 h-3.5" />
+                      Global Campus Multi-Tenant Super Administrator
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row gap-3 shrink-0">
+                  <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-4 py-2.5 text-center">
+                    <span className="text-[10px] text-white/70 uppercase tracking-wider block font-bold">Access Tier</span>
+                    <span className="text-sm font-black text-white">Tier 0 (Unrestricted)</span>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-4 py-2.5 text-center">
+                    <span className="text-[10px] text-white/70 uppercase tracking-wider block font-bold">Cloud Cluster</span>
+                    <span className="text-sm font-black text-amber-300">AWS EC2 (ap-se-1)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Grid with 2 Columns: Edit Profile (Left) and Security & Cloud Info (Right) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+              {/* Card 1: Edit Administrator Details */}
+              <div className="bg-white dark:bg-[#161B22] rounded-3xl p-6 sm:p-7 border border-[#F0E6D8] dark:border-gray-800 shadow-sm space-y-6">
+                <div className="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-gray-800">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-xl bg-orange-500/10 text-orange-600 flex items-center justify-center">
+                      <User className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-black text-gray-900 dark:text-white">Edit Administrator Profile</h3>
+                      <p className="text-xs text-gray-400">Update your full legal name, public admin handle, and contact</p>
+                    </div>
+                  </div>
+                </div>
+
+                {profileSuccessMsg && (
+                  <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 shrink-0" />
+                    <span>{profileSuccessMsg}</span>
+                  </div>
+                )}
+
+                {profileErrorMsg && (
+                  <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-bold flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{profileErrorMsg}</span>
+                  </div>
+                )}
+
+                <form onSubmit={handleSaveProfile} className="space-y-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-gray-700 dark:text-gray-300">Full Name</label>
+                    <div className="relative">
+                      <User className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        placeholder="e.g. Jaspreet Bhatia"
+                        required
+                        className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700/80 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E65100]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-gray-700 dark:text-gray-300">Email Address</label>
+                    <div className="relative">
+                      <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="email"
+                        value={editEmail}
+                        onChange={(e) => setEditEmail(e.target.value)}
+                        placeholder="e.g. admin@foodzie.com"
+                        required
+                        className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700/80 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E65100]"
+                      />
+                    </div>
+                    <p className="text-[11px] text-gray-400">Used for master portal login and emergency campus dispatch alerts</p>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-gray-700 dark:text-gray-300">Phone Number (Optional)</label>
+                    <div className="relative">
+                      <Phone className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="tel"
+                        value={editPhone}
+                        onChange={(e) => setEditPhone(e.target.value)}
+                        placeholder="e.g. +91 7717670668"
+                        className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700/80 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E65100]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      disabled={isSavingProfile}
+                      className="w-full py-3 rounded-2xl bg-[#E65100] hover:bg-[#D84315] text-white text-xs font-black shadow-lg shadow-orange-500/20 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                    >
+                      {isSavingProfile ? (
+                        <>
+                          <Clock className="w-4 h-4 animate-spin" /> Saving Changes...
+                        </>
+                      ) : (
+                        <>
+                          <Check className="w-4 h-4" /> Save Profile Changes
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              {/* Card 2: Security & Password Update */}
+              <div className="bg-white dark:bg-[#161B22] rounded-3xl p-6 sm:p-7 border border-[#F0E6D8] dark:border-gray-800 shadow-sm space-y-6">
+                <div className="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-gray-800">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-xl bg-orange-500/10 text-orange-600 flex items-center justify-center">
+                      <Key className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-black text-gray-900 dark:text-white">Security &amp; Password</h3>
+                      <p className="text-xs text-gray-400">Change your administrator access credentials and security key</p>
+                    </div>
+                  </div>
+                </div>
+
+                {passwordSuccessMsg && (
+                  <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 shrink-0" />
+                    <span>{passwordSuccessMsg}</span>
+                  </div>
+                )}
+
+                {passwordErrorMsg && (
+                  <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-bold flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{passwordErrorMsg}</span>
+                  </div>
+                )}
+
+                <form onSubmit={handleUpdatePassword} className="space-y-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-gray-700 dark:text-gray-300">Current Password</label>
+                    <input
+                      type="password"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      placeholder="••••••••••••"
+                      required
+                      className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700/80 rounded-2xl px-4 py-2.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E65100]"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-gray-700 dark:text-gray-300">New Password</label>
+                    <input
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="••••••••••••"
+                      required
+                      className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700/80 rounded-2xl px-4 py-2.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E65100]"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-gray-700 dark:text-gray-300">Confirm New Password</label>
+                    <input
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="••••••••••••"
+                      required
+                      className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700/80 rounded-2xl px-4 py-2.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E65100]"
+                    />
+                  </div>
+
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      disabled={isUpdatingPassword}
+                      className="w-full py-3 rounded-2xl bg-gray-900 dark:bg-gray-800 hover:bg-black text-white text-xs font-black shadow-sm active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                    >
+                      {isUpdatingPassword ? (
+                        <>
+                          <Clock className="w-4 h-4 animate-spin" /> Verifying &amp; Updating...
+                        </>
+                      ) : (
+                        <>
+                          <Shield className="w-4 h-4" /> Update Administrator Password
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              {/* Card 3: Cloud Infrastructure & System Diagnostics */}
+              <div className="bg-white dark:bg-[#161B22] rounded-3xl p-6 sm:p-7 border border-[#F0E6D8] dark:border-gray-800 shadow-sm space-y-4">
+                <div className="flex items-center gap-2.5 pb-4 border-b border-gray-100 dark:border-gray-800">
+                  <div className="w-9 h-9 rounded-xl bg-orange-500/10 text-orange-600 flex items-center justify-center">
+                    <SlidersHorizontal className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-black text-gray-900 dark:text-white">Cloud Infrastructure Host</h3>
+                    <p className="text-xs text-gray-400">AWS EC2 compute specs and edge proxy configurations</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div className="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border border-gray-150 dark:border-gray-800">
+                    <span className="text-[10px] text-gray-400 font-bold block uppercase">Cloud Host</span>
+                    <span className="font-mono font-bold text-gray-900 dark:text-white">52.76.154.38</span>
+                  </div>
+                  <div className="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border border-gray-150 dark:border-gray-800">
+                    <span className="text-[10px] text-gray-400 font-bold block uppercase">AWS Region</span>
+                    <span className="font-mono font-bold text-gray-900 dark:text-white">ap-southeast-1</span>
+                  </div>
+                  <div className="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border border-gray-150 dark:border-gray-800">
+                    <span className="text-[10px] text-gray-400 font-bold block uppercase">Reverse Proxy</span>
+                    <span className="font-mono font-bold text-emerald-500">Apache2 + SSL</span>
+                  </div>
+                  <div className="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border border-gray-150 dark:border-gray-800">
+                    <span className="text-[10px] text-gray-400 font-bold block uppercase">Database Host</span>
+                    <span className="font-mono font-bold text-emerald-500">Supabase PG (Healthy)</span>
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-orange-50 dark:bg-[#E65100]/10 border border-orange-200 dark:border-orange-500/20 text-xs text-gray-700 dark:text-gray-300">
+                  <p className="font-bold text-[#E65100] mb-1 flex items-center gap-1.5">
+                    <Shield className="w-3.5 h-3.5" /> High Availability Note
+                  </p>
+                  Profile updates are synced instantly across PM2 process clusters and replicated to the multi-region PostgreSQL ledger.
+                </div>
+              </div>
+
+              {/* Card 4: Platform Security Privileges */}
+              <div className="bg-white dark:bg-[#161B22] rounded-3xl p-6 sm:p-7 border border-[#F0E6D8] dark:border-gray-800 shadow-sm space-y-4">
+                <div className="flex items-center gap-2.5 pb-4 border-b border-gray-100 dark:border-gray-800">
+                  <div className="w-9 h-9 rounded-xl bg-orange-500/10 text-orange-600 flex items-center justify-center">
+                    <Crown className="w-5 h-5 text-[#E65100]" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-black text-gray-900 dark:text-white">Super Admin Privileges</h3>
+                    <p className="text-xs text-gray-400">Assigned role-based access control (RBAC) permissions</p>
+                  </div>
+                </div>
+
+                <ul className="space-y-2 text-xs">
+                  {[
+                    'Full read/write authority across all 5 university database schemas',
+                    'Direct management of student balances, Foodie Credit Points & refunds',
+                    'Real-time canteen approval, menu auditing, and price regulation',
+                    'Kitchen POS terminal supervision & rider dispatch coordination',
+                    'Access to university earnings & canteen profitability matrix analytics',
+                  ].map((perm, idx) => (
+                    <li key={idx} className="flex items-center gap-2 text-gray-600 dark:text-gray-300 font-medium">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                      <span>{perm}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="pt-2">
+                  <button
+                    onClick={onLogout}
+                    className="w-full py-3 rounded-2xl bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-500/20 text-xs font-black transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <LogOut className="w-4 h-4" /> Sign Out from Administrator Session
+                  </button>
+                </div>
+              </div>
+
             </div>
           </main>
         )}
