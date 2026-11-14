@@ -9,7 +9,6 @@ import {
   GraduationCap, Store, MapPin, Phone
 } from 'lucide-react';
 import { api, setToken, decodeToken } from '@/lib/api';
-import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/Button';
 import toast from 'react-hot-toast';
 
@@ -159,11 +158,6 @@ function SignupForm() {
       
       {/* Branded Background Pattern Overlay */}
       <div className="absolute inset-0 bg-[url('/foodzie_bg_pattern.jpg')] bg-repeat opacity-[0.03] dark:opacity-[0.08] pointer-events-none z-0" />
-      
-      {/* Floating Theme Changer */}
-      <div className="absolute top-6 right-6 z-50">
-        <ThemeToggle />
-      </div>
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-orange-500/5 dark:bg-orange-500/8 rounded-full blur-3xl" />

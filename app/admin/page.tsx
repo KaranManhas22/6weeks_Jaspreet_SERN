@@ -1,14 +1,13 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { useTheme } from 'next-themes';
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, CartesianGrid, BarChart, Bar, Legend
 } from 'recharts';
 import {
   LayoutDashboard, Store, Users, ShoppingBag, Settings,
-  Search, Bell, Moon, Sun, Menu, X, Plus, Edit2, Trash2,
+  Search, Bell, Menu, X, Plus, Edit2, Trash2,
   ChevronRight, Eye, GripVertical, Check, Key, Mail, Phone, MapPin,
   Shield, UserCheck, UserX, Clock, Calendar, CheckCircle2,
   TrendingUp, TrendingDown, MoreVertical, SlidersHorizontal, ArrowUpRight,
@@ -152,7 +151,6 @@ export default function AdminPage() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { id?: string; name: string; email: string; phone?: string; role: string }; onLogout: () => void }) {
-  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState<'Dashboard' | 'User Management' | 'Canteens' | 'Orders' | 'Settings'>('Dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -954,19 +952,9 @@ function AdminPanelMain({ adminProfile, onLogout }: { adminProfile: { id?: strin
           </div>
 
           <div className="flex items-center gap-3">
-            {mounted && (
-              <button
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className="p-2.5 rounded-2xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:scale-105 transition-transform"
-                title="Toggle Theme"
-              >
-                {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-              </button>
-            )}
-
             <button
               onClick={() => setActiveTab('Settings')}
-              className="flex items-center gap-3 pl-3 border-l border-gray-200 dark:border-gray-800 text-left hover:opacity-85 transition-opacity cursor-pointer"
+              className="flex items-center gap-3 text-left hover:opacity-85 transition-opacity cursor-pointer"
               title="Open Admin Settings"
             >
               <div className="w-10 h-10 rounded-2xl bg-[#E65100] flex items-center justify-center text-white font-black text-sm shadow-md shadow-orange-500/20">

@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { UtensilsCrossed, ArrowLeft } from 'lucide-react';
 import { useBrand } from '@/context/BrandContext';
-import { ThemeToggle } from '@/components/ThemeToggle';
 
 export default function PrivacyPage() {
   const { brandName } = useBrand();
@@ -22,7 +21,6 @@ export default function PrivacyPage() {
           <ArrowLeft className="w-4 h-4" /> Back to Home
         </Link>
         <div className="flex items-center gap-4">
-          <ThemeToggle />
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-[#E65100] rounded-xl flex items-center justify-center shadow-md shadow-orange-500/20">
               <UtensilsCrossed className="w-4 h-4 text-white" />

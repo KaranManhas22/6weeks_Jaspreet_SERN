@@ -39,7 +39,6 @@ import {
 } from 'lucide-react';
 import { api, decodeToken, getToken } from '@/lib/api';
 import { getFoodImage } from '@/lib/imageHelper';
-import { ThemeToggle } from '@/components/ThemeToggle';
 import { getCanteenScheduleStatus } from '@/lib/schedule';
 import { useCartStore } from '@/lib/store/cartStore';
 import { CartSlideOver } from '@/components/CartSlideOver';
@@ -596,8 +595,7 @@ export default function FoodzieShopPage() {
               )}
             </div>
 
-            {/* Theme Toggle & Profile link */}
-            <ThemeToggle />
+            {/* Profile link */}
             <Link
               href="/shop/profile"
               className="w-10 h-10 rounded-2xl bg-orange-500/10 text-[#E65100] dark:text-orange-400 border border-orange-500/20 flex items-center justify-center font-black text-sm hover:scale-105 transition-transform"

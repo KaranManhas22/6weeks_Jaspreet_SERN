@@ -30,7 +30,6 @@ import {
   Lock,
   UserCheck
 } from 'lucide-react';
-import { ThemeToggle } from '@/components/ThemeToggle';
 import { getToken, decodeToken } from '@/lib/api';
 import toast from 'react-hot-toast';
 
@@ -148,9 +147,8 @@ export default function FoodzieLandingPage() {
             </Link>
           </div>
 
-          {/* Right Action Buttons & Theme Toggle */}
+          {/* Right Action Buttons */}
           <div className="hidden sm:flex items-center gap-3">
-            <ThemeToggle />
             {isLoggedIn ? (
               <>
                 <Link
@@ -187,7 +185,6 @@ export default function FoodzieLandingPage() {
 
           {/* Mobile Menu Hamburger */}
           <div className="flex sm:hidden items-center gap-2">
-            <ThemeToggle />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-gray-800"

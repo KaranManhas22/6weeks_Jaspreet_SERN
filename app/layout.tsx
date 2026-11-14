@@ -37,7 +37,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="light" style={{ colorScheme: 'light' }} suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -57,6 +57,16 @@ export default function RootLayout({
                   });
                 }
               }
+              // Enforce 100% Light Theme permanently and wipe any stale dark theme preference
+              try {
+                localStorage.removeItem('theme');
+                localStorage.setItem('theme', 'light');
+                if (document.documentElement.classList.contains('dark')) {
+                  document.documentElement.classList.remove('dark');
+                }
+                document.documentElement.classList.add('light');
+                document.documentElement.style.colorScheme = 'light';
+              } catch (e) {}
             `,
           }}
         />
@@ -64,7 +74,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+        <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light" enableSystem={false}>
           <BrandProvider>
             <CurrencyProvider>
               {children}

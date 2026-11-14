@@ -6,7 +6,6 @@ import { Loader2, Menu } from 'lucide-react';
 import { useBrand } from '@/context/BrandContext';
 import { getToken, decodeToken } from '@/lib/api';
 import Sidebar from '@/components/vendor/Sidebar';
-import { ThemeToggle } from '@/components/ThemeToggle';
 
 interface TokenPayload {
   sub: string;
@@ -74,7 +73,6 @@ export default function VendorLayout({ children }: { children: React.ReactNode }
           </button>
           <span className="font-bold text-sm text-white">{brandName} Canteen Portal</span>
         </div>
-        <ThemeToggle />
       </header>
 
       <div className="flex flex-1 min-h-0 relative">

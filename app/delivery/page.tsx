@@ -22,7 +22,6 @@ import {
   QrCode
 } from 'lucide-react';
 import { api, getToken, removeToken, decodeToken } from '@/lib/api';
-import { ThemeToggle } from '@/components/ThemeToggle';
 import { useCurrency } from '@/context/CurrencyContext';
 
 interface AssignedOrder {
@@ -340,7 +339,6 @@ export default function DeliveryDashboard() {
           </div>
 
           <div className="flex items-center gap-4">
-            <ThemeToggle />
             <button 
               onClick={handleLogout}
               className="bg-gray-900 border border-gray-800 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 text-xs font-bold px-4 py-2 rounded-xl transition-all flex items-center gap-1.5 active:scale-95"

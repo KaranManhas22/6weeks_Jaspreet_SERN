@@ -26,7 +26,6 @@ import {
   Utensils,
   Bike
 } from 'lucide-react';
-import { ThemeToggle } from '@/components/ThemeToggle';
 
 interface FoodItem {
   id: string;
@@ -292,7 +291,6 @@ export default function OrdersPage() {
           </div>
           
           <div className="flex items-center gap-3 self-end sm:self-auto">
-            <ThemeToggle />
             <div className="flex items-center gap-2 px-4 py-2 bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-2xl border border-orange-500/20 shadow-sm">
               <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
               <span className="text-xs font-black uppercase tracking-wider">Live Tracking</span>

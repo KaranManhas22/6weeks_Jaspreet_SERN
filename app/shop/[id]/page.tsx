@@ -5,7 +5,6 @@ import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { ArrowLeft, Store, Clock, Plus, Minus, ShoppingBag, Loader2, User, Leaf, Flame, Star, X, Users, Share2, CalendarClock, ChevronDown, ChevronUp } from 'lucide-react';
 import { api, getToken } from '@/lib/api';
 import { getFoodImage } from '@/lib/imageHelper';
-import { ThemeToggle } from '@/components/ThemeToggle';
 import { useCartStore } from '@/lib/store/cartStore';
 import { CartSlideOver } from '@/components/CartSlideOver';
 import { DietaryIcon } from '@/components/DietaryIcon';
@@ -323,7 +322,6 @@ export default function VendorMenuPage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <ThemeToggle />
           <Link 
             href="/shop/profile"
             className="w-9 h-9 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm"

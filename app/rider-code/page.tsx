@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { UtensilsCrossed, ArrowLeft } from 'lucide-react';
 import { useBrand } from '@/context/BrandContext';
-import { ThemeToggle } from '@/components/ThemeToggle';
 
 export default function RiderCodePage() {
   const { brandName } = useBrand();
@@ -22,7 +21,6 @@ export default function RiderCodePage() {
           <ArrowLeft className="w-4 h-4" /> Back to Home
         </Link>
         <div className="flex items-center gap-4">
-          <ThemeToggle />
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
               <UtensilsCrossed className="w-4 h-4 text-white" />

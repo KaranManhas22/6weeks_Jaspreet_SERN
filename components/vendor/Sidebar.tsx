@@ -19,7 +19,6 @@ import {
   Star,
 } from 'lucide-react';
 import { removeToken } from '@/lib/api';
-import { ThemeToggle } from '@/components/ThemeToggle';
 
 const NAV_ITEMS = [
   { href: '/vendor',           label: 'Dashboard',        icon: LayoutDashboard, exact: true,  active: true  },
@@ -142,13 +141,8 @@ export default function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, o
           })}
         </nav>
 
-        {/* Bottom — Appearance & Logout */}
-        <div className="px-3 py-4 border-t border-[#F0E6D8] dark:border-gray-800 shrink-0 space-y-3">
-          <div className={`flex items-center ${isCollapsed ? 'lg:justify-center' : 'justify-between px-3'}`}>
-            {!isCollapsed && <span className="text-xs text-gray-500 font-semibold select-none">Appearance</span>}
-            <ThemeToggle />
-          </div>
-
+        {/* Bottom — Logout */}
+        <div className="px-3 py-4 border-t border-[#F0E6D8] dark:border-gray-800 shrink-0">
           <button
             id="sidebar-logout-btn"
             onClick={handleLogout}

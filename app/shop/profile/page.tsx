@@ -18,7 +18,6 @@ import {
   Phone
 } from 'lucide-react';
 import { api } from '@/lib/api';
-import { ThemeToggle } from '@/components/ThemeToggle';
 
 interface Order {
   id: string;
@@ -191,12 +190,6 @@ export default function FoodieProfilePage() {
                 <span className="text-gray-600 dark:text-gray-400">{userData?.universityName || 'Not Set'}</span>
               </div>
             </div>
-          </div>
-
-          <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 border border-gray-200 dark:border-gray-800 shadow-xl shadow-orange-500/5">
-            <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-              <ThemeToggle /> <span className="text-sm">Appearance</span>
-            </h3>
           </div>
 
           <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 border border-gray-200 dark:border-gray-800 shadow-xl shadow-orange-500/5">

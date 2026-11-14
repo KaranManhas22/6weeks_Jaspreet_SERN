@@ -12,18 +12,7 @@
   --border: #F0E6D8;     /* Warm linen/cream border */
   --primary: #E65100;    /* Foodzie signature deep vibrant orange */
   --primary-hover: #D84315;
-}
-
-.dark {
-  --background: #0D1117; /* GitHub-style rich dark canvas — exact Home Page dark palette */
-  --foreground: #E6EDF3; /* Crisp soft warm white */
-  --card: #161B22;       /* Elevated dark card surface */
-  --card-foreground: #E6EDF3;
-  --muted: #21262D;      /* Secondary dark surface */
-  --muted-foreground: #8B949E;
-  --border: #30363D;     /* Subtle dark border */
-  --primary: #E65100;
-  --primary-hover: #D84315;
+  color-scheme: light;
 }
 
 body {
@@ -70,119 +59,119 @@ input, textarea, select {
   animation-play-state: paused;
 }
 
-/* ── Light Mode Color Palette & Visual Hierarchy (Home Page Warm System) ─── */
-html:not(.dark) body {
+/* ── Universal Warm Light Palette & Visual Hierarchy (Home Page Design System) ─── */
+body {
   background-color: #FFFDF9 !important;
   color: #2C2723 !important;
 }
 
 /* Surfaces */
-html:not(.dark) .bg-gray-950,
-html:not(.dark) .bg-gray-50,
-html:not(.dark) .bg-slate-50,
-html:not(.dark) .bg-neutral-50,
-html:not(.dark) .bg-zinc-50 {
+.bg-gray-950,
+.bg-gray-50,
+.bg-slate-50,
+.bg-neutral-50,
+.bg-zinc-50 {
   background-color: #FFFDF9 !important;
 }
 
-html:not(.dark) .bg-gray-900,
-html:not(.dark) .bg-white {
+.bg-gray-900,
+.bg-white {
   background-color: #FFFFFF !important;
 }
 
-html:not(.dark) .bg-gray-955,
-html:not(.dark) .bg-gray-100,
-html:not(.dark) .bg-slate-100 {
+.bg-gray-955,
+.bg-gray-100,
+.bg-slate-100 {
   background-color: #FFF8EE !important;
 }
 
-html:not(.dark) .bg-gray-955\/50 {
+.bg-gray-955\/50 {
   background-color: rgba(255, 248, 238, 0.7) !important;
 }
 
-html:not(.dark) .bg-gray-900\/40,
-html:not(.dark) .bg-gray-900\/60,
-html:not(.dark) .bg-gray-900\/70,
-html:not(.dark) .bg-white\/90,
-html:not(.dark) .bg-white\/80 {
+.bg-gray-900\/40,
+.bg-gray-900\/60,
+.bg-gray-900\/70,
+.bg-white\/90,
+.bg-white\/80 {
   background-color: rgba(255, 255, 255, 0.92) !important;
 }
 
-html:not(.dark) .bg-gray-950\/85,
-html:not(.dark) .bg-gray-950\/50,
-html:not(.dark) .bg-gray-950\/35 {
+.bg-gray-950\/85,
+.bg-gray-950\/50,
+.bg-gray-950\/35 {
   background-color: rgba(255, 253, 249, 0.85) !important;
 }
 
-html:not(.dark) .bg-gray-950\/10 {
+.bg-gray-950\/10 {
   background-color: rgba(230, 81, 0, 0.05) !important;
 }
 
-html:not(.dark) .bg-gray-800,
-html:not(.dark) .bg-gray-200 {
+.bg-gray-800,
+.bg-gray-200 {
   background-color: #F5EBE1 !important;
 }
 
-html:not(.dark) .hover\:bg-gray-700:hover,
-html:not(.dark) .hover\:bg-gray-800:hover,
-html:not(.dark) .hover\:bg-gray-850:hover,
-html:not(.dark) .hover\:bg-gray-100:hover {
+.hover\:bg-gray-700:hover,
+.hover\:bg-gray-800:hover,
+.hover\:bg-gray-850:hover,
+.hover\:bg-gray-100:hover {
   background-color: #F5EBE1 !important;
 }
 
-html:not(.dark) .hover\:bg-gray-955\/50:hover {
+.hover\:bg-gray-955\/50:hover {
   background-color: rgba(245, 235, 225, 0.8) !important;
 }
 
 /* Light Theme Borders: Warm Linen / Cream */
-html:not(.dark) .border-gray-100,
-html:not(.dark) .border-gray-200,
-html:not(.dark) .border-gray-700,
-html:not(.dark) .border-gray-800,
-html:not(.dark) .border-gray-850,
-html:not(.dark) .border-gray-900,
-html:not(.dark) .border-slate-200 {
+.border-gray-100,
+.border-gray-200,
+.border-gray-700,
+.border-gray-800,
+.border-gray-850,
+.border-gray-900,
+.border-slate-200 {
   border-color: #F0E6D8 !important;
 }
 
-html:not(.dark) .border-gray-855 {
+.border-gray-855 {
   border-color: #E2D5C3 !important;
 }
 
 /* Light Theme Typography: Warm Espresso Hierarchy */
-html:not(.dark) .text-gray-900 {
+.text-gray-900 {
   color: #1A1412 !important; /* Deep warm espresso title text */
 }
 
-html:not(.dark) .text-gray-800 {
+.text-gray-800 {
   color: #2C2723 !important; /* Rich body espresso */
 }
 
-html:not(.dark) .text-gray-700 {
+.text-gray-700 {
   color: #443E3A !important; /* Standard reading espresso */
 }
 
-html:not(.dark) .text-gray-600 {
+.text-gray-600 {
   color: #57534E !important; /* Subdued description text */
 }
 
-html:not(.dark) .text-gray-500,
-html:not(.dark) .text-gray-550,
-html:not(.dark) .text-gray-555,
-html:not(.dark) .text-gray-650 {
+.text-gray-500,
+.text-gray-550,
+.text-gray-555,
+.text-gray-650 {
   color: #78716C !important; /* Warm stone muted labels */
 }
 
-html:not(.dark) .text-gray-400,
-html:not(.dark) .text-gray-300 {
+.text-gray-400,
+.text-gray-300 {
   color: #A8A29E !important; /* Tertiary & placeholder text */
 }
 
 /* Inverted text-white for dark containers converted to light */
-html:not(.dark) .bg-gray-900 > .text-white,
-html:not(.dark) .bg-gray-950 > .text-white,
-html:not(.dark) .bg-gray-955 > .text-white,
-html:not(.dark) .bg-white .text-white:not([class*="bg-"]):not([class*="btn"]) {
+.bg-gray-900 > .text-white,
+.bg-gray-950 > .text-white,
+.bg-gray-955 > .text-white,
+.bg-white .text-white:not([class*="bg-"]):not([class*="btn"]) {
   color: #1A1412 !important;
 }
 
@@ -218,67 +207,18 @@ html:not(.dark) .bg-white .text-white:not([class*="bg-"]):not([class*="btn"]) {
 }
 
 /* Semantic Badges & Links in Light Mode */
-html:not(.dark) .text-orange-500,
-html:not(.dark) .text-orange-600,
-html:not(.dark) .text-amber-500 {
+.text-orange-500,
+.text-orange-600,
+.text-amber-500 {
   color: #E65100 !important;
 }
 
-html:not(.dark) .text-green-500,
-html:not(.dark) .text-green-600 {
+.text-green-500,
+.text-green-600 {
   color: #059669 !important;
 }
 
-html:not(.dark) .text-red-500,
-html:not(.dark) .text-red-600 {
+.text-red-500,
+.text-red-600 {
   color: #DC2626 !important;
-}
-
-/* ── Dark Mode Typography & Container Rules (Home Page GitHub-Dark System) ─ */
-.dark body {
-  background-color: #0D1117 !important;
-  color: #E6EDF3 !important;
-}
-
-.dark .bg-gray-950,
-.dark .bg-gray-900,
-.dark .bg-black {
-  background-color: #161B22;
-}
-
-.dark .bg-gray-800 {
-  background-color: #21262D !important;
-}
-
-.dark .border-gray-800,
-.dark .border-gray-700 {
-  border-color: #30363D !important;
-}
-
-.dark .text-gray-300,
-.dark .text-gray-400 {
-  color: #8B949E !important;
-}
-
-.dark .text-gray-555,
-.dark .text-gray-500,
-.dark .text-gray-550 {
-  color: #6E7681 !important;
-}
-
-.dark .text-gray-650 {
-  color: #484F58 !important;
-}
-
-.dark .text-gray-700,
-.dark .text-gray-800,
-.dark .text-gray-900 {
-  color: #E6EDF3 !important;
-}
-
-.dark .text-orange-500,
-.dark .text-orange-500 *,
-.dark .text-orange-600,
-.dark .text-orange-600 * {
-  color: #F97316 !important;
 }
